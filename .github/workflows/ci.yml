@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts/ecstasy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Check
+        run: cargo check
+      - name: Test
+        run: cargo test
+
+  docs-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify required docs
+        run: |
+          test -f README.md
+          test -f docs/TECHNICAL_SPEC.md
+          test -f docs/SECURITY.md
+          test -f docs/BRANDING.md
+          test -f docs/DEMO_SCRIPT.md
