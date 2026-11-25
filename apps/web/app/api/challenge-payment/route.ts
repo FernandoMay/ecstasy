@@ -64,11 +64,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Request too large" }, { status: 413 });
   }
   const activeLimiter = await limiter;
-  const limitHeaders = {
-    "x-ecstasy-rate-limit-mode": activeLimiter.mode,
-    "x-ecstasy-blobs-context": process.env.NETLIFY_BLOBS_CONTEXT ? "present" : "absent",
-    "x-ecstasy-netlify-site": process.env.NETLIFY_SITE_ID ? "present" : "absent",
-  };
+  const limitHeaders = { "x-ecstasy-rate-limit-mode": activeLimiter.mode };
   if (!(await activeLimiter.check(clientKey(request)))) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429, headers: limitHeaders });
   }
