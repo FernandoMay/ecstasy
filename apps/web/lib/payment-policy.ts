@@ -129,10 +129,26 @@ export class SharedRateLimiter {
 export async function createPaymentRateLimiter(): Promise<{
   check: (key: string) => Promise<boolean>;
 }> {
+  const local = new RateLimiter();
   if (process.env.NETLIFY === "true") {
     try {
       const { getStore } = await import("@netlify/blobs");
-      return new SharedRateLimiter(getStore("ecstasy-payment-limits"));
+      const shared = new SharedRateLimiter(getStore("ecstasy-payment-limits"));
+      return {
+        check: async (key: string) => {
+          try {
+            return await shared.check(key);
+          } catch (cause) {
+            console.warn(
+              JSON.stringify({
+                event: "shared_rate_limit_failed_falling_back",
+                error: cause instanceof Error ? cause.message : String(cause),
+              }),
+            );
+            return local.check(key);
+          }
+        },
+      };
     } catch (cause) {
       console.warn(
         JSON.stringify({
@@ -142,6 +158,5 @@ export async function createPaymentRateLimiter(): Promise<{
       );
     }
   }
-  const local = new RateLimiter();
   return { check: async (key: string) => local.check(key) };
 }
