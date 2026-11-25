@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { ChallengePayment } from "@/components/ChallengePayment";
 import { CreateEncounterForm } from "@/components/CreateEncounterForm";
 import { ExplorerEvidence } from "@/components/ExplorerEvidence";
 import { useWallet } from "@/components/WalletProvider";
@@ -70,6 +71,8 @@ export default function Home() {
               <li>Each participant may leave one bounded afterglow score.</li>
             </ol>
           </div>
+          <div style={{ height: 18 }} />
+          <ChallengePayment />
           <div style={{ height: 18 }} />
           <ExplorerEvidence />
           <div style={{ height: 18 }} />

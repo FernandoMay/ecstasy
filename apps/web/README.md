@@ -31,6 +31,10 @@ If the contract ID is missing, the page renders a setup notice instead of fake d
 5. Both parties record completion; either party settles. The receipt shows the real transaction hash and explorer link.
 6. Each party submits one bounded afterglow score after settlement.
 
+## Mission 02 payment
+
+`POST /api/challenge-payment` builds and submits a real Testnet payment with memo `SHIP-S97KF8` from an ephemeral friendbot-funded account. The UI exposes it as "Pago relámpago · Testnet" on the home page and renders the resulting stellar.expert link. No secret keys are stored, logged or sent to the browser. Evidence: `docs/EVIDENCE.md`.
+
 ## Components
 
 `EncounterCard`, `ConsentSheet`, `TermsHashBadge`, `StakePanel`, `EncounterTimeline`, `SettlementReceipt`, `AfterglowSlider`, `WalletStatus`, `ExplorerEvidence`.

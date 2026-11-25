@@ -85,6 +85,27 @@ CREATOR=<identity-a> PARTICIPANT=<identity-b> \
 
 The smoke script prints the contract ID, both addresses, every transaction hash and every emitted event. `contracts/ecstasy/tests/contract_test.rs` covers the equivalent state machine offline (19 tests).
 
+## Mission 02 — Pago relámpago (`SHIP-S97KF8`)
+
+A real Testnet **payment** (classic `payment` operation, not a contract invoke) sent by the app itself through its own route `apps/web/app/api/challenge-payment/route.ts`, exposed in the UI by `apps/web/components/ChallengePayment.tsx`. The source is an ephemeral keypair funded by Testnet friendbot per request; no key is stored or logged.
+
+| Item | Value |
+|---|---|
+| Transaction hash | `94f69d66bb3019a9adeaef5071cfe73e0fd58794fb891a600af12f47aff7f893` |
+| stellar.expert | https://stellar.expert/explorer/testnet/tx/94f69d66bb3019a9adeaef5071cfe73e0fd58794fb891a600af12f47aff7f893 |
+| Memo (text) | `SHIP-S97KF8` |
+| Operation | `payment`, 0.0001 XLM (native) |
+| Source (ephemeral) | `GDVXRUISPEWL7EBMU2TRFYTLTSZFNZCSVNYID7LTVXW2QKS2WMCLTX3D` |
+| Destination | `GAUZSVWQY5KOFMWZA5YJEBOECWBGSZHPSADVI6G3ZB54JULLDL6IKISJ` |
+| Horizon readback | `successful: true`, `memo_type: text`, `memo: SHIP-S97KF8`, `to: GAUZS…6IKISJ` |
+
+Reproduce from the running app (the code that builds and submits lives in the committed route):
+
+```bash
+npm run dev
+curl -X POST http://localhost:3000/api/challenge-payment
+```
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build.
