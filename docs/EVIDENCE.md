@@ -224,7 +224,7 @@ CI and Netlify both use Node 24; Rust 1.99.1 is pinned in `rust-toolchain.toml`;
 
 ### Clean-clone verification
 
-Pending: will be recorded after running the full check suite from a fresh clone.
+Executed from a fresh `git clone https://github.com/FernandoMay/ecstasy.git` (commit `90b8471`): `npm ci`, `npm test` (12 shared + 12 web), `npm run typecheck` (clean), `npm run build` (compiled), `cargo clippy --all-targets -- -D warnings` (clean), `cargo test` (24 passed), `stellar contract build` (wasm hash `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61`), `npm run generate:bindings` + `git diff --exit-code` on the generated client (no diff). Two ordering issues found during this check were fixed: the root `test`/`typecheck` scripts now build the shared package first, and clippy lints in the contract/tests were resolved.
 
 ## Known limitations
 
