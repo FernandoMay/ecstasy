@@ -7,7 +7,7 @@ Versioned, independently checkable snapshot of the ECSTASY Testnet release. This
 | Item | Value |
 |---|---|
 | Release label | Testnet Release Candidate 1 (not Mainnet, not a production financial product) |
-| Source commit | `d82a57d` (Sprint D final; includes status endpoint, privacy controls, runbook and this pack) |
+| Source commit | `e592829` (Sprint D + P1 hardening: status endpoint, privacy controls, wallet identity and state-read resilience) |
 | Contract ID | `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` |
 | Wasm SHA-256 | `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61` |
 | Network | Testnet (`Test SDF Network ; September 2015`) |
@@ -18,7 +18,7 @@ Versioned, independently checkable snapshot of the ECSTASY Testnet release. This
 Reproduce the wasm hash:
 
 ```bash
-git checkout d82a57d
+git checkout e592829
 cd contracts/ecstasy && stellar contract build
 ```
 
