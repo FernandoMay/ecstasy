@@ -131,16 +131,21 @@ export async function createPaymentRateLimiter(): Promise<{
   mode: "shared" | "local";
 }> {
   const local = new RateLimiter();
-  if (process.env.NETLIFY === "true") {
+  // Netlify populates NETLIFY_BLOBS_CONTEXT automatically in functions.
+  if (Boolean(process.env.NETLIFY_BLOBS_CONTEXT)) {
     try {
       const { getStore } = await import("@netlify/blobs");
       const shared = new SharedRateLimiter(getStore("ecstasy-payment-limits"));
+      let activeMode: "shared" | "local" = "shared";
       return {
-        mode: "shared",
+        get mode() {
+          return activeMode;
+        },
         check: async (key: string) => {
           try {
             return await shared.check(key);
           } catch (cause) {
+            activeMode = "local";
             console.warn(
               JSON.stringify({
                 event: "shared_rate_limit_failed_falling_back",
