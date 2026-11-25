@@ -14,7 +14,7 @@ export type { TermsDocument } from "./terms";
 
 export { accountUrl, contractUrl, shortAddress, transactionUrl } from "./explorer";
 
-export { FreighterWallet, assertWalletNetwork } from "./wallet";
+export { FreighterWallet, assertWalletIdentity, assertWalletNetwork } from "./wallet";
 export type { WalletAdapter, WalletIdentity } from "./wallet";
 
 export { createEcstasyClient, createReadOnlyClient } from "./contract";

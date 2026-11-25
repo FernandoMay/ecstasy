@@ -4,9 +4,11 @@ import { useState } from "react";
 
 export function AfterglowSlider({
   disabled,
+  alreadySubmitted,
   onSubmit,
 }: {
   disabled?: boolean;
+  alreadySubmitted?: boolean;
   onSubmit: (score: number) => Promise<void>;
 }) {
   const [score, setScore] = useState(50);
@@ -15,6 +17,11 @@ export function AfterglowSlider({
   return (
     <div className="card">
       <h3>Afterglow</h3>
+      {alreadySubmitted && (
+        <div className="notice" style={{ borderLeftColor: "var(--success)" }}>
+          Your score is already recorded. One submission per participant is allowed.
+        </div>
+      )}
       <p className="muted small">
         One bounded score (0–100) per participant, available after settlement. This is participant
         feedback — not a safety, identity, or truth verification.
@@ -25,7 +32,7 @@ export function AfterglowSlider({
           min={0}
           max={100}
           value={score}
-          disabled={disabled || busy}
+          disabled={disabled || busy || alreadySubmitted}
           onChange={(event) => setScore(Number(event.target.value))}
           aria-label="Afterglow score"
         />
@@ -34,7 +41,7 @@ export function AfterglowSlider({
       <button
         className="btn btn-primary"
         style={{ marginTop: 14 }}
-        disabled={disabled || busy}
+        disabled={disabled || busy || alreadySubmitted}
         onClick={async () => {
           setBusy(true);
           try {

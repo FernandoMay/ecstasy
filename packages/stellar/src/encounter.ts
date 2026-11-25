@@ -6,7 +6,7 @@ import { createEcstasyClient, createReadOnlyClient, type EcstasyClient } from ".
 import { transactionUrl } from "./explorer";
 import type { Encounter, EncounterStatus } from "./generated/ecstasy";
 import type { WalletAdapter } from "./wallet";
-import { assertWalletNetwork } from "./wallet";
+import { assertWalletIdentity, assertWalletNetwork } from "./wallet";
 
 export interface Receipt {
   hash: string;
@@ -85,6 +85,10 @@ export class EcstasyService {
     // Re-check the wallet network immediately before signing: a wallet may
     // have been switched while the page was open.
     await assertWalletNetwork(this.wallet, this.config.networkPassphrase);
+    if (!this.address) {
+      throw new Error("Connect a wallet before sending a transaction");
+    }
+    await assertWalletIdentity(this.wallet, this.address);
     const sent = await tx.signAndSend();
     const result = sent.result;
     if (result.isErr()) {

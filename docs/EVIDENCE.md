@@ -239,6 +239,15 @@ Executed from a fresh `git clone https://github.com/FernandoMay/ecstasy.git` (co
 - `docs/RUNBOOK.md` covers RPC outage, pending transactions, failed deploy, payment 502/504, contract incidents, compromised credentials and privacy incidents. `docs/RELEASES/testnet-rc-1.md` pins source commit, wasm hash, contract, verification matrix and known limitations.
 - `docs/FUNCTIONS_FOR_REVIEW.md` records every new function with its transaction link (read-only endpoints are marked N/A).
 
+
+## P1 hardening applied after Sprint D
+
+- **Identity before signing (P1.5):** `assertWalletIdentity()` re-reads the connected account immediately before signing and fails closed on a changed account, revoked access or a disconnected extension. Three tests cover those cases (15 shared-package tests total).
+- **Read failures and receipts (P1.2):** `refresh()` preserves the last known encounter when a read fails, marks it stale, and adds manual retry. A successful transaction sets a "waiting for confirmed state" state until a fresh read succeeds — no success status is claimed from the receipt alone.
+- **Action consistency (P1.3):** afterglow submission is disabled once that wallet's score exists; duplicate clicks are blocked at component and action-controller level; terminal states are explicit; actions stay hidden from unrelated wallets; permissionless expiry remains available to any viewer; cancel wording now states that either party may cancel and the creator receives the refund.
+
+These are code-level hardening items, not a replacement for the still-pending two-wallet browser E2E.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

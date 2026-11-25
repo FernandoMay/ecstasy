@@ -266,7 +266,7 @@ Do not do a broad find-and-replace of the word “demo”. Keep historical chall
 
 **Exit criteria:** a new user can complete the supported protocol without CLI intervention or developer-only steps.
 
-### Sprint C — Contract hardening and parity (complete)
+### Sprint C — Contract hardening and parity (complete; P1.1–P1.5 hardening applied after Sprint D)
 
 - [x] Review and test Soroban storage TTL for active escrow and historical records (TTL extension on every mutating call + ledger-advance test).
 - [x] Adversarial multi-asset tests: pinned asset + cross-asset surplus cannot be withdrawn (2 tests).

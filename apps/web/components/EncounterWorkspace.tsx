@@ -27,15 +27,33 @@ export function EncounterWorkspace({ id }: { id: string }) {
   const [error, setError] = useState<string | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [busy, setBusy] = useState(false);
+  const [readError, setReadError] = useState<string | null>(null);
+  const [stale, setStale] = useState(false);
+  const [pendingConfirm, setPendingConfirm] = useState(false);
   const [scores, setScores] = useState<{ creator?: number; participant?: number }>({});
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (): Promise<boolean> => {
+    let parsed: bigint;
     try {
-      setEncounter(await service.read(parseEncounterId(id)));
-      setError(null);
+      parsed = parseEncounterId(id);
     } catch (cause) {
-      setError(message(cause));
-      setEncounter(null);
+      setReadError(message(cause));
+      setStale(false);
+      return false;
+    }
+    try {
+      const next = await service.read(parsed);
+      setEncounter(next);
+      setReadError(null);
+      setStale(false);
+      setPendingConfirm(false);
+      return true;
+    } catch (cause) {
+      // Preserve the last known state: a receipt can succeed while a
+      // subsequent read fails. Report it as stale, never as confirmed.
+      setReadError(message(cause));
+      setStale(true);
+      return false;
     }
   }, [service, id]);
 
@@ -64,7 +82,11 @@ export function EncounterWorkspace({ id }: { id: string }) {
     try {
       const result = await action();
       setReceipt(result.receipt);
-      await refresh();
+      setPendingConfirm(true);
+      const confirmed = await refresh();
+      if (!confirmed) {
+        setError("Transaction submitted, but the state read failed. Showing last known state — retry to confirm.");
+      }
     } catch (cause) {
       setError(message(cause));
     } finally {
@@ -76,8 +98,13 @@ export function EncounterWorkspace({ id }: { id: string }) {
     return (
       <div className="card" style={{ marginTop: 40 }}>
         <h2>Encounter #{id}</h2>
-        <p className="muted">Loading on-chain state…</p>
-        {error && <div className="notice error">{error}</div>}
+        <p className="muted">{readError ? "Could not load encounter." : "Loading on-chain state…"}</p>
+        {readError && <div className="notice error">{readError}</div>}
+        {readError && (
+          <button className="btn" onClick={refresh} disabled={busy}>
+            Retry read
+          </button>
+        )}
       </div>
     );
   }
@@ -134,6 +161,17 @@ export function EncounterWorkspace({ id }: { id: string }) {
           <ExplorerEvidence contractId={config.contractId} />
         </div>
       </div>
+
+      {(stale || pendingConfirm) && (
+        <div className="notice" style={{ marginTop: 20 }}>
+          {pendingConfirm
+            ? "Transaction submitted — waiting for a confirmed state read."
+            : "State read failed. Showing last known on-chain state."}
+          <button className="btn btn-small" style={{ marginLeft: 12 }} onClick={refresh} disabled={busy}>
+            Retry read
+          </button>
+        </div>
+      )}
 
       {error && (
         <div className="notice error" style={{ marginTop: 20 }}>
@@ -192,6 +230,9 @@ export function EncounterWorkspace({ id }: { id: string }) {
                 Cancel
               </button>
             </div>
+            <p className="muted small" style={{ marginTop: 12 }}>
+              Either party may cancel an open encounter; any escrow is refunded to the creator.
+            </p>
           </div>
         )}
 
@@ -212,6 +253,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
           <>
             <AfterglowSlider
               disabled={busy}
+              alreadySubmitted={isCreator ? scores.creator !== undefined : scores.participant !== undefined}
               onSubmit={(score) => run(() => service.afterglow(address!, encounterId, score))}
             />
             <div className="card">

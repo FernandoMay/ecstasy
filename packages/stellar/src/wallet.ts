@@ -114,3 +114,25 @@ export async function assertWalletNetwork(
     );
   }
 }
+
+/**
+ * Fail closed if the wallet account changed, access was revoked, or the
+ * extension disappeared between page load and a signing action.
+ */
+export async function assertWalletIdentity(
+  wallet: WalletAdapter,
+  expectedAddress: string,
+): Promise<void> {
+  let current: string | null;
+  try {
+    current = await wallet.getAddress();
+  } catch {
+    throw new Error("Wallet extension is unavailable — reconnect and retry");
+  }
+  if (!current) {
+    throw new Error("Wallet access was revoked — reconnect and retry");
+  }
+  if (current !== expectedAddress) {
+    throw new Error("Wallet account changed since the page loaded — reconnect and retry");
+  }
+}
