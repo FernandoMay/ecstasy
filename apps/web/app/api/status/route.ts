@@ -13,7 +13,7 @@ export async function GET() {
     const response = await fetch(config.rpcUrl, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "getHealth", params: [] }),
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "getHealth", params: {} }),
       signal: AbortSignal.timeout(4000),
     });
     if (response.ok) {
