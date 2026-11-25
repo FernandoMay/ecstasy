@@ -1,0 +1,18 @@
+name: Production smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every 6 hours.
+    - cron: "0 */6 * * *"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check public app and RPC-backed status
+        env:
+          SITE_URL: https://ecs-tasy.netlify.app
+          SKIP_PAYMENT: "1"
+        run: bash scripts/production-smoke.sh

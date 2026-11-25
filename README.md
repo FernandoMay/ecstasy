@@ -35,7 +35,7 @@ Create → Invite → Consent → Optional Escrow → Complete → Settle → Af
 ## Repository
 
 ```text
-apps/web/                 Next.js demo dApp (real Testnet flows)
+apps/web/                 Next.js Testnet app (real Testnet flows)
 contracts/ecstasy/        Soroban contract (incl. retirar), tests and deploy/smoke scripts
 packages/stellar/         shared Stellar SDK, wallet adapter and typed bindings
 docs/                     product, protocol, security, evidence and demo docs
@@ -58,7 +58,7 @@ The Ship It: Builder Challenge target is a small, demonstrable vertical slice ra
 
 ## Current status
 
-**Stage: Testnet Release Candidate (Sprint C complete; browser two-wallet E2E and Netlify Blobs mode still pending).** The Soroban contract, its test suite, the shared Stellar package and the Next.js demo are implemented. The contract is deployed on Testnet and the full create → consent → complete → settle → afterglow flow has been executed with two real signed transactions per party. See `docs/EVIDENCE.md`.
+**Stage: Testnet Release Candidate 1** (`docs/RELEASES/testnet-rc-1.md`). Sprint C is complete; two-wallet Freighter E2E, Netlify Blobs runtime mode and the payment endpoint timeout remain open. See `docs/RUNBOOK.md` for operations. The Soroban contract, its test suite, the shared Stellar package and the Next.js demo are implemented. The contract is deployed on Testnet and the full create → consent → complete → settle → afterglow flow has been executed with two real signed transactions per party. See `docs/EVIDENCE.md`.
 
 ### Quickstart
 

@@ -6,6 +6,7 @@ Registro dedicado — **se actualiza cada vez que se añade una funcionalidad nu
 |---|---|---|
 | `retirar(caller, encounter_id)` | Contrato Soroban (nueva función pública) | https://stellar.expert/explorer/testnet/tx/1f595ef796ff309c630b5d909cd7a27dd57a2c826b5d6c651139fb230b6d9ec6 |
 | `POST /api/challenge-payment` (pago Testnet con memo `SHIP-S97KF8`) | Endpoint de la app | https://stellar.expert/explorer/testnet/tx/84d812fbbcc5098f6c028eda6a4396ae07fde049db74f0ef27d86762561e9fd8 |
+| `GET /api/status` (health de despliegue y RPC) | Endpoint de solo lectura | N/A — no crea transacciones; ver `GET /api/status` en producción |
 
 ## Detalle de `retirar`
 
@@ -29,3 +30,4 @@ Al añadir cualquier función pública nueva (contrato, endpoint o servicio), ag
 1. **Nombre de la función** (firma completa si aplica).
 2. **Enlace a la transacción que la usa** en `https://stellar.expert/explorer/testnet/tx/...`.
 3. Una nota breve con el efecto observado y el archivo de tests.
+4. Si es de solo lectura, indicar `N/A — no crea transacciones`.

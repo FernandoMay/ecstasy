@@ -74,3 +74,5 @@ jobs:
           test -f docs/DEMO_SCRIPT.md
           test -f docs/EVIDENCE.md
           test -f docs/FUNCTIONS_FOR_REVIEW.md
+          test -f docs/RUNBOOK.md
+          test -f docs/RELEASES/testnet-rc-1.md

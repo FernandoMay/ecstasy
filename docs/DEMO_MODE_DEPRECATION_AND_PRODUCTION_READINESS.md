@@ -277,13 +277,13 @@ Do not do a broad find-and-replace of the word “demo”. Keep historical chall
 
 **Exit criteria:** contract accounting and storage invariants are tested; generated client matches the deployed candidate WASM; CI is green. P0.4 browser E2E and Netlify Blobs runtime mode remain open items outside this sprint.
 
-### Sprint D — Release documentation and operations
+### Sprint D — Release documentation and operations (mostly complete)
 
-- [ ] Update all status and API documentation.
-- [ ] Replace “demo dApp” product language with “Testnet app” while preserving historical demo instructions.
-- [ ] Publish Testnet status, contract, asset, RPC and explorer references in the UI.
-- [ ] Add runbook and monitoring.
-- [ ] Assemble a versioned evidence pack tied to the exact source commit and deployed contract WASM hash.
+- [x] Update status and API documentation (`README.md`, web README, `docs/API.md`, `docs/TECHNICAL_SPEC.md`, `docs/EVIDENCE.md`).
+- [x] Product language is “Testnet app”; `docs/DEMO_SCRIPT.md` preserved as historical/reproducible instructions.
+- [x] `GET /api/status` + `StatusPanel` publish network, contract, asset, RPC health and explorer link.
+- [x] `docs/RUNBOOK.md` and scheduled/manual production smoke workflow.
+- [x] `docs/RELEASES/testnet-rc-1.md` pins commit, wasm hash, contract and evidence.
 - [ ] Tag a Testnet Release Candidate only after all P0 gates pass.
 
 **Exit criteria:** the release can be reproduced and independently checked from source, build, deployed app, contract and transaction evidence.

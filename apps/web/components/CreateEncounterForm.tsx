@@ -33,6 +33,8 @@ export function CreateEncounterForm() {
   const [createdId, setCreatedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [keepLocal, setKeepLocal] = useState(false);
+  const [cleared, setCleared] = useState(false);
 
   const fields: TermsFormFields = {
     title,
@@ -89,7 +91,7 @@ export function CreateEncounterForm() {
       setDirty(false);
       setCreatedId(result.value.toString());
       setReceipt(result.receipt);
-      if (typeof window !== "undefined") {
+      if (keepLocal && typeof window !== "undefined") {
         sessionStorage.setItem(`ecstasy:terms:${commitment.hex}`, JSON.stringify(commitment.terms));
       }
     } catch (cause) {
@@ -155,6 +157,19 @@ export function CreateEncounterForm() {
       <div className="field">
         <label className="label" htmlFor="location">Coarse location hint (optional)</label>
         <input id="location" className="input" value={locationHint} disabled={locked} onChange={(event) => change(() => setLocationHint(event.target.value))} />
+        <p className="muted small">Keep it optional and coarse. Do not enter a precise address or identifying detail.</p>
+      </div>
+
+      <div className="field">
+        <label className="row small" style={{ gap: 8 }}>
+          <input
+            type="checkbox"
+            checked={keepLocal}
+            disabled={locked}
+            onChange={(event) => setKeepLocal(event.target.checked)}
+          />
+          Keep a copy of these private terms in this browser session (local only, never uploaded)
+        </label>
       </div>
 
       <div className="row">
@@ -193,6 +208,22 @@ export function CreateEncounterForm() {
           </p>
         </div>
       )}
+
+      <div className="row" style={{ marginTop: 18 }}>
+        <button
+          className="btn btn-small"
+          onClick={() => {
+            if (typeof window === "undefined") return;
+            Object.keys(sessionStorage)
+              .filter((key) => key.startsWith("ecstasy:terms:"))
+              .forEach((key) => sessionStorage.removeItem(key));
+            setCleared(true);
+          }}
+        >
+          Clear locally stored terms
+        </button>
+        {cleared && <span className="small success-text">Local copies removed</span>}
+      </div>
 
       {error && <div className="notice error" style={{ marginTop: 18 }}>{error}</div>}
       {receipt && createdId && (

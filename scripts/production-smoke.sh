@@ -5,6 +5,7 @@ set -euo pipefail
 
 SITE_URL="${SITE_URL:-https://ecs-tasy.netlify.app}"
 SITE_URL="${SITE_URL%/}"
+SKIP_PAYMENT="${SKIP_PAYMENT:-0}"
 
 check() {
   local label="$1" expected="$2" actual="$3"
@@ -22,6 +23,12 @@ check "homepage" "200" "$(curl -s -o /dev/null -w '%{http_code}' "$SITE_URL/")"
 # A dynamically rendered encounter route must return an HTML document, not
 # a 404 or a server error. The id below is a known Testnet encounter.
 check "encounter route" "200" "$(curl -s -o /dev/null -w '%{http_code}' "$SITE_URL/encounter/1")"
+
+if [[ "$SKIP_PAYMENT" == "1" ]]; then
+  echo "SKIP payment check (SKIP_PAYMENT=1)"
+  echo "✅ Production smoke finished. Record the output in docs/EVIDENCE.md"
+  exit 0
+fi
 
 # The challenge endpoint is Testnet-only, fixed-destination and rate-limited.
 # A POST either succeeds with a hash or is rate-limited (429). Any 5xx is a

@@ -1,6 +1,6 @@
 # ECSTASY Web
 
-Next.js demo dApp. It uses real Testnet RPC transactions — there are no mock chain responses in any path.
+Next.js Testnet app. It uses real Testnet RPC transactions — there are no mock chain responses in any path.
 
 ## Setup
 
@@ -30,6 +30,10 @@ If the contract ID is missing, the page renders a setup notice instead of fake d
 4. The participant opens the link, pastes the private terms to verify the hash, then consents or declines.
 5. Both parties record completion; either party settles. The receipt shows the real transaction hash and explorer link.
 6. Each party submits one bounded afterglow score after settlement.
+
+## Deployment status and privacy
+
+`GET /api/status` returns the configured network, contract, asset, RPC health and latest ledger without exposing secrets. The home page renders that data in `StatusPanel` with an explorer link. Private terms are never encrypted by this protocol; a hash is a commitment, not encryption. Local storage of terms is opt-in and can be cleared from the create form.
 
 ## Mission 02 payment
 

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ChallengePayment } from "@/components/ChallengePayment";
 import { CreateEncounterForm } from "@/components/CreateEncounterForm";
 import { ExplorerEvidence } from "@/components/ExplorerEvidence";
+import { StatusPanel } from "@/components/StatusPanel";
 import { useWallet } from "@/components/WalletProvider";
 
 export default function Home() {
@@ -61,6 +62,8 @@ export default function Home() {
       <div id="create" className="grid" style={{ alignItems: "start" }}>
         <CreateEncounterForm />
         <div>
+          <StatusPanel />
+          <div style={{ height: 18 }} />
           <div className="card">
             <h2>How it works</h2>
             <ol className="muted small" style={{ lineHeight: 1.9 }}>
@@ -81,7 +84,9 @@ export default function Home() {
             <p className="muted small">
               A transaction proves the contract accepted a state transition under its rules. It does
               not prove that any private, off-chain event was objectively true, safe, or legal. A
-              hash is a commitment, not encryption.
+              hash is a commitment, not encryption. Private terms are never encrypted by this
+              protocol; share them only through a channel you trust, and never put secrets or
+              private keys in them.
             </p>
           </div>
         </div>
