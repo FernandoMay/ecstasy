@@ -63,8 +63,10 @@ export async function POST(request: Request) {
   if (bodyTooLarge(request.headers.get("content-length"))) {
     return NextResponse.json({ error: "Request too large" }, { status: 413 });
   }
-  if (!(await (await limiter).check(clientKey(request)))) {
-    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  const activeLimiter = await limiter;
+  const limitHeaders = { "x-ecstasy-rate-limit-mode": activeLimiter.mode };
+  if (!(await activeLimiter.check(clientKey(request)))) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429, headers: limitHeaders });
   }
 
   let destination: string;
@@ -134,7 +136,7 @@ export async function POST(request: Request) {
       amount: PAYMENT_AMOUNT,
       destination,
       network: "testnet",
-    });
+    }, { headers: limitHeaders });
   } catch (cause) {
     return NextResponse.json(
       { error: cause instanceof Error ? cause.message : String(cause) },
