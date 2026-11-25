@@ -17,11 +17,11 @@
 - [x] complete/settle (real escrow transfer and receipt)
 - [x] afterglow (one bounded score per party)
 - [x] explorer evidence (`docs/EVIDENCE.md`)
-- [x] public web deployment config (`netlify.toml`, monorepo build + publish); production verification pending site URL
+- [x] public web deployment on Netlify (`netlify.toml` + Next.js runtime plugin); production homepage and `/api/challenge-payment` verified
 
 ## Phase 2 — Public demo
 - [x] web application implemented and production build passing
-- [ ] real Testnet E2E through the browser UI with two Freighter wallets
+- [ ] real Testnet E2E through the browser UI with two Freighter wallets (CLI/RPC E2E and production payment already verified)
 - [ ] evidence pack screenshots
 - [x] accessibility pass on core flow (labels, semantic markup, visible focus)
 - [x] error-state pass (setup notice, tx failures, invalid scores, hash mismatch)

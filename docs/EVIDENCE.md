@@ -127,11 +127,27 @@ Observed events: SAC `transfer` of `20000000` stroops contract → creator, and 
 
 `netlify.toml` sets the monorepo build explicitly: base = repo root, `command = "npm run build"` (builds `@ecstasy/stellar` then `@ecstasy/web`), `publish = "apps/web/.next"`, Node 24. The Next.js Runtime (OpenNext adapter, auto-installed by Netlify) serves App Router route handlers, including `POST /api/challenge-payment`. No additional Netlify plugins are declared. Netlify UI package directory should be `apps/web`; no Stellar secret keys are configured in Netlify environment variables.
 
-Production verification of `/api/challenge-payment` from the public Netlify URL is pending until the site URL is available.
+### Production verification (done)
+
+Site: https://ecs-tasy.netlify.app — production deploy `6b06649447b9b18c14f52c4a` for commit `a711a2c1`. The first deploy after adding `netlify.toml` had **no functions** because Next.js lives in the `apps/web` workspace and Netlify's auto-detection missed it; `@netlify/plugin-nextjs@5.16.9` was declared explicitly and the new deploy reports "1 function deployed".
+
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' https://ecs-tasy.netlify.app/          # 200
+curl -X POST https://ecs-tasy.netlify.app/api/challenge-payment                # payment tx
+```
+
+| Item | Value |
+|---|---|
+| Production payment tx | `600f91ff10957cabb990ea4cd9a182c3b280f1ecba8f8b77d0cec655b9884f0f` |
+| stellar.expert | https://stellar.expert/explorer/testnet/tx/600f91ff10957cabb990ea4cd9a182c3b280f1ecba8f8b77d0cec655b9884f0f |
+| Memo | `SHIP-S97KF8` (text) |
+| Horizon readback | `successful: true`, `payment`, `0.0001000 XLM`, `to: GAUZSVWQ…6IKISJ` |
+
+No Stellar secret keys or seed phrases are configured in Netlify environment variables. The endpoint generates an ephemeral friendbot-funded keypair per request.
 
 ## Known limitations
 
-- Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build.
+- Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
 - One asset (native XLM) and one escrow rule (creator's stake → participant on mutual completion) are implemented.
 - No dispute arbitration, identity verification or encrypted off-chain storage.
 - A hash is a commitment, not encryption: if the terms are shared openly, confidentiality is lost.
