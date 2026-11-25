@@ -181,7 +181,7 @@ fn payout_from_contract(env: &Env, asset: &Address, to: &Address, amount: i128) 
     // wallet or CLI identity can sign.
     TokenClient::new(env, asset).transfer(
         &env.current_contract_address(),
-        &MuxedAddress::from(to.clone()),
+        MuxedAddress::from(to.clone()),
         &amount,
     );
 }
@@ -190,7 +190,7 @@ fn payout_from_contract(env: &Env, asset: &Address, to: &Address, amount: i128) 
 fn pull_from_actor(env: &Env, asset: &Address, from: &Address, amount: i128) {
     TokenClient::new(env, asset).transfer(
         from,
-        &MuxedAddress::from(env.current_contract_address()),
+        MuxedAddress::from(env.current_contract_address()),
         &amount,
     );
 }

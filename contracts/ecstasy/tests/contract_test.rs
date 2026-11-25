@@ -122,7 +122,7 @@ fn create_stores_public_state_and_increments_ids() {
     assert!(!e.participant_completed);
     assert_eq!(e.settlement_marker, None);
 
-    assert!(created_events.contains(&Symbol::new(&s.env, "encounter_created")));
+    assert!(created_events.contains(Symbol::new(&s.env, "encounter_created")));
 }
 
 #[test]
@@ -217,7 +217,7 @@ fn accept_records_explicit_consent() {
         s.client.get_encounter(&id).status,
         EncounterStatus::Accepted
     );
-    assert!(events.contains(&Symbol::new(&s.env, "encounter_accepted")));
+    assert!(events.contains(Symbol::new(&s.env, "encounter_accepted")));
 }
 
 #[test]
@@ -250,7 +250,7 @@ fn decline_refunds_creator_and_is_terminal() {
         s.client.try_accept_encounter(&s.participant, &id),
         Err(Ok(EcstasyError::InvalidState))
     );
-    assert!(events.contains(&Symbol::new(&s.env, "encounter_declined")));
+    assert!(events.contains(Symbol::new(&s.env, "encounter_declined")));
 }
 
 #[test]
@@ -299,7 +299,7 @@ fn completion_requires_both_parties_and_rejects_duplicates() {
     let done = s.client.get_encounter(&id);
     assert_eq!(done.status, EncounterStatus::Completed);
     assert!(done.creator_completed && done.participant_completed);
-    assert!(events.contains(&Symbol::new(&s.env, "encounter_completed")));
+    assert!(events.contains(Symbol::new(&s.env, "encounter_completed")));
 }
 
 #[test]
@@ -333,7 +333,7 @@ fn settle_releases_escrow_and_cannot_run_twice() {
     assert_eq!(s.token.balance(&s.participant), STAKE);
     assert_eq!(s.token.balance(&s.contract_id), 0);
     assert_eq!(s.token.balance(&s.creator), FUNDS - STAKE);
-    assert!(events.contains(&Symbol::new(&s.env, "encounter_settled")));
+    assert!(events.contains(Symbol::new(&s.env, "encounter_settled")));
 
     // Replay / double settlement must be rejected and must not move funds.
     assert_eq!(
@@ -379,7 +379,7 @@ fn expiry_is_enforced_on_chain_and_refunds_creator() {
     assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Expired);
     assert_eq!(s.token.balance(&s.creator), FUNDS);
     assert_eq!(s.token.balance(&s.contract_id), 0);
-    assert!(events.contains(&Symbol::new(&s.env, "encounter_expired")));
+    assert!(events.contains(Symbol::new(&s.env, "encounter_expired")));
 
     assert_eq!(
         s.client.try_expire_encounter(&id),
@@ -495,7 +495,7 @@ fn retirar_withdraws_only_surplus_and_protects_reserved_escrow() {
     assert_eq!(withdrawn, extra);
     assert_eq!(s.token.balance(&s.creator), FUNDS - STAKE + extra);
     assert_eq!(s.token.balance(&s.contract_id), STAKE);
-    assert!(events.contains(&Symbol::new(&s.env, "funds_withdrawn")));
+    assert!(events.contains(Symbol::new(&s.env, "funds_withdrawn")));
 
     // A second call has no surplus: reserved escrow cannot be withdrawn.
     assert_eq!(
