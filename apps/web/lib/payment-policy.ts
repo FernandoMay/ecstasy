@@ -84,7 +84,7 @@ export type LimitWriteOptions =
 export interface LimitStore {
   getWithMetadata(
     key: string,
-    options: { type: "json" },
+    options: { type: "json"; consistency?: "strong" | "eventual" },
   ): Promise<{ data: unknown; etag?: string } | null>;
   setJSON(key: string, data: unknown, options: LimitWriteOptions): Promise<{ modified?: boolean }>;
 }
@@ -103,7 +103,10 @@ export class SharedRateLimiter {
 
   async check(key: string, now: number = Date.now()): Promise<boolean> {
     for (let attempt = 0; attempt < 3; attempt += 1) {
-      const entry = await this.store.getWithMetadata(key, { type: "json" });
+      const entry = await this.store.getWithMetadata(key, {
+        type: "json",
+        consistency: "strong",
+      });
       const raw = Array.isArray(entry?.data) ? (entry!.data as unknown[]) : [];
       const recent = raw.filter(
         (at): at is number => typeof at === "number" && now - at < this.windowMs,
@@ -135,7 +138,10 @@ export async function createPaymentRateLimiter(): Promise<{
   if (Boolean(process.env.NETLIFY_BLOBS_CONTEXT)) {
     try {
       const { getStore } = await import("@netlify/blobs");
-      const shared = new SharedRateLimiter(getStore("ecstasy-payment-limits"));
+      // Strong consistency is required for the ETag-based compare-and-set.
+      const shared = new SharedRateLimiter(
+        getStore({ name: "ecstasy-payment-limits", consistency: "strong" }),
+      );
       let activeMode: "shared" | "local" = "shared";
       return {
         get mode() {
