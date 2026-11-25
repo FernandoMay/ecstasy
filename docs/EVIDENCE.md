@@ -145,6 +145,8 @@ curl -X POST https://ecs-tasy.netlify.app/api/challenge-payment                #
 
 No Stellar secret keys or seed phrases are configured in Netlify environment variables. The endpoint generates an ephemeral friendbot-funded keypair per request.
 
+**Current limitation (Sprint B follow-up):** production calls to `/api/challenge-payment` now return HTTP 502/504 intermittently. Instrumented local runs show Friendbot taking up to ~7.6 s and submission ~2.8 s, above the Netlify function timeout. The account sequence is now derived from the Friendbot transaction ledger (`ledger << 32`) instead of polling `/accounts`, removing a few seconds and fixing an earlier `tx_bad_seq` off-by-one; three local payments succeeded after that fix (`643c1bc9…`, `bca2db49…`, `ef8daa35…`). Raising the function timeout or moving the payment to an asynchronous flow is a platform decision; no secrets are stored.
+
 
 ## Sprint A — P0 corrections (audit `DEMO_MODE_DEPRECATION_AND_PRODUCTION_READINESS.md`)
 
