@@ -9,8 +9,8 @@
   ],
   "scripts": {
     "build": "npm run build --workspace=@ecstasy/stellar && npm run build --workspace=@ecstasy/web",
-    "test": "npm run test --workspace=@ecstasy/stellar && npm run test --workspace=@ecstasy/web",
-    "typecheck": "npm run typecheck --workspace=@ecstasy/stellar && npm run typecheck --workspace=@ecstasy/web",
+    "test": "npm run build --workspace=@ecstasy/stellar && npm run test --workspace=@ecstasy/stellar && npm run test --workspace=@ecstasy/web",
+    "typecheck": "npm run build --workspace=@ecstasy/stellar && npm run typecheck --workspace=@ecstasy/stellar && npm run typecheck --workspace=@ecstasy/web",
     "dev": "npm run dev --workspace=@ecstasy/web"
   },
   "engines": {
