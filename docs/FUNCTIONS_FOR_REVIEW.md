@@ -20,6 +20,7 @@ Registro dedicado — **se actualiza cada vez que se añade una funcionalidad nu
 - Cuenta origen efímera financiada por Friendbot; sin claves privadas almacenadas ni devueltas.
 - Destino fijo y validado server-side; Testnet-only; rate limit por cliente con fallback local y store compartido vía Netlify Blobs cuando está disponible.
 - Tests: `apps/web/test/payment-policy.test.ts`.
+- **Production status:** the historical transaction above was successful. Recent production calls returned HTTP 502 because Friendbot latency (up to ~8 s in measurements) plus submission can exceed the Netlify function timeout. The code now derives the account sequence from the Friendbot transaction ledger to remove the account polling step; the endpoint remains Testnet-only and rate-limited. Enabling a longer function timeout or a pre-funded account pool would require a separate decision — no Stellar secret keys are stored in Netlify.
 
 ## Regla para futuras funciones
 

@@ -82,14 +82,34 @@ export async function POST(request: Request) {
   // change the memo, amount, asset or destination.
 
   try {
+    const started = Date.now();
     const source = Keypair.random();
+    const keygenMs = Date.now() - started;
     const fundResponse = await fetch(`${FRIEND_BOT}?addr=${source.publicKey()}`);
     if (!fundResponse.ok) {
       console.warn(JSON.stringify({ event: "friendbot_failed", status: fundResponse.status }));
       throw new Error(`Friendbot failed with HTTP ${fundResponse.status}`);
     }
 
-    const account = await waitForAccount(source.publicKey());
+    // Derive the new account's sequence from the friendbot transaction ledger
+    // instead of polling /accounts until it appears. Stellar encodes classic
+    // account sequences as (ledger << 32) after a createAccount operation; the builder adds 1.
+    let sequence: string | undefined;
+    const funded = (await fundResponse.json()) as { hash?: string };
+    if (funded.hash) {
+      const fundingTx = await fetch(`${HORIZON_TESTNET}/transactions/${funded.hash}`);
+      if (fundingTx.ok) {
+        const info = (await fundingTx.json()) as { ledger?: number };
+        if (typeof info.ledger === "number") {
+          sequence = String(BigInt(info.ledger) << 32n);
+        }
+      }
+    }
+    const fundedMs = Date.now() - started;
+    const account = sequence
+      ? { sequence }
+      : await waitForAccount(source.publicKey());
+    const accountMs = Date.now() - started;
     const transaction = new TransactionBuilder(new Account(source.publicKey(), account.sequence), {
       fee: "100",
       networkPassphrase: Networks.TESTNET,
@@ -112,6 +132,7 @@ export async function POST(request: Request) {
       body: new URLSearchParams({ tx: transaction.toXdr() }).toString(),
     });
     const submitted = (await submitResponse.json()) as { hash?: string; result_codes?: unknown };
+    console.info(JSON.stringify({ event: "payment_timing", keygenMs, fundedMs, accountMs, totalMs: Date.now() - started }));
     if (!submitResponse.ok || !submitted.hash) {
       console.warn(JSON.stringify({ event: "payment_rejected", detail: submitted }));
       return NextResponse.json({ error: "Transaction rejected", detail: submitted }, { status: 502 });
