@@ -20,8 +20,8 @@
 //! double settlement impossible.
 
 use soroban_sdk::{
-    contract, contracterror, contractevent, contractimpl, contracttype, token::TokenClient, Address,
-    Bytes, BytesN, Env, MuxedAddress, Symbol,
+    contract, contracterror, contractevent, contractimpl, contracttype, token::TokenClient,
+    Address, Bytes, BytesN, Env, MuxedAddress, Symbol,
 };
 
 /// Every state transition emits this typed event.
@@ -106,6 +106,19 @@ pub enum DataKey {
     EscrowAsset,
 }
 
+/// Instance-storage TTL policy (in ledgers). Testnet ledger ~5 s, so the
+/// extension covers roughly one year and stays below the protocol maximum
+/// (6_312_000 ledgers). Every successful mutating call refreshes it, so an
+/// encounter with live escrow cannot silently expire while funds are held.
+const TTL_THRESHOLD: u32 = 5_000_000;
+const TTL_EXTEND: u32 = 6_000_000;
+
+fn keep_storage(env: &Env) {
+    env.storage()
+        .instance()
+        .extend_ttl(TTL_THRESHOLD, TTL_EXTEND);
+}
+
 #[contract]
 pub struct EcstasyContract;
 
@@ -137,7 +150,10 @@ fn emit(env: &Env, name: &str, id: u64, status: EncounterStatus, stake: i128, ac
 /// Accounting helpers for funds that belong to an encounter and therefore
 /// must never be withdrawable by `retirar`.
 fn reserved_stake(env: &Env) -> i128 {
-    env.storage().instance().get(&DataKey::ReservedStake).unwrap_or(0)
+    env.storage()
+        .instance()
+        .get(&DataKey::ReservedStake)
+        .unwrap_or(0)
 }
 
 fn reserve(env: &Env, amount: i128) -> Result<(), EcstasyError> {
@@ -227,6 +243,7 @@ impl EcstasyContract {
         expires_at: u64,
     ) -> Result<u64, EcstasyError> {
         creator.require_auth();
+        keep_storage(&env);
 
         if creator == participant {
             return Err(EcstasyError::SelfEncounter);
@@ -295,6 +312,7 @@ impl EcstasyContract {
         encounter_id: u64,
     ) -> Result<(), EcstasyError> {
         participant.require_auth();
+        keep_storage(&env);
         let mut encounter = load(&env, encounter_id)?;
         if encounter.participant != participant {
             return Err(EcstasyError::NotParty);
@@ -326,6 +344,7 @@ impl EcstasyContract {
         encounter_id: u64,
     ) -> Result<(), EcstasyError> {
         participant.require_auth();
+        keep_storage(&env);
         let mut encounter = load(&env, encounter_id)?;
         if encounter.participant != participant {
             return Err(EcstasyError::NotParty);
@@ -362,6 +381,7 @@ impl EcstasyContract {
         encounter_id: u64,
     ) -> Result<(), EcstasyError> {
         caller.require_auth();
+        keep_storage(&env);
         let mut encounter = load(&env, encounter_id)?;
         ensure_party(&encounter, &caller)?;
         if is_expired(&env, &encounter) {
@@ -422,6 +442,7 @@ impl EcstasyContract {
         encounter_id: u64,
     ) -> Result<(), EcstasyError> {
         caller.require_auth();
+        keep_storage(&env);
         let mut encounter = load(&env, encounter_id)?;
         ensure_party(&encounter, &caller)?;
         if encounter.status != EncounterStatus::Completed {
@@ -432,7 +453,12 @@ impl EcstasyContract {
         }
 
         if encounter.stake > 0 {
-            payout_from_contract(&env, &encounter.asset, &encounter.participant, encounter.stake);
+            payout_from_contract(
+                &env,
+                &encounter.asset,
+                &encounter.participant,
+                encounter.stake,
+            );
             release(&env, encounter.stake)?;
         }
 
@@ -466,6 +492,7 @@ impl EcstasyContract {
         encounter_id: u64,
     ) -> Result<(), EcstasyError> {
         caller.require_auth();
+        keep_storage(&env);
         let mut encounter = load(&env, encounter_id)?;
         ensure_party(&encounter, &caller)?;
         if is_expired(&env, &encounter) {
@@ -500,6 +527,7 @@ impl EcstasyContract {
     /// A failed invocation would roll back the refund, so expiry is committed
     /// in this successful, idempotent-on-terminal-state transition.
     pub fn expire_encounter(env: Env, encounter_id: u64) -> Result<(), EcstasyError> {
+        keep_storage(&env);
         let mut encounter = load(&env, encounter_id)?;
         if !is_expired(&env, &encounter) {
             return Err(EcstasyError::InvalidState);
@@ -527,11 +555,7 @@ impl EcstasyContract {
     /// call it, and only the surplus above `ReservedStake` is transferred.
     /// This is a real value-moving state transition with an event; it cannot
     /// drain locked stakes. Returns the amount withdrawn.
-    pub fn retirar(
-        env: Env,
-        caller: Address,
-        encounter_id: u64,
-    ) -> Result<i128, EcstasyError> {
+    pub fn retirar(env: Env, caller: Address, encounter_id: u64) -> Result<i128, EcstasyError> {
         caller.require_auth();
         let encounter = load(&env, encounter_id)?;
         if caller != encounter.creator {
@@ -547,7 +571,8 @@ impl EcstasyContract {
             return Err(EcstasyError::InvalidAsset);
         }
 
-        let balance = TokenClient::new(&env, &encounter.asset).balance(&env.current_contract_address());
+        let balance =
+            TokenClient::new(&env, &encounter.asset).balance(&env.current_contract_address());
         let reserved = reserved_stake(&env);
         if balance <= reserved {
             return Err(EcstasyError::InvalidState);
@@ -575,6 +600,7 @@ impl EcstasyContract {
         score: u32,
     ) -> Result<(), EcstasyError> {
         caller.require_auth();
+        keep_storage(&env);
         let encounter = load(&env, encounter_id)?;
         ensure_party(&encounter, &caller)?;
         if encounter.status != EncounterStatus::Settled {

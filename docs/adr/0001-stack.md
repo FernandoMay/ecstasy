@@ -19,9 +19,10 @@ Verified locally on Testnet:
 |---|---|
 | Rust / Cargo | 1.99.1 |
 | `soroban-sdk` (manifest) | 29.0.0 (resolves to 29.0.1) |
-| Stellar CLI | 30.0.1 |
+| Stellar CLI | 30.0.1 (pinned in CI and deploy scripts) |
+| Rust toolchain | 1.99.1 (`contracts/ecstasy/rust-toolchain.toml`) |
 | Wasm target | `wasm32v1-none` |
-| Node | 26.13.1 |
+| Node | 26.13.1 local; CI + Netlify pinned to 24 |
 | TypeScript | 7.0.2 |
 | Next.js | 16.4.6 |
 | React / React DOM | 19.3.1 |

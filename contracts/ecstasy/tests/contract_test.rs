@@ -58,16 +58,14 @@ fn setup(_stake: i128) -> Setup {
 }
 
 fn create(s: &Setup) -> u64 {
-    s.client
-        .create_encounter(
-            &s.creator,
-            &s.participant,
-            &s.asset,
-            &STAKE,
-            &s.terms_hash,
-            &EXPIRY,
-        )
-        
+    s.client.create_encounter(
+        &s.creator,
+        &s.participant,
+        &s.asset,
+        &STAKE,
+        &s.terms_hash,
+        &EXPIRY,
+    )
 }
 
 fn accept_and_complete(s: &Setup, id: u64) {
@@ -80,7 +78,13 @@ fn accept_and_complete(s: &Setup, id: u64) {
 /// topics `("ecstasy", id, name)`.
 fn event_names(s: &Setup) -> Vec<Symbol> {
     let mut names = Vec::new(&s.env);
-    for event in s.env.events().all().filter_by_contract(&s.contract_id).events() {
+    for event in s
+        .env
+        .events()
+        .all()
+        .filter_by_contract(&s.contract_id)
+        .events()
+    {
         let soroban_sdk::xdr::ContractEventBody::V0(body) = &event.body;
         for topic in body.topics.iter() {
             if let soroban_sdk::xdr::ScVal::Symbol(name) = topic {
@@ -178,17 +182,14 @@ fn create_locks_stake_and_zero_stake_is_allowed() {
     assert_eq!(s.token.balance(&s.contract_id), STAKE);
 
     let free = setup_with_zero_stake();
-    let free_id = free
-        .client
-        .create_encounter(
-            &free.creator,
-            &free.participant,
-            &free.asset,
-            &0,
-            &free.terms_hash,
-            &EXPIRY,
-        )
-        ;
+    let free_id = free.client.create_encounter(
+        &free.creator,
+        &free.participant,
+        &free.asset,
+        &0,
+        &free.terms_hash,
+        &EXPIRY,
+    );
     assert_eq!(free.token.balance(&free.creator), FUNDS);
     assert_eq!(free.token.balance(&free.contract_id), 0);
     accept_and_complete(&free, free_id);
@@ -228,10 +229,7 @@ fn accept_rejects_wrong_participant() {
         s.client.try_accept_encounter(&s.outsider, &id),
         Err(Ok(EcstasyError::NotParty))
     );
-    assert_eq!(
-        s.client.get_encounter(&id).status,
-        EncounterStatus::Created
-    );
+    assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Created);
 }
 
 #[test]
@@ -242,7 +240,10 @@ fn decline_refunds_creator_and_is_terminal() {
     s.client.decline_encounter(&s.participant, &id);
     let events = event_names(&s);
 
-    assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Cancelled);
+    assert_eq!(
+        s.client.get_encounter(&id).status,
+        EncounterStatus::Cancelled
+    );
     assert_eq!(s.token.balance(&s.creator), FUNDS);
     assert_eq!(s.token.balance(&s.contract_id), 0);
     assert_eq!(
@@ -263,7 +264,10 @@ fn cancel_refunds_creator_from_created_and_accepted() {
 
         s.client.cancel_encounter(&s.creator, &id);
 
-        assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Cancelled);
+        assert_eq!(
+            s.client.get_encounter(&id).status,
+            EncounterStatus::Cancelled
+        );
         assert_eq!(s.token.balance(&s.creator), FUNDS);
         assert_eq!(s.token.balance(&s.contract_id), 0);
     }
@@ -361,10 +365,7 @@ fn expiry_is_enforced_on_chain_and_refunds_creator() {
     s.env.ledger().with_mut(|li| li.timestamp = EXPIRY + 1);
 
     // Read-only view derives EXPIRED even before any transaction touches it.
-    assert_eq!(
-        s.client.get_encounter(&id).status,
-        EncounterStatus::Expired
-    );
+    assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Expired);
     assert_eq!(
         s.client.try_accept_encounter(&s.participant, &id),
         Err(Ok(EcstasyError::Expired))
@@ -466,16 +467,14 @@ fn terms_hash_changes_are_recorded_as_distinct_commitments() {
     let different = BytesN::from_array(&s.env, &changed);
     assert_ne!(s.terms_hash, different);
 
-    s.client
-        .create_encounter(
-            &s.creator,
-            &s.participant,
-            &s.asset,
-            &0,
-            &different,
-            &EXPIRY,
-        )
-        ;
+    s.client.create_encounter(
+        &s.creator,
+        &s.participant,
+        &s.asset,
+        &0,
+        &different,
+        &EXPIRY,
+    );
     assert_eq!(s.client.get_encounter(&id).terms_hash, s.terms_hash);
     assert_eq!(s.client.get_encounter(&2).terms_hash, different);
 }
@@ -570,19 +569,20 @@ fn retirar_cannot_consume_another_assets_surplus() {
     let s = setup(STAKE);
     // Pin the *other* asset as this deployment's escrow asset.
     let other_admin = Address::generate(&s.env);
-    let other_asset = s.env.register_stellar_asset_contract_v2(other_admin.clone()).address();
+    let other_asset = s
+        .env
+        .register_stellar_asset_contract_v2(other_admin.clone())
+        .address();
     let other_token = TokenClient::new(&s.env, &other_asset);
 
-    let id = s
-        .client
-        .create_encounter(
-            &s.creator,
-            &s.participant,
-            &other_asset,
-            &0,
-            &s.terms_hash,
-            &EXPIRY,
-        );
+    let id = s.client.create_encounter(
+        &s.creator,
+        &s.participant,
+        &other_asset,
+        &0,
+        &s.terms_hash,
+        &EXPIRY,
+    );
     assert_eq!(s.client.get_encounter(&id).asset, other_asset);
 
     // Surplus arrives in a different asset; it must not be withdrawable
@@ -599,4 +599,33 @@ fn retirar_cannot_consume_another_assets_surplus() {
     );
     assert_eq!(other_token.balance(&s.contract_id), 0);
     assert_eq!(s.token.balance(&s.contract_id), 500);
+}
+
+#[test]
+fn escrow_state_survives_long_ledger_advance() {
+    let s = setup(STAKE);
+    let id = create(&s);
+
+    // Advance far beyond both the encounter expiry and any default TTL. The
+    // mutating create call extended the instance storage TTL.
+    s.env.ledger().with_mut(|li| {
+        li.sequence_number += 200_000;
+        li.timestamp += 200_000 * 5;
+    });
+
+    let after = s.client.get_encounter(&id);
+    assert_eq!(after.id, id);
+    assert_eq!(after.stake, STAKE);
+    assert_eq!(after.asset, s.asset);
+    assert_eq!(after.status, EncounterStatus::Expired);
+
+    // Surplus withdrawal still honours the reserve after the ledger advance.
+    s.issuer.mint(&s.contract_id, &321);
+    assert_eq!(s.client.retirar(&s.creator, &id), 321);
+    assert_eq!(s.token.balance(&s.contract_id), STAKE);
+
+    // Expiry refund is committed after the same advance.
+    s.client.expire_encounter(&id);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+    assert_eq!(s.token.balance(&s.creator), FUNDS + 321);
 }

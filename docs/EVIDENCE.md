@@ -8,13 +8,13 @@ Everything below was produced by real signed Stellar Testnet transactions. No RP
 |---|---|
 | Network | Testnet (`Test SDF Network ; September 2015`) |
 | Source commit | `7c04816` (`feat: implement ECSTASY Testnet vertical slice`) |
-| Contract ID (current, Sprint A) | `CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2` |
-| Wasm SHA-256 (current) | `42dafbf5864ea4d008783ed5c40a3e6f70d78d2ee4a85300304f854796adddb6` |
+| Contract ID (current, Sprint A) | `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` |
+| Wasm SHA-256 (current) | `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61` |
 | Previous contract IDs | `CB7IX7KXOT7EDVNRFKN5UAT5TNNBVIAGM2IFLZIHIZXPXW7WH7I35DJV` (`retirar`), `CBZKLJGQP6ZYYY7CV37RWAGU72U4I5HXXHAPYW657YI2VQIZDGLNBP7W` (earlier evidence below) |
 | Escrow asset | native XLM SAC `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
 | Creator identity | `arceus-deployer` → `GAUZSVWQY5KOFMWZA5YJEBOECWBGSZHPSADVI6G3ZB54JULLDL6IKISJ` |
 | Participant identity | `suite-admin` → `GBQV7XDOMA6342BHICZGIRBDOZVTMRL7A7A3MWVL4SRP7EH37NAPO5KQ` |
-| Contract explorer (current) | https://lab.stellar.org/r/testnet/contract/CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2 |
+| Contract explorer (current) | https://lab.stellar.org/r/testnet/contract/CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY |
 
 ## Deployment transactions
 
@@ -171,7 +171,7 @@ The web app no longer accepts a free-form asset: the configured SAC is read-only
 
 `apps/web/lib/payment-policy.ts` + the route now: ignore caller-controlled destination, validate the server-configured destination as a classic Stellar account (`G…`), reject non-Testnet configurations, cap request size, rate-limit per client (2 requests / 10 minutes), ignore request bodies, and emit structured logs with public hashes only. No secret material is stored, logged or returned. Five policy tests cover invalid addresses, config override, network gate, body size and rate limiting.
 
-**Production re-verification after Sprint A:** Netlify deploy `6b0669acdbff4010076d85a6` for commit `a5040462` reports "1 function deployed"; `GET /` → 200; the public JS bundle contains contract ID `CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2` (committed testnet preset, no UI override needed). `POST /api/challenge-payment` produced `da1d9f6018df0a93336e5b0294738c64d52b6c1d60d9d3317d10e8a327f600ed` with `successful: true` and memo `SHIP-S97KF8`; the third rapid call returned HTTP 429 `{"error":"Too many requests"}`, confirming the rate limit in production.
+**Production re-verification after Sprint A:** Netlify deploy `6b0669acdbff4010076d85a6` for commit `a5040462` reports "1 function deployed"; `GET /` → 200; the public JS bundle contains contract ID `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` (committed testnet preset, no UI override needed). `POST /api/challenge-payment` produced `da1d9f6018df0a93336e5b0294738c64d52b6c1d60d9d3317d10e8a327f600ed` with `successful: true` and memo `SHIP-S97KF8`; the third rapid call returned HTTP 429 `{"error":"Too many requests"}`, confirming the rate limit in production.
 
 ### P0.4 — Two-wallet browser E2E
 
@@ -197,6 +197,34 @@ To close that gap, `apps/web/lib/payment-policy.ts` adds `SharedRateLimiter` bac
 ### Browser E2E gate (blocked, not claimed)
 
 The in-app browser successfully loaded https://ecs-tasy.netlify.app/ (title and UI rendered), but `window.freighter` is absent: **Freighter is not installed in this browser**. No two-wallet signing flow, rejection, account switch or screenshots were executed. This gate remains explicitly open. Required next steps: install Freighter, create/fund two independent Testnet wallets, then run create → accept → complete ×2 → settle → afterglow ×2, plus decline/cancel/expiry, capturing hashes and screenshots.
+
+
+## Sprint C — Contract hardening and CI/deploy parity
+
+All work is on `main`; no new feature branches were needed.
+
+### Storage TTL
+
+Every successful mutating contract call now calls `extend_ttl(5_000_000, 6_000_000)` on instance storage (below the 6_312_000 ledger protocol maximum; Testnet ledger ≈ 5 s). A new test advances 200,000 ledgers and timestamps while an encounter holds escrow, then verifies: state is readable, status derives `Expired`, the reserve still blocks withdrawal of locked funds, surplus withdrawal works, and `expire_encounter` refunds the creator. 24 contract tests total.
+
+### Final WASM and deployment
+
+| Item | Value |
+|---|---|
+| Contract ID (Sprint C) | `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` |
+| Wasm SHA-256 | `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61` |
+| Full flow after redeploy | `584f839f…`, `b2739e80…`, `f0bd3830…`, `772dd8c2…`, `9692ac0b…`, `f17e588f…`, `af6bf779…` (final state `Settled`, marker `c8a8ccbc…`) |
+| `retirar` on final contract | `1f595ef796ff309c630b5d909cd7a27dd57a2c826b5d6c651139fb230b6d9ec6` (2 XLM surplus withdrawn) |
+
+The generated TypeScript client was regenerated from this exact WASM. CI now fails if the committed generated file differs from a fresh generation.
+
+### Parity and fail-closed config
+
+CI and Netlify both use Node 24; Rust 1.99.1 is pinned in `rust-toolchain.toml`; Stellar CLI 30.0.1 is pinned in CI and scripts. CI runs cargo check, fmt, clippy, 24 contract tests, wasm build, npm ci, 12 shared + 12 web tests, typecheck, production build and the bindings-sync check. `getConfig()` rejects unknown networks and requires `NEXT_PUBLIC_MAINNET_RELEASE=confirmed` plus explicit valid IDs for Mainnet; two new tests cover those gates.
+
+### Clean-clone verification
+
+Pending: will be recorded after running the full check suite from a fresh clone.
 
 ## Known limitations
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { NETWORK_PRESETS, getConfig, isConfigured } from "../src/config";
+import { NETWORK_PRESETS, getConfig, isAssetConfigured, isConfigured } from "../src/config";
 import { accountUrl, contractUrl, shortAddress, transactionUrl } from "../src/explorer";
 
 const config = {
@@ -33,5 +33,29 @@ describe("config", () => {
     expect(getConfig().network).toBe("testnet");
     expect(isConfigured({ ...config, contractId: "" })).toBe(false);
     expect(isConfigured(config)).toBe(true);
+  });
+});
+
+describe("config fails closed", () => {
+  it("rejects unknown networks", () => {
+    expect(() => getConfig({ NEXT_PUBLIC_STELLAR_NETWORK: "local" })).toThrow(/Invalid/);
+    expect(() => getConfig({ NEXT_PUBLIC_STELLAR_NETWORK: "" })).not.toThrow();
+  });
+
+  it("requires an explicit Mainnet release switch and IDs", () => {
+    expect(() => getConfig({ NEXT_PUBLIC_STELLAR_NETWORK: "mainnet" })).toThrow(/MAINNET_RELEASE/);
+    expect(() =>
+      getConfig({
+        NEXT_PUBLIC_STELLAR_NETWORK: "mainnet",
+        NEXT_PUBLIC_MAINNET_RELEASE: "confirmed",
+      }),
+    ).toThrow(/explicit valid/);
+  });
+
+  it("uses the reviewed Testnet preset by default", () => {
+    const config = getConfig({});
+    expect(config.network).toBe("testnet");
+    expect(isConfigured(config)).toBe(true);
+    expect(isAssetConfigured(config)).toBe(true);
   });
 });

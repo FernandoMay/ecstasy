@@ -58,7 +58,7 @@ The Ship It: Builder Challenge target is a small, demonstrable vertical slice ra
 
 ## Current status
 
-**Stage: Testnet vertical slice shipped.** The Soroban contract, its test suite, the shared Stellar package and the Next.js demo are implemented. The contract is deployed on Testnet and the full create → consent → complete → settle → afterglow flow has been executed with two real signed transactions per party. See `docs/EVIDENCE.md`.
+**Stage: Testnet Release Candidate (Sprint C complete; browser two-wallet E2E and Netlify Blobs mode still pending).** The Soroban contract, its test suite, the shared Stellar package and the Next.js demo are implemented. The contract is deployed on Testnet and the full create → consent → complete → settle → afterglow flow has been executed with two real signed transactions per party. See `docs/EVIDENCE.md`.
 
 ### Quickstart
 

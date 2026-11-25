@@ -60,6 +60,10 @@ Mitigation: no private content on-chain; avoid putting raw IPFS/public URLs in e
 - [x] tests for malformed hashes (32-byte commitment enforced in client and contract ABI)
 - [x] tests for zero/negative stake
 
+### Storage TTL
+
+All contract state lives in instance storage. Every successful mutating call extends the instance TTL (`TTL_THRESHOLD = 5_000_000`, `TTL_EXTEND = 6_000_000` ledgers, below the 6_312_000 protocol maximum), so an encounter with live escrow cannot silently expire while funds are held. A test advances 200,000 ledgers and verifies the encounter, reserve accounting, surplus withdrawal and expiry refund still work.
+
 ### Deployment-specific note
 
 `payout_from_contract` deliberately does **not** call `require_auth()` on the contract's own address. Doing so produces an auth entry that external wallets cannot sign; Soroban already treats the contract as the authorized direct invoker of the Stellar Asset Contract. This was verified on Testnet: settlement with the explicit self-auth failed, and succeeded after its removal.

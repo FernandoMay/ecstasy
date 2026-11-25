@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: contracts/ecstasy (wasm hash
-// 42dafbf5864ea4d008783ed5c40a3e6f70d78d2ee4a85300304f854796adddb6)
+// f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61)
 // Regenerate with: npm run generate:bindings --workspace=@ecstasy/stellar
 //
 import { Buffer } from "buffer";

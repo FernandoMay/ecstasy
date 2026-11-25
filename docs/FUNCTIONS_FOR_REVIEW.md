@@ -4,12 +4,12 @@ Registro dedicado — **se actualiza cada vez que se añade una funcionalidad nu
 
 | Nombre de la función | Tipo | Enlace a la transacción que la usa |
 |---|---|---|
-| `retirar(caller, encounter_id)` | Contrato Soroban (nueva función pública) | https://stellar.expert/explorer/testnet/tx/14a8a267412de480364c8f27fdb021eb47c36e8190589fe998b7db752b0ecf0e |
+| `retirar(caller, encounter_id)` | Contrato Soroban (nueva función pública) | https://stellar.expert/explorer/testnet/tx/1f595ef796ff309c630b5d909cd7a27dd57a2c826b5d6c651139fb230b6d9ec6 |
 | `POST /api/challenge-payment` (pago Testnet con memo `SHIP-S97KF8`) | Endpoint de la app | https://stellar.expert/explorer/testnet/tx/84d812fbbcc5098f6c028eda6a4396ae07fde049db74f0ef27d86762561e9fd8 |
 
 ## Detalle de `retirar`
 
-- Contrato `CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2` (wasm `42dafbf5864ea4d008783ed5c40a3e6f70d78d2ee4a85300304f854796adddb6`).
+- Contrato `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` (wasm `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61`).
 - Retira solo el excedente sobre `ReservedStake`; transfiere XLM real, emite `funds_withdrawn` y no puede vaciar el escrow reservado. Un segundo retiro sin excedente falla con `InvalidState` (#6).
 - Operación observada: transferencia de `20000000` stroops desde el contrato al creador + evento `funds_withdrawn`.
 - Tests: `contracts/ecstasy/tests/contract_test.rs`.

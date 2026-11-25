@@ -266,16 +266,16 @@ Do not do a broad find-and-replace of the word “demo”. Keep historical chall
 
 **Exit criteria:** a new user can complete the supported protocol without CLI intervention or developer-only steps.
 
-### Sprint C — Contract hardening and parity (not started)
+### Sprint C — Contract hardening and parity (complete)
 
-- [ ] Review and test Soroban storage TTL for active escrow and historical records.
-- [ ] Add adversarial tests for multi-asset behavior (or prove rejection of any asset other than the configured one).
-- [ ] Add ledger-advance/TTL tests.
-- [ ] Regenerate bindings from the final WASM and verify the generated source is in sync.
-- [ ] Align Node/Rust/Stellar CLI versions and enforce CI/deploy parity.
-- [ ] Run all checks from a clean clone.
+- [x] Review and test Soroban storage TTL for active escrow and historical records (TTL extension on every mutating call + ledger-advance test).
+- [x] Adversarial multi-asset tests: pinned asset + cross-asset surplus cannot be withdrawn (2 tests).
+- [x] Ledger-advance test: 200,000 ledgers with live escrow, state/reserve still readable.
+- [x] Bindings regenerated from final WASM; CI enforces `git diff --exit-code` on the generated file.
+- [x] CI/Netlify Node 24, Rust 1.99.1 (`rust-toolchain.toml`), Stellar CLI 30.0.1; fmt, clippy, tests, wasm build and bindings check mandatory.
+- [x] All checks run from a clean clone (see `docs/EVIDENCE.md`).
 
-**Exit criteria:** contract accounting and storage invariants are tested; generated client matches the deployed candidate WASM; CI is green.
+**Exit criteria:** contract accounting and storage invariants are tested; generated client matches the deployed candidate WASM; CI is green. P0.4 browser E2E and Netlify Blobs runtime mode remain open items outside this sprint.
 
 ### Sprint D — Release documentation and operations
 
