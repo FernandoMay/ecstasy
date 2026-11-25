@@ -169,7 +169,7 @@ The web app no longer accepts a free-form asset: the configured SAC is read-only
 
 `apps/web/lib/payment-policy.ts` + the route now: ignore caller-controlled destination, validate the server-configured destination as a classic Stellar account (`G…`), reject non-Testnet configurations, cap request size, rate-limit per client (2 requests / 10 minutes), ignore request bodies, and emit structured logs with public hashes only. No secret material is stored, logged or returned. Five policy tests cover invalid addresses, config override, network gate, body size and rate limiting.
 
-**Netlify follow-up:** if the Netlify UI defines `NEXT_PUBLIC_CONTRACT_ID`, update it to `CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2`. Otherwise the committed testnet preset is used automatically.
+**Production re-verification after Sprint A:** Netlify deploy `6b0669acdbff4010076d85a6` for commit `a5040462` reports "1 function deployed"; `GET /` → 200; the public JS bundle contains contract ID `CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2` (committed testnet preset, no UI override needed). `POST /api/challenge-payment` produced `da1d9f6018df0a93336e5b0294738c64d52b6c1d60d9d3317d10e8a327f600ed` with `successful: true` and memo `SHIP-S97KF8`; the third rapid call returned HTTP 429 `{"error":"Too many requests"}`, confirming the rate limit in production.
 
 ### P0.4 — Two-wallet browser E2E
 
