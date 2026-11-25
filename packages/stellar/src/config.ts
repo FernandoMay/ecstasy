@@ -12,6 +12,9 @@ export interface NetworkPreset {
   rpcUrl: string;
   networkPassphrase: string;
   explorerBaseUrl: string;
+  /** Public deployment defaults; environment variables override them. */
+  contractId: string;
+  assetContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -19,11 +22,15 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     rpcUrl: "https://soroban-testnet.stellar.org",
     networkPassphrase: "Testnet SDF",
     explorerBaseUrl: "https://explorer.stellar.org",
+    contractId: "CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2",
+    assetContractId: "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
     networkPassphrase: "Public Global Stellar Network ; September 2015",
     explorerBaseUrl: "https://explorer.stellar.org",
+    contractId: "",
+    assetContractId: "",
   },
 };
 
@@ -51,12 +58,17 @@ export function getConfig(): AppConfig {
     network,
     ...preset,
     rpcUrl: env("NEXT_PUBLIC_RPC_URL") ?? preset.rpcUrl,
-    contractId: env("NEXT_PUBLIC_CONTRACT_ID") ?? "",
-    assetContractId: env("NEXT_PUBLIC_ASSET_CONTRACT_ID") ?? "",
+    contractId: env("NEXT_PUBLIC_CONTRACT_ID") ?? preset.contractId,
+    assetContractId: env("NEXT_PUBLIC_ASSET_CONTRACT_ID") ?? preset.assetContractId,
     assetSymbol: env("NEXT_PUBLIC_ASSET_SYMBOL") ?? "XLM",
   };
 }
 
 export function isConfigured(config: AppConfig): boolean {
   return /^C[A-Z2-7]{55}$/.test(config.contractId);
+}
+
+/** The deployment supports exactly one escrow asset; validate that it is set. */
+export function isAssetConfigured(config: AppConfig): boolean {
+  return /^C[A-Z2-7]{55}$/.test(config.assetContractId);
 }

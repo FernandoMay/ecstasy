@@ -4,7 +4,7 @@ The ABI is generated from the contract spec; `packages/stellar/src/generated/ecs
 
 | Method | Actor | Effect | Errors |
 |---|---|---|---|
-| `create_encounter(creator, participant, asset, stake, terms_hash, expires_at) -> u64` | creator | Creates invitation and optional escrow | `SelfEncounter`, `InvalidStake`, `InvalidExpiry` |
+| `create_encounter(creator, participant, asset, stake, terms_hash, expires_at) -> u64` | creator | Creates invitation and optional escrow; pins the single escrow asset | `SelfEncounter`, `InvalidStake`, `InvalidExpiry`, `InvalidAsset` |
 | `accept_encounter(participant, id)` | participant | Explicit consent | `NotFound`, `NotParty`, `Expired`, `InvalidState` |
 | `decline_encounter(participant, id)` | participant | Cancels and refunds creator | `NotFound`, `NotParty`, `Expired`, `InvalidState` |
 | `complete_encounter(caller, id)` | either party | Records one completion flag | `NotFound`, `NotParty`, `Expired`, `InvalidState`, `AlreadyCompleted` |
@@ -29,6 +29,7 @@ The ABI is generated from the contract spec; `packages/stellar/src/generated/ecs
 | 8 | `AlreadyCompleted` |
 | 9 | `AlreadySubmitted` |
 | 10 | `Expired` |
+| 11 | `InvalidAsset` |
 
 ## Events
 

@@ -527,3 +527,76 @@ fn retirar_rejects_non_creator_and_empty_surplus() {
     );
     assert_eq!(s.token.balance(&s.contract_id), STAKE);
 }
+
+#[test]
+fn escrow_asset_is_pinned_per_deployment() {
+    let s = setup(STAKE);
+    let other_asset = s
+        .env
+        .register_stellar_asset_contract_v2(Address::generate(&s.env))
+        .address();
+
+    let id = create(&s);
+    assert_eq!(s.client.get_encounter(&id).asset, s.asset);
+
+    assert_eq!(
+        s.client.try_create_encounter(
+            &s.creator,
+            &s.participant,
+            &other_asset,
+            &0,
+            &s.terms_hash,
+            &EXPIRY,
+        ),
+        Err(Ok(EcstasyError::InvalidAsset))
+    );
+
+    // Even a zero-stake encounter cannot switch the pinned asset.
+    assert_eq!(
+        s.client.try_create_encounter(
+            &s.creator,
+            &s.participant,
+            &other_asset,
+            &0,
+            &s.terms_hash,
+            &EXPIRY,
+        ),
+        Err(Ok(EcstasyError::InvalidAsset))
+    );
+}
+
+#[test]
+fn retirar_cannot_consume_another_assets_surplus() {
+    let s = setup(STAKE);
+    // Pin the *other* asset as this deployment's escrow asset.
+    let other_admin = Address::generate(&s.env);
+    let other_asset = s.env.register_stellar_asset_contract_v2(other_admin.clone()).address();
+    let other_token = TokenClient::new(&s.env, &other_asset);
+
+    let id = s
+        .client
+        .create_encounter(
+            &s.creator,
+            &s.participant,
+            &other_asset,
+            &0,
+            &s.terms_hash,
+            &EXPIRY,
+        );
+    assert_eq!(s.client.get_encounter(&id).asset, other_asset);
+
+    // Surplus arrives in a different asset; it must not be withdrawable
+    // through an encounter pinned to `other_asset`.
+    s.issuer.mint(&s.contract_id, &500);
+    assert_eq!(other_token.balance(&s.contract_id), 0);
+    assert_eq!(s.token.balance(&s.contract_id), 500);
+
+    // The only surplus is in a non-pinned asset, so there is nothing to
+    // withdraw from the pinned escrow asset.
+    assert_eq!(
+        s.client.try_retirar(&s.creator, &id),
+        Err(Ok(EcstasyError::InvalidState))
+    );
+    assert_eq!(other_token.balance(&s.contract_id), 0);
+    assert_eq!(s.token.balance(&s.contract_id), 500);
+}

@@ -60,7 +60,7 @@ Encounter {
 | `get_encounter(encounter_id)` | public | Reads state with derived expiry |
 | `get_afterglow(encounter_id, participant)` | public | Reads one submitted score |
 
-Every mutating method returns `Result<(), EcstasyError>`; `create_encounter` returns `Result<u64, EcstasyError>`. Error codes (part of the ABI): `1 NotFound`, `2 NotParty`, `3 SelfEncounter`, `4 InvalidStake`, `5 InvalidExpiry`, `6 InvalidState`, `7 InvalidScore`, `8 AlreadyCompleted`, `9 AlreadySubmitted`, `10 Expired`.
+Every mutating method returns `Result<(), EcstasyError>`; `create_encounter` returns `Result<u64, EcstasyError>`. Error codes (part of the ABI): `1 NotFound`, `2 NotParty`, `3 SelfEncounter`, `4 InvalidStake`, `5 InvalidExpiry`, `6 InvalidState`, `7 InvalidScore`, `8 AlreadyCompleted`, `9 AlreadySubmitted`, `10 Expired`, `11 InvalidAsset`.
 
 ## 5. Authorization
 
@@ -70,7 +70,7 @@ Expiry refunds are committed by a **successful** permissionless transaction. A m
 
 ## 6. Escrow model
 
-One fungible Stellar Asset Contract per deployment, configured by `assetContractId`. No issuer is invented: the demo uses the native XLM SAC (`CDLZFC3S…YSC`). A no-stake encounter is always possible (`stake = 0`), and no token call is made in that case.
+One fungible Stellar Asset Contract per deployment, configured by `assetContractId` and pinned on-chain as `EscrowAsset` at the first create. Any different asset is rejected with `InvalidAsset`; `retirar` is scoped to the pinned asset so reserves cannot be consumed cross-asset. No issuer is invented: the demo uses the native XLM SAC (`CDLZFC3S…YSC`). A no-stake encounter is always possible (`stake = 0`), and no token call is made in that case.
 
 Escrow rules:
 

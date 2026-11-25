@@ -1,4 +1,4 @@
-export { getConfig, isConfigured, NETWORK_PRESETS } from "./config";
+export { getConfig, isConfigured, isAssetConfigured, NETWORK_PRESETS } from "./config";
 export type { AppConfig, NetworkName, NetworkPreset } from "./config";
 
 export {

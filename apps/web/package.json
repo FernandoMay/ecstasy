@@ -2,12 +2,13 @@
   "name": "@ecstasy/web",
   "version": "0.1.0",
   "private": true,
-  "description": "ECSTASY demo dApp — create, consent, complete, settle and leave afterglow on Stellar Testnet.",
+  "description": "ECSTASY demo dApp \u2014 create, consent, complete, settle and leave afterglow on Stellar Testnet.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@ecstasy/stellar": "0.1.0",
@@ -20,6 +21,7 @@
     "@types/node": "26.6.7",
     "@types/react": "19.3.1",
     "@types/react-dom": "19.3.0",
-    "typescript": "7.0.2"
+    "typescript": "7.0.2",
+    "vitest": "5.1.1"
   }
 }

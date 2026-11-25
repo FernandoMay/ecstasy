@@ -21,7 +21,6 @@ export interface WriteResult<T> {
 export interface CreateEncounterInput {
   creator: string;
   participant: string;
-  assetContractId: string;
   /** Stake in the asset's smallest unit (e.g. stroops for XLM). */
   stake: bigint;
   /** 32-byte SHA-256 digest of the canonical private terms. */
@@ -107,11 +106,17 @@ export class EcstasyService {
     if (input.stake < 0n) {
       throw new Error("stake cannot be negative");
     }
+    if (!/^C[A-Z2-7]{55}$/.test(this.config.assetContractId)) {
+      throw new Error("NEXT_PUBLIC_ASSET_CONTRACT_ID is not configured for this network");
+    }
+    // The configured asset is the only asset this deployment supports. It is
+    // injected here, never accepted from the caller.
+    const asset = this.config.assetContractId;
     const result = await this.send(
       await this.getClient().create_encounter({
         creator: input.creator,
         participant: input.participant,
-        asset: input.assetContractId,
+        asset,
         stake: input.stake,
         terms_hash: Buffer.from(input.termsHash),
         expires_at: input.expiresAt,

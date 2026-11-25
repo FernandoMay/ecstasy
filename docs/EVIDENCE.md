@@ -8,13 +8,13 @@ Everything below was produced by real signed Stellar Testnet transactions. No RP
 |---|---|
 | Network | Testnet (`Test SDF Network ; September 2015`) |
 | Source commit | `7c04816` (`feat: implement ECSTASY Testnet vertical slice`) |
-| Contract ID (current, with `retirar`) | `CB7IX7KXOT7EDVNRFKN5UAT5TNNBVIAGM2IFLZIHIZXPXW7WH7I35DJV` |
-| Wasm SHA-256 (current) | `1b7f83741c8f00930649cef538d600be3794a79571a8eb71bd516c11a5a984ba` |
-| Previous contract ID | `CBZKLJGQP6ZYYY7CV37RWAGU72U4I5HXXHAPYW657YI2VQIZDGLNBP7W` (evidence below still valid) |
+| Contract ID (current, Sprint A) | `CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2` |
+| Wasm SHA-256 (current) | `42dafbf5864ea4d008783ed5c40a3e6f70d78d2ee4a85300304f854796adddb6` |
+| Previous contract IDs | `CB7IX7KXOT7EDVNRFKN5UAT5TNNBVIAGM2IFLZIHIZXPXW7WH7I35DJV` (`retirar`), `CBZKLJGQP6ZYYY7CV37RWAGU72U4I5HXXHAPYW657YI2VQIZDGLNBP7W` (earlier evidence below) |
 | Escrow asset | native XLM SAC `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
 | Creator identity | `arceus-deployer` → `GAUZSVWQY5KOFMWZA5YJEBOECWBGSZHPSADVI6G3ZB54JULLDL6IKISJ` |
 | Participant identity | `suite-admin` → `GBQV7XDOMA6342BHICZGIRBDOZVTMRL7A7A3MWVL4SRP7EH37NAPO5KQ` |
-| Contract explorer (current) | https://lab.stellar.org/r/testnet/contract/CB7IX7KXOT7EDVNRFKN5UAT5TNNBVIAGM2IFLZIHIZXPXW7WH7I35DJV |
+| Contract explorer (current) | https://lab.stellar.org/r/testnet/contract/CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2 |
 
 ## Deployment transactions
 
@@ -144,6 +144,36 @@ curl -X POST https://ecs-tasy.netlify.app/api/challenge-payment                #
 | Horizon readback | `successful: true`, `payment`, `0.0001000 XLM`, `to: GAUZSVWQ…6IKISJ` |
 
 No Stellar secret keys or seed phrases are configured in Netlify environment variables. The endpoint generates an ephemeral friendbot-funded keypair per request.
+
+
+## Sprint A — P0 corrections (audit `DEMO_MODE_DEPRECATION_AND_PRODUCTION_READINESS.md`)
+
+### P0.1 — Stale terms commitment
+
+`apps/web/lib/terms-form.ts` now builds the terms document and digest from the current form values on **every** preview and on submit. Any edit clears the preview and shows "Terms changed — preview again"; the form locks after a successful create and the copy button emits the exact submitted document. Four regression tests cover preview→edit→submit, preview→no-edit stability, edits to every term field, and malformed values.
+
+### P0.2 — Single escrow asset enforced on-chain
+
+The contract pins `EscrowAsset` on the first `create_encounter` and rejects any different asset with `InvalidAsset` (code `11`), including zero-stake creates. `retirar` also verifies the encounter asset matches the pinned asset, so one asset's reserve cannot be consumed through another. Two new contract tests cover pinning and cross-asset surplus.
+
+Testnet verification on the current contract:
+
+| Check | Result |
+|---|---|
+| Full create → accept → complete ×2 → settle → afterglow ×2 | succeeded, 7 real transactions: `f53d02f1…`, `f4cc2d64…`, `9eb9f213…`, `f272bdc0…`, `f685c8bd…`, `a9388eb8…`, `4ec7f294…`; final readback `Settled`, marker `88b7df30…` |
+| `create_encounter` with a different asset, stake 0 | `HostError: Error(Contract, #11)` = `InvalidAsset` |
+
+The web app no longer accepts a free-form asset: the configured SAC is read-only, the service injects it and rejects an unconfigured value before building a transaction. Network presets carry explicit public defaults so production works without extra Netlify env vars; env vars still override.
+
+### P0.3 — Payment route hardened
+
+`apps/web/lib/payment-policy.ts` + the route now: ignore caller-controlled destination, validate the server-configured destination as a classic Stellar account (`G…`), reject non-Testnet configurations, cap request size, rate-limit per client (2 requests / 10 minutes), ignore request bodies, and emit structured logs with public hashes only. No secret material is stored, logged or returned. Five policy tests cover invalid addresses, config override, network gate, body size and rate limiting.
+
+**Netlify follow-up:** if the Netlify UI defines `NEXT_PUBLIC_CONTRACT_ID`, update it to `CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2`. Otherwise the committed testnet preset is used automatically.
+
+### P0.4 — Two-wallet browser E2E
+
+Still pending: no Freighter extension is available in this execution environment. CLI/RPC E2E and production payment evidence remain valid; browser evidence will be added separately.
 
 ## Known limitations
 

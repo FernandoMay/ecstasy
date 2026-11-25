@@ -248,13 +248,13 @@ Do not do a broad find-and-replace of the word “demo”. Keep historical chall
 
 ### Sprint A — Correctness and abuse prevention
 
-- [ ] Fix stale terms hash/document state in `CreateEncounterForm.tsx`.
-- [ ] Enforce one asset per deployment end-to-end, or implement per-asset reserve accounting in the contract.
-- [ ] Decide whether to remove/isolate `POST /api/challenge-payment`; if retained, fix destination validation, rate limiting, Testnet-only guard and abuse handling.
+- [x] Fix stale terms hash/document state in `CreateEncounterForm.tsx` (`lib/terms-form.ts` + 4 regression tests).
+- [x] Enforce one asset per deployment end-to-end (`EscrowAsset` + `InvalidAsset` #11, verified on Testnet; 2 contract tests).
+- [x] Retain `POST /api/challenge-payment` as a Testnet-only fixed-destination route with validation, rate limit, size cap and structured logs (5 policy tests).
 - [ ] Validate encounter IDs and improve not-found/RPC error states.
-- [ ] Add regression tests for each fix.
+- [x] Add regression tests for each fix (23 contract tests, 7 shared-package tests, 9 web tests).
 
-**Exit criteria:** no visible-vs-committed terms mismatch; no cross-asset reserve ambiguity; no unrestricted public payment route.
+**Exit criteria:** no visible-vs-committed terms mismatch; no cross-asset reserve ambiguity; no unrestricted public payment route. Sprint A implementation complete; P0.4 browser E2E remains pending (see `docs/EVIDENCE.md`).
 
 ### Sprint B — Wallet and complete UX
 

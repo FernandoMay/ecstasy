@@ -53,6 +53,7 @@ pub enum EcstasyError {
     AlreadyCompleted = 8,
     AlreadySubmitted = 9,
     Expired = 10,
+    InvalidAsset = 11,
 }
 
 /// Lifecycle of an encounter.
@@ -101,6 +102,8 @@ pub enum DataKey {
     /// Total stake still locked across all non-terminal encounters. Used to
     /// protect escrow from the `retirar` withdrawal of surplus funds.
     ReservedStake,
+    /// The single asset contract allowed for escrow in this deployment.
+    EscrowAsset,
 }
 
 #[contract]
@@ -235,6 +238,18 @@ impl EcstasyContract {
         if expires_at <= now {
             return Err(EcstasyError::InvalidExpiry);
         }
+
+        let configured_asset: Address = env
+            .storage()
+            .instance()
+            .get(&DataKey::EscrowAsset)
+            .unwrap_or_else(|| asset.clone());
+        if asset != configured_asset {
+            return Err(EcstasyError::InvalidAsset);
+        }
+        env.storage()
+            .instance()
+            .set(&DataKey::EscrowAsset, &configured_asset);
 
         let previous: u64 = env.storage().instance().get(&DataKey::Counter).unwrap_or(0);
         let id = previous.checked_add(1).ok_or(EcstasyError::InvalidState)?;
@@ -521,6 +536,15 @@ impl EcstasyContract {
         let encounter = load(&env, encounter_id)?;
         if caller != encounter.creator {
             return Err(EcstasyError::NotParty);
+        }
+
+        let configured_asset: Address = env
+            .storage()
+            .instance()
+            .get(&DataKey::EscrowAsset)
+            .ok_or(EcstasyError::InvalidAsset)?;
+        if encounter.asset != configured_asset {
+            return Err(EcstasyError::InvalidAsset);
         }
 
         let balance = TokenClient::new(&env, &encounter.asset).balance(&env.current_contract_address());

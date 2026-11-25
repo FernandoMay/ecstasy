@@ -1,56 +1,62 @@
 "use client";
 
-import {
-  TERMS_SCHEMA,
-  shortHash,
-  toHex,
-  termsDigest,
-  type Receipt,
-  type TermsDocument,
-} from "@ecstasy/stellar";
+import { isAssetConfigured, shortHash, type Receipt } from "@ecstasy/stellar";
 import Link from "next/link";
 import { useState } from "react";
 import { copyToClipboard, xlmToStroops } from "@/lib/format";
+import {
+  commitmentBytes,
+  commitmentForFields,
+  type TermsCommitment,
+  type TermsFormFields,
+} from "@/lib/terms-form";
 import { SettlementReceipt } from "./SettlementReceipt";
 import { useWallet } from "./WalletProvider";
 
 export function CreateEncounterForm() {
   const { config, address, service, connect } = useWallet();
+
   const [participant, setParticipant] = useState("");
-  const [asset, setAsset] = useState(config.assetContractId);
   const [stake, setStake] = useState("0");
   const [minutes, setMinutes] = useState("60");
   const [title, setTitle] = useState("A private agreement");
   const [summary, setSummary] = useState("What we agree to, in our own words.");
   const [boundaries, setBoundaries] = useState("Respect the agreed time\nNo recording");
   const [locationHint, setLocationHint] = useState("");
-  const [hash, setHash] = useState<string | null>(null);
-  const [terms, setTerms] = useState<TermsDocument | null>(null);
+  const [createdAt] = useState(() => new Date().toISOString());
+
+  const [preview, setPreview] = useState<TermsCommitment | null>(null);
+  const [submitted, setSubmitted] = useState<TermsCommitment | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [createdId, setCreatedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [copied, setCopied] = useState(false);
 
-  function buildTerms(): TermsDocument {
-    return {
-      schema: TERMS_SCHEMA,
-      title,
-      summary,
-      boundaries: boundaries.split("\n").map((line) => line.trim()).filter(Boolean),
-      durationMinutes: Number(minutes),
-      ...(locationHint.trim() ? { locationHint: locationHint.trim() } : {}),
-      createdAt: new Date().toISOString(),
-    };
+  const fields: TermsFormFields = {
+    title,
+    summary,
+    boundariesText: boundaries,
+    durationMinutes: minutes,
+    locationHint,
+  };
+  const locked = submitted !== null;
+  const assetReady = isAssetConfigured(config);
+
+  function change(update: () => void) {
+    if (locked) return;
+    update();
+    setPreview(null);
+    setDirty(true);
+    setCopied(false);
   }
 
   async function previewHash() {
     setError(null);
     try {
-      const document = buildTerms();
-      const digest = await termsDigest(document);
-      setTerms(document);
-      setHash(toHex(digest));
+      setPreview(await commitmentForFields(fields, createdAt));
+      setDirty(false);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause));
     }
@@ -61,29 +67,30 @@ export function CreateEncounterForm() {
       await connect();
       return;
     }
+    if (!assetReady) {
+      setError("NEXT_PUBLIC_ASSET_CONTRACT_ID is not configured for this network");
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
-      let document = terms;
-      let digestHex = hash;
-      if (!document || !digestHex) {
-        document = buildTerms();
-        digestHex = toHex(await termsDigest(document));
-        setTerms(document);
-        setHash(digestHex);
-      }
+      // Always recompute from the currently displayed form values. A preview
+      // is a display snapshot and can never become the submitted commitment.
+      const commitment = await commitmentForFields(fields, createdAt);
       const result = await service.create({
         creator: address,
         participant: participant.trim(),
-        assetContractId: asset.trim(),
         stake: xlmToStroops(stake),
-        termsHash: Uint8Array.from(digestHex.match(/.{2}/g)!.map((pair) => parseInt(pair, 16))),
+        termsHash: commitmentBytes(commitment.hex),
         expiresAt: BigInt(Math.floor(Date.now() / 1000) + Number(minutes) * 60),
       });
+      setSubmitted(commitment);
+      setPreview(commitment);
+      setDirty(false);
       setCreatedId(result.value.toString());
       setReceipt(result.receipt);
-      if (typeof window !== "undefined" && document) {
-        sessionStorage.setItem(`ecstasy:terms:${digestHex}`, JSON.stringify(document));
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem(`ecstasy:terms:${commitment.hex}`, JSON.stringify(commitment.terms));
       }
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause));
@@ -92,12 +99,15 @@ export function CreateEncounterForm() {
     }
   }
 
+  const shownCommitment = submitted ?? preview;
+
   return (
     <div className="card">
       <h2>Create encounter</h2>
       <p className="muted small">
         Private terms stay in this browser. Only the SHA-256 commitment and the agreed state
-        transition go on-chain.
+        transition go on-chain. The form locks once terms are committed so the visible document and
+        the submitted digest cannot diverge.
       </p>
 
       <div className="field">
@@ -107,63 +117,69 @@ export function CreateEncounterForm() {
           className="input mono"
           placeholder="G…"
           value={participant}
-          onChange={(event) => setParticipant(event.target.value)}
+          disabled={locked}
+          onChange={(event) => change(() => setParticipant(event.target.value))}
         />
       </div>
       <div className="field">
-        <label className="label" htmlFor="asset">Asset contract (escrow)</label>
-        <input
-          id="asset"
-          className="input mono"
-          placeholder="C…"
-          value={asset}
-          onChange={(event) => setAsset(event.target.value)}
-        />
-        <p className="muted small">Use {config.assetSymbol}. Leave the stake at 0 for no escrow.</p>
+        <label className="label">Asset contract (single escrow asset)</label>
+        <input className="input mono" value={config.assetContractId} readOnly aria-readonly="true" />
+        <p className="muted small">
+          {assetReady
+            ? `Pinned by this deployment (${config.assetSymbol}). A no-stake encounter is allowed.`
+            : "Configure NEXT_PUBLIC_ASSET_CONTRACT_ID to enable escrow contracts."}
+        </p>
       </div>
       <div className="row">
         <div className="field" style={{ flex: 1 }}>
           <label className="label" htmlFor="stake">Stake ({config.assetSymbol})</label>
-          <input id="stake" className="input" value={stake} onChange={(event) => setStake(event.target.value)} />
+          <input id="stake" className="input" value={stake} disabled={locked} onChange={(event) => change(() => setStake(event.target.value))} />
         </div>
         <div className="field" style={{ flex: 1 }}>
           <label className="label" htmlFor="minutes">Expiry (minutes)</label>
-          <input id="minutes" className="input" value={minutes} onChange={(event) => setMinutes(event.target.value)} />
+          <input id="minutes" className="input" value={minutes} disabled={locked} onChange={(event) => change(() => setMinutes(event.target.value))} />
         </div>
       </div>
       <div className="field">
         <label className="label" htmlFor="title">Title</label>
-        <input id="title" className="input" value={title} onChange={(event) => setTitle(event.target.value)} />
+        <input id="title" className="input" value={title} disabled={locked} onChange={(event) => change(() => setTitle(event.target.value))} />
       </div>
       <div className="field">
         <label className="label" htmlFor="summary">Private summary</label>
-        <textarea id="summary" className="textarea" value={summary} onChange={(event) => setSummary(event.target.value)} />
+        <textarea id="summary" className="textarea" value={summary} disabled={locked} onChange={(event) => change(() => setSummary(event.target.value))} />
       </div>
       <div className="field">
         <label className="label" htmlFor="boundaries">Boundaries (one per line)</label>
-        <textarea id="boundaries" className="textarea" value={boundaries} onChange={(event) => setBoundaries(event.target.value)} />
+        <textarea id="boundaries" className="textarea" value={boundaries} disabled={locked} onChange={(event) => change(() => setBoundaries(event.target.value))} />
       </div>
       <div className="field">
         <label className="label" htmlFor="location">Coarse location hint (optional)</label>
-        <input id="location" className="input" value={locationHint} onChange={(event) => setLocationHint(event.target.value)} />
+        <input id="location" className="input" value={locationHint} disabled={locked} onChange={(event) => change(() => setLocationHint(event.target.value))} />
       </div>
 
       <div className="row">
-        <button className="btn" onClick={previewHash}>Preview terms hash</button>
-        <button className="btn btn-primary" onClick={submit} disabled={busy}>
-          {busy ? "Submitting…" : address ? "Create encounter" : "Connect & create"}
+        <button className="btn" onClick={previewHash} disabled={locked || busy}>Preview terms hash</button>
+        <button className="btn btn-primary" onClick={submit} disabled={locked || busy || !assetReady}>
+          {busy ? "Submitting…" : locked ? "Terms committed" : address ? "Create encounter" : "Connect & create"}
         </button>
       </div>
 
-      {hash && (
+      {dirty && !preview && !locked && (
+        <div className="notice" style={{ marginTop: 18 }}>
+          Terms changed — preview again before creating.
+        </div>
+      )}
+
+      {shownCommitment && (
         <div className="notice" style={{ marginTop: 18, marginBottom: 0 }}>
           <div className="row" style={{ justifyContent: "space-between" }}>
-            <span className="mono small">sha256 · {shortHash(hash)}</span>
+            <span className="mono small">
+              {submitted ? "submitted" : "preview"} · sha256 {shortHash(shownCommitment.hex)}
+            </span>
             <button
               className="btn btn-small"
               onClick={async () => {
-                if (!terms) return;
-                await copyToClipboard(JSON.stringify(terms, null, 2));
+                await copyToClipboard(JSON.stringify(shownCommitment.terms, null, 2));
                 setCopied(true);
               }}
             >
@@ -171,8 +187,9 @@ export function CreateEncounterForm() {
             </button>
           </div>
           <p className="small muted" style={{ marginBottom: 0, marginTop: 8 }}>
-            Share these private terms through your own channel. The invitation link contains only
-            the encounter id — never the terms.
+            {submitted
+              ? "These are the exact terms whose digest was submitted. Share them through your own channel; the invitation link contains only the encounter id."
+              : "Share these private terms through your own channel. The invitation link contains only the encounter id — never the terms."}
           </p>
         </div>
       )}
@@ -188,9 +205,7 @@ export function CreateEncounterForm() {
             </Link>
             <button
               className="btn"
-              onClick={() =>
-                copyToClipboard(`${window.location.origin}/encounter/${createdId}`)
-              }
+              onClick={() => copyToClipboard(`${window.location.origin}/encounter/${createdId}`)}
             >
               Copy invitation link
             </button>

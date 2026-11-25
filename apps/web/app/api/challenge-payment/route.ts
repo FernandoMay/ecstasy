@@ -8,24 +8,38 @@ import {
   TransactionBuilder,
 } from "@stellar/stellar-sdk";
 import { NextResponse } from "next/server";
+import {
+  CHALLENGE_CODE,
+  PAYMENT_AMOUNT,
+  RateLimiter,
+  bodyTooLarge,
+  isPaymentRouteEnabled,
+  resolveDestination,
+} from "@/lib/payment-policy";
 
 /**
- * Mission 02 / "Pago relámpago": a real Testnet payment sent by this app with
- * the challenge code in the transaction memo.
+ * Mission 02 payment, enabled only on Testnet.
  *
- * The source is an ephemeral keypair generated per request and funded by
- * Testnet friendbot. No secret key is stored, logged, or sent to the client.
+ * Hardened after the production-readiness audit:
+ * - destination is server-controlled and validated, never caller-supplied;
+ * - per-client rate limit and request-size cap before any Friendbot call;
+ * - ephemeral friendbot-funded keypair per request; no secret is stored,
+ *   logged or returned;
+ * - structured logs contain only public hashes/addresses.
  */
 export const runtime = "nodejs";
 
-export const CHALLENGE_CODE = "SHIP-S97KF8";
 const HORIZON_TESTNET = "https://horizon-testnet.stellar.org";
 const FRIEND_BOT = "https://friendbot.stellar.org";
-const AMOUNT = "0.0001";
-const DEFAULT_DESTINATION = "GAUZSVWQY5KOFMWZA5YJEBOECWBGSZHPSADVI6G3ZB54JULLDL6IKISJ";
+const limiter = new RateLimiter();
 
 function explorerUrl(hash: string): string {
   return `https://stellar.expert/explorer/testnet/tx/${hash}`;
+}
+
+function clientKey(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  return forwarded?.split(",")[0]?.trim() || "unknown";
 }
 
 async function waitForAccount(address: string): Promise<{ sequence: string }> {
@@ -40,13 +54,36 @@ async function waitForAccount(address: string): Promise<{ sequence: string }> {
 }
 
 export async function POST(request: Request) {
-  try {
-    const body = (await request.json().catch(() => ({}))) as { destination?: string };
-    const destination = body.destination ?? process.env.PAYMENT_DESTINATION ?? DEFAULT_DESTINATION;
+  if (!isPaymentRouteEnabled(process.env.NEXT_PUBLIC_STELLAR_NETWORK)) {
+    return NextResponse.json({ error: "Payment route is Testnet-only" }, { status: 403 });
+  }
+  if (request.method !== "POST") {
+    return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+  }
+  if (bodyTooLarge(request.headers.get("content-length"))) {
+    return NextResponse.json({ error: "Request too large" }, { status: 413 });
+  }
+  if (!limiter.check(clientKey(request))) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
 
+  let destination: string;
+  try {
+    destination = resolveDestination(process.env.PAYMENT_DESTINATION);
+  } catch (cause) {
+    return NextResponse.json(
+      { error: cause instanceof Error ? cause.message : String(cause) },
+      { status: 500 },
+    );
+  }
+  // The request body is deliberately ignored: no caller-controlled input can
+  // change the memo, amount, asset or destination.
+
+  try {
     const source = Keypair.random();
     const fundResponse = await fetch(`${FRIEND_BOT}?addr=${source.publicKey()}`);
     if (!fundResponse.ok) {
+      console.warn(JSON.stringify({ event: "friendbot_failed", status: fundResponse.status }));
       throw new Error(`Friendbot failed with HTTP ${fundResponse.status}`);
     }
 
@@ -59,7 +96,7 @@ export async function POST(request: Request) {
         Operation.payment({
           destination,
           asset: Asset.native(),
-          amount: AMOUNT,
+          amount: PAYMENT_AMOUNT,
         }),
       )
       .addMemo(Memo.text(CHALLENGE_CODE))
@@ -74,19 +111,28 @@ export async function POST(request: Request) {
     });
     const submitted = (await submitResponse.json()) as { hash?: string; result_codes?: unknown };
     if (!submitResponse.ok || !submitted.hash) {
-      return NextResponse.json(
-        { error: "Transaction rejected", detail: submitted },
-        { status: 502 },
-      );
+      console.warn(JSON.stringify({ event: "payment_rejected", detail: submitted }));
+      return NextResponse.json({ error: "Transaction rejected", detail: submitted }, { status: 502 });
     }
+
+    console.info(
+      JSON.stringify({
+        event: "challenge_payment_submitted",
+        network: "testnet",
+        memo: CHALLENGE_CODE,
+        amount: PAYMENT_AMOUNT,
+        source: source.publicKey(),
+        destination,
+        hash: submitted.hash,
+      }),
+    );
 
     return NextResponse.json({
       hash: submitted.hash,
       explorerUrl: explorerUrl(submitted.hash),
       memo: CHALLENGE_CODE,
-      amount: AMOUNT,
+      amount: PAYMENT_AMOUNT,
       destination,
-      source: source.publicKey(),
       network: "testnet",
     });
   } catch (cause) {
