@@ -51,3 +51,55 @@ describe("payment route policy (P0.3)", () => {
     expect(limiter.check("ip-1", 11_001)).toBe(true);
   });
 });
+
+class FakeBlobStore {
+  private data = new Map<string, { value: unknown; etag: string }>();
+  private version = 0;
+
+  async getWithMetadata(key: string) {
+    const entry = this.data.get(key);
+    return entry ? { data: entry.value, etag: entry.etag } : null;
+  }
+
+  async setJSON(key: string, value: unknown, options: { onlyIfMatch?: string; onlyIfNew?: boolean }) {
+    const current = this.data.get(key);
+    if (options.onlyIfNew && current) return { modified: false };
+    if (options.onlyIfMatch && current?.etag !== options.onlyIfMatch) return { modified: false };
+    const etag = `etag-${++this.version}`;
+    this.data.set(key, { value, etag });
+    return { modified: true };
+  }
+}
+
+describe("distributed rate limiter (Sprint B)", () => {
+  it("holds the cap across independent instances sharing a store", async () => {
+    const store = new FakeBlobStore();
+    const instanceA = new (await import("../lib/payment-policy")).SharedRateLimiter(store, 2, 10_000);
+    const instanceB = new (await import("../lib/payment-policy")).SharedRateLimiter(store, 2, 10_000);
+
+    const results = await Promise.all([
+      instanceA.check("client-x", 0),
+      instanceB.check("client-x", 0),
+      instanceA.check("client-x", 0),
+      instanceB.check("client-x", 0),
+    ]);
+    expect(results.filter(Boolean)).toHaveLength(2);
+  });
+
+  it("keeps separate keys independent", async () => {
+    const store = new FakeBlobStore();
+    const { SharedRateLimiter } = await import("../lib/payment-policy");
+    const limiter = new SharedRateLimiter(store, 2, 10_000);
+    expect(await limiter.check("client-a", 0)).toBe(true);
+    expect(await limiter.check("client-b", 0)).toBe(true);
+  });
+
+  it("expires old hits and resets", async () => {
+    const store = new FakeBlobStore();
+    const { SharedRateLimiter } = await import("../lib/payment-policy");
+    const limiter = new SharedRateLimiter(store, 1, 10_000);
+    expect(await limiter.check("client-c", 0)).toBe(true);
+    expect(await limiter.check("client-c", 1)).toBe(false);
+    expect(await limiter.check("client-c", 11_000)).toBe(true);
+  });
+});

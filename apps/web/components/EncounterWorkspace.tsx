@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  parseEncounterId,
   shortAddress,
   statusName,
   type Encounter,
@@ -30,7 +31,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
 
   const refresh = useCallback(async () => {
     try {
-      setEncounter(await service.read(BigInt(id)));
+      setEncounter(await service.read(parseEncounterId(id)));
       setError(null);
     } catch (cause) {
       setError(message(cause));
@@ -47,8 +48,8 @@ export function EncounterWorkspace({ id }: { id: string }) {
     (async () => {
       try {
         const [creator, participant] = await Promise.all([
-          service.getAfterglow(BigInt(id), encounter.creator),
-          service.getAfterglow(BigInt(id), encounter.participant),
+          service.getAfterglow(parseEncounterId(id), encounter.creator),
+          service.getAfterglow(parseEncounterId(id), encounter.participant),
         ]);
         setScores({ creator, participant });
       } catch {
@@ -85,7 +86,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
   const isCreator = Boolean(address && address === encounter.creator);
   const isParticipant = Boolean(address && address === encounter.participant);
   const isParty = isCreator || isParticipant;
-  const encounterId = BigInt(id);
+  const encounterId = parseEncounterId(id);
 
   return (
     <>

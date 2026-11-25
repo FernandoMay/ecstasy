@@ -11,6 +11,7 @@ import {
   requestAccess,
   signAuthEntry,
   signTransaction,
+  WatchWalletChanges,
 } from "@stellar/freighter-api";
 import type { SignAuthEntryLike, SignTransactionLike } from "@stellar/stellar-sdk/contract";
 
@@ -27,6 +28,8 @@ export interface WalletAdapter {
   signTransaction: SignTransactionLike;
   signAuthEntry: SignAuthEntryLike;
   getNetwork(): Promise<{ network: string; networkPassphrase: string }>;
+  /** Subscribe to account/network changes; returns an unsubscribe function. */
+  watchChanges(callback: (info: { address: string; networkPassphrase: string }) => void): () => void;
 }
 
 function message(error: unknown): string {
@@ -87,6 +90,15 @@ export class FreighterWallet implements WalletAdapter {
       throw new Error(result.error ? message(result.error) : "Could not read wallet network");
     }
     return { network: result.network, networkPassphrase: result.networkPassphrase };
+  }
+
+  watchChanges(callback: (info: { address: string; networkPassphrase: string }) => void): () => void {
+    const watcher = new WatchWalletChanges(3000);
+    watcher.watch((params) => {
+      if (params.error || !params.address) return;
+      callback({ address: params.address, networkPassphrase: params.networkPassphrase });
+    });
+    return () => watcher.stop();
   }
 }
 

@@ -256,9 +256,9 @@ Do not do a broad find-and-replace of the word “demo”. Keep historical chall
 
 **Exit criteria:** no visible-vs-committed terms mismatch; no cross-asset reserve ambiguity; no unrestricted public payment route. Sprint A implementation complete; P0.4 browser E2E remains pending (see `docs/EVIDENCE.md`).
 
-### Sprint B — Wallet and complete UX
+### Sprint B — Wallet and complete UX (in progress, branch `sprint-b`)
 
-- [ ] Add wallet disconnect/account refresh and active-network revalidation.
+- [x] Add wallet disconnect/account refresh and active-network revalidation (provider + pre-sign check).
 - [ ] Make the workspace preserve state during transient RPC failures and support retry.
 - [ ] Make action visibility and afterglow state accurate for each role.
 - [ ] Complete two-wallet browser E2E on the public Netlify deployment.
@@ -266,7 +266,7 @@ Do not do a broad find-and-replace of the word “demo”. Keep historical chall
 
 **Exit criteria:** a new user can complete the supported protocol without CLI intervention or developer-only steps.
 
-### Sprint C — Contract hardening and parity
+### Sprint C — Contract hardening and parity (not started)
 
 - [ ] Review and test Soroban storage TTL for active escrow and historical records.
 - [ ] Add adversarial tests for multi-asset behavior (or prove rejection of any asset other than the configured one).

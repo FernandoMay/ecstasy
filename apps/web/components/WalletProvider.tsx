@@ -26,6 +26,8 @@ interface WalletContextValue {
   service: EcstasyService;
   wallet: WalletAdapter;
   connect: () => Promise<void>;
+  disconnect: () => void;
+  refresh: () => Promise<void>;
   clearError: () => void;
 }
 
@@ -37,6 +39,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [address, setAddress] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [networkMismatch, setNetworkMismatch] = useState(false);
 
   const service = useMemo(
     () => new EcstasyService(config, address ? wallet : null, address ?? undefined),
@@ -53,6 +56,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       await assertWalletNetwork(wallet, config.networkPassphrase);
       const found = await wallet.requestAccess();
       setAddress(found);
+      setNetworkMismatch(false);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause));
     } finally {
@@ -66,6 +70,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     (async () => {
       try {
         if (!(await wallet.isConnected())) return;
+        await assertWalletNetwork(wallet, config.networkPassphrase);
         const found = await wallet.getAddress();
         if (!cancelled && found) setAddress(found);
       } catch {
@@ -75,7 +80,43 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [wallet]);
+  }, [wallet, config.networkPassphrase]);
+
+  // React to account/network switches made inside Freighter while the app is open.
+  useEffect(() => {
+    return wallet.watchChanges(({ address: nextAddress, networkPassphrase }) => {
+      if (networkPassphrase !== config.networkPassphrase) {
+        setAddress(null);
+        setNetworkMismatch(true);
+        setError("Wallet switched to another network. Switch back to Testnet and reconnect.");
+        return;
+      }
+      setNetworkMismatch(false);
+      setAddress(nextAddress || null);
+    });
+  }, [wallet, config.networkPassphrase]);
+
+  const disconnect = useCallback(() => {
+    setAddress(null);
+    setNetworkMismatch(false);
+    setError(null);
+  }, []);
+
+  const refresh = useCallback(async () => {
+    setError(null);
+    try {
+      await assertWalletNetwork(wallet, config.networkPassphrase);
+      const found = await wallet.getAddress();
+      if (!found) {
+        disconnect();
+        return;
+      }
+      setAddress(found);
+      setNetworkMismatch(false);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause));
+    }
+  }, [wallet, config.networkPassphrase, disconnect]);
 
   return (
     <WalletContext.Provider
@@ -87,6 +128,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         service,
         wallet,
         connect,
+        disconnect,
+        refresh,
         clearError: () => setError(null),
       }}
     >

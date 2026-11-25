@@ -4,7 +4,7 @@ import { shortAddress } from "@ecstasy/stellar";
 import { useWallet } from "./WalletProvider";
 
 export function WalletStatus() {
-  const { address, connecting, connect, config } = useWallet();
+  const { address, connecting, connect, disconnect, refresh, config, error } = useWallet();
 
   return (
     <div className="row">
@@ -15,14 +15,23 @@ export function WalletStatus() {
         <strong>{config.network}</strong>
       </span>
       {address ? (
-        <span className="badge" title={address}>
-          <strong>{shortAddress(address)}</strong>
-        </span>
+        <>
+          <span className="badge" title={address}>
+            <strong>{shortAddress(address)}</strong>
+          </span>
+          <button className="btn btn-small" onClick={refresh} title="Refresh account from wallet">
+            Refresh
+          </button>
+          <button className="btn btn-small btn-danger" onClick={disconnect}>
+            Disconnect
+          </button>
+        </>
       ) : (
         <button className="btn btn-small" onClick={connect} disabled={connecting}>
           {connecting ? "Connecting…" : "Connect wallet"}
         </button>
       )}
+      {error && <span className="small" style={{ color: "var(--danger)" }} title={error}>⚠</span>}
     </div>
   );
 }

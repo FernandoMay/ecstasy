@@ -6,6 +6,7 @@ import { createEcstasyClient, createReadOnlyClient, type EcstasyClient } from ".
 import { transactionUrl } from "./explorer";
 import type { Encounter, EncounterStatus } from "./generated/ecstasy";
 import type { WalletAdapter } from "./wallet";
+import { assertWalletNetwork } from "./wallet";
 
 export interface Receipt {
   hash: string;
@@ -81,6 +82,9 @@ export class EcstasyService {
     if (!this.wallet) {
       throw new Error("Connect a wallet before sending a transaction");
     }
+    // Re-check the wallet network immediately before signing: a wallet may
+    // have been switched while the page was open.
+    await assertWalletNetwork(this.wallet, this.config.networkPassphrase);
     const sent = await tx.signAndSend();
     const result = sent.result;
     if (result.isErr()) {
@@ -161,6 +165,18 @@ export class EcstasyService {
       }),
     );
   }
+}
+
+/** Strict parser for the public encounter id used in routes. */
+export function parseEncounterId(raw: string): bigint {
+  if (!/^\d{1,20}$/.test(raw)) {
+    throw new Error("Invalid encounter id");
+  }
+  const id = BigInt(raw);
+  if (id < 1n) {
+    throw new Error("Invalid encounter id");
+  }
+  return id;
 }
 
 export function statusName(status: EncounterStatus): string {

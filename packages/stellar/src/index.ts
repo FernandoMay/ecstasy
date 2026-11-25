@@ -20,7 +20,7 @@ export type { WalletAdapter, WalletIdentity } from "./wallet";
 export { createEcstasyClient, createReadOnlyClient } from "./contract";
 export type { EcstasyClient, ClientOptions } from "./contract";
 
-export { EcstasyService, statusName } from "./encounter";
+export { EcstasyService, parseEncounterId, statusName } from "./encounter";
 export type { CreateEncounterInput, Receipt, WriteResult } from "./encounter";
 
 export {

@@ -175,6 +175,27 @@ The web app no longer accepts a free-form asset: the configured SAC is read-only
 
 Still pending: no Freighter extension is available in this execution environment. CLI/RPC E2E and production payment evidence remain valid; browser evidence will be added separately.
 
+
+## Sprint B — concurrency, wallet hardening and browser E2E gate
+
+Work is on branch `sprint-b`; `main` remains the stable baseline.
+
+### Endpoint concurrency
+
+Against a local production build of the app (`next dev -p 3101`), six parallel `POST /api/challenge-payment` requests with the same `X-Forwarded-For` returned **2 × HTTP 200 and 4 × HTTP 429**. Six parallel requests with six distinct client keys returned **6 × HTTP 200**, confirming per-client isolation. The in-process limiter is therefore correct under concurrency, but it is per function instance: a caller could multiply the allowance by hitting many Netlify instances.
+
+To close that gap, `apps/web/lib/payment-policy.ts` adds `SharedRateLimiter` backed by Netlify Blobs with optimistic concurrency (`getWithMetadata` ETag + `setJSON` `onlyIfMatch` / `onlyIfNew`). It is used automatically when `NETLIFY === "true"`; elsewhere the local limiter remains. Three tests simulate two independent limiter instances sharing one store: only 2 of 4 concurrent requests succeed. It fails closed on repeated CAS contention, and falls back to local limiting if Blobs is unavailable. Production behaviour with the shared store must be re-verified after this branch is merged.
+
+### Wallet and input hardening
+
+- `WalletProvider` adds explicit `disconnect()` and `refresh()` controls, and subscribes to Freighter account/network changes (`WatchWalletChanges`, 3 s poll). A network switch clears the connected account and blocks writes until Testnet is restored; a visible warning is shown in `WalletStatus`.
+- `EcstasyService.send()` re-checks the wallet network with `assertWalletNetwork` immediately before signing, so a switch while the page is open cannot produce a signature on the wrong network.
+- `parseEncounterId()` strictly validates route IDs (digits only, positive, ≤20 digits) with two regression tests; invalid IDs now fail before RPC calls.
+
+### Browser E2E gate (blocked, not claimed)
+
+The in-app browser successfully loaded https://ecs-tasy.netlify.app/ (title and UI rendered), but `window.freighter` is absent: **Freighter is not installed in this browser**. No two-wallet signing flow, rejection, account switch or screenshots were executed. This gate remains explicitly open. Required next steps: install Freighter, create/fund two independent Testnet wallets, then run create → accept → complete ×2 → settle → afterglow ×2, plus decline/cancel/expiry, capturing hashes and screenshots.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

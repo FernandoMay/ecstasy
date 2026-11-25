@@ -11,8 +11,8 @@ import { NextResponse } from "next/server";
 import {
   CHALLENGE_CODE,
   PAYMENT_AMOUNT,
-  RateLimiter,
   bodyTooLarge,
+  createPaymentRateLimiter,
   isPaymentRouteEnabled,
   resolveDestination,
 } from "@/lib/payment-policy";
@@ -31,7 +31,7 @@ export const runtime = "nodejs";
 
 const HORIZON_TESTNET = "https://horizon-testnet.stellar.org";
 const FRIEND_BOT = "https://friendbot.stellar.org";
-const limiter = new RateLimiter();
+const limiter = createPaymentRateLimiter();
 
 function explorerUrl(hash: string): string {
   return `https://stellar.expert/explorer/testnet/tx/${hash}`;
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
   if (bodyTooLarge(request.headers.get("content-length"))) {
     return NextResponse.json({ error: "Request too large" }, { status: 413 });
   }
-  if (!limiter.check(clientKey(request))) {
+  if (!(await (await limiter).check(clientKey(request)))) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
