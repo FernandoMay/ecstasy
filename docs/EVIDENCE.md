@@ -230,6 +230,15 @@ CI and Netlify both use Node 24; Rust 1.99.1 is pinned in `rust-toolchain.toml`;
 
 Executed from a fresh `git clone https://github.com/FernandoMay/ecstasy.git` (commit `90b8471`): `npm ci`, `npm test` (12 shared + 12 web), `npm run typecheck` (clean), `npm run build` (compiled), `cargo clippy --all-targets -- -D warnings` (clean), `cargo test` (24 passed), `stellar contract build` (wasm hash `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61`), `npm run generate:bindings` + `git diff --exit-code` on the generated client (no diff). Two ordering issues found during this check were fixed: the root `test`/`typecheck` scripts now build the shared package first, and clippy lints in the contract/tests were resolved.
 
+
+## Sprint D — release documentation and operations
+
+- `GET /api/status` is live in production: `{"network":"testnet","rpc":"healthy","latestLedger":5912321,...}` with the pinned contract and asset IDs. The home page renders this in `StatusPanel` with an explorer link. No secrets or private terms are exposed.
+- `scripts/production-smoke.sh` (manual + scheduled every 6 h via `.github/workflows/production-smoke.yml`): homepage 200, encounter route 200, payment step skipped by default because of the known Friendbot/function-timeout issue. Full smoke including payment still reports 502 and is documented above.
+- Privacy controls: private-terms local storage is now opt-in and clearable from the create form; the UI states that a hash is a commitment, not encryption, that terms are not encrypted by this protocol, and that location hints must stay coarse.
+- `docs/RUNBOOK.md` covers RPC outage, pending transactions, failed deploy, payment 502/504, contract incidents, compromised credentials and privacy incidents. `docs/RELEASES/testnet-rc-1.md` pins source commit, wasm hash, contract, verification matrix and known limitations.
+- `docs/FUNCTIONS_FOR_REVIEW.md` records every new function with its transaction link (read-only endpoints are marked N/A).
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

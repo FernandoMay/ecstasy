@@ -7,7 +7,7 @@ Versioned, independently checkable snapshot of the ECSTASY Testnet release. This
 | Item | Value |
 |---|---|
 | Release label | Testnet Release Candidate 1 (not Mainnet, not a production financial product) |
-| Source commit | `9d32566` (`docs(evidence): record post-Sprint-C production smoke`) |
+| Source commit | `d82a57d` (Sprint D final; includes status endpoint, privacy controls, runbook and this pack) |
 | Contract ID | `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` |
 | Wasm SHA-256 | `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61` |
 | Network | Testnet (`Test SDF Network ; September 2015`) |
@@ -18,7 +18,7 @@ Versioned, independently checkable snapshot of the ECSTASY Testnet release. This
 Reproduce the wasm hash:
 
 ```bash
-git checkout 9d32566
+git checkout d82a57d
 cd contracts/ecstasy && stellar contract build
 ```
 
@@ -33,7 +33,7 @@ cd contracts/ecstasy && stellar contract build
 | Clippy `-D warnings` / cargo fmt | clean |
 | Generated bindings vs final wasm | no diff |
 | Clean clone | `npm ci`, tests, typecheck, build, wasm, clippy, bindings sync all pass |
-| Production smoke | homepage 200, encounter route 200, new contract ID in public bundle |
+| Production smoke | homepage 200, encounter route 200, new contract ID in public bundle; `GET /api/status` reports `rpc: healthy` |
 
 ## Evidence links
 
