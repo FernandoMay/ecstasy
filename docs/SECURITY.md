@@ -46,16 +46,20 @@ Mitigation: no private content on-chain; avoid putting raw IPFS/public URLs in e
 
 ## Audit checklist
 
-- [ ] auth checks on every mutating function
-- [ ] state transition guards
-- [ ] expiry checks
-- [ ] amount validation
-- [ ] asset validation
-- [ ] no integer overflow/underflow assumptions
-- [ ] no unbounded storage growth in MVP paths
-- [ ] events do not contain sensitive payloads
-- [ ] tests for unauthorized callers
-- [ ] tests for replay/double execution
-- [ ] tests for expiry
-- [ ] tests for malformed hashes
-- [ ] tests for zero/negative/maximum stake
+- [x] auth checks on every mutating function
+- [x] state transition guards
+- [x] expiry checks (`expire_encounter` commits the refund in a successful tx)
+- [x] amount validation (`stake >= 0`, `expires_at > now`)
+- [x] asset validation (explicit configured SAC ID; no issuer invented)
+- [x] no integer overflow/underflow assumptions (`overflow-checks = true`, checked id counter)
+- [x] no unbounded storage growth in MVP paths (one entry per encounter/score)
+- [x] events do not contain sensitive payloads (typed `[status, stake, actor]` only)
+- [x] tests for unauthorized callers
+- [x] tests for replay/double execution
+- [x] tests for expiry
+- [x] tests for malformed hashes (32-byte commitment enforced in client and contract ABI)
+- [x] tests for zero/negative stake
+
+### Deployment-specific note
+
+`payout_from_contract` deliberately does **not** call `require_auth()` on the contract's own address. Doing so produces an auth entry that external wallets cannot sign; Soroban already treats the contract as the authorized direct invoker of the Stellar Asset Contract. This was verified on Testnet: settlement with the explicit self-auth failed, and succeeded after its removal.

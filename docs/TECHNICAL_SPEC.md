@@ -2,27 +2,26 @@
 
 ## 1. Product invariant
 
-ECSTASY is a bilateral state machine. No settlement occurs unless the contract's required authorization and state conditions are satisfied.
+ECSTASY is a bilateral state machine. No settlement occurs unless the contract's required authorization and state conditions are satisfied. The contract records a public state transition, never the truth of a private off-chain event.
 
 ## 2. Encounter lifecycle
 
 ```text
-CREATED
-  └─ invite → INVITED
-                  ├─ decline → CANCELLED
-                  └─ accept → ACCEPTED
-                                 └─ start/activate → ACTIVE
-                                      ├─ cancel → CANCELLED
-                                      ├─ expire → EXPIRED
-                                      └─ complete → COMPLETED
-                                                     └─ settle → SETTLED
+CREATED (invitation pending)
+   ├─ accept  → ACCEPTED
+   │               ├─ complete by both parties → COMPLETED → settle → SETTLED
+   │               ├─ cancel by either party   → CANCELLED
+   │               └─ expiry before completion  → EXPIRED (via expire_encounter)
+   ├─ decline → CANCELLED
+   ├─ cancel (creator) → CANCELLED
+   └─ expiry → EXPIRED (via expire_encounter)
 ```
 
-A later implementation may add `DISPUTED`, but the MVP should not ship an under-specified dispute system.
+`SETTLED`, `CANCELLED` and `EXPIRED` are terminal. The MVP has no separate `INVITED` or `ACTIVE` state: `create_encounter` emits the invitation and `accept_encounter` records consent directly. A later implementation may add `DISPUTED`, but the MVP should not ship an under-specified dispute system.
 
 ## 3. State
 
-Minimum contract state:
+On-chain state (no private terms, chat, photos or PII):
 
 ```text
 Encounter {
@@ -37,91 +36,76 @@ Encounter {
   status: EncounterStatus,
   creator_completed: bool,
   participant_completed: bool,
-  settlement_tx_marker: optional BytesN<32>,
+  settlement_marker: Option<BytesN<32>>,
 }
 ```
 
-Do not store free-form private text on-chain.
+`settlement_marker` is a deterministic on-chain digest derived from `(encounter id, settlement ledger timestamp)`. It is **not** the Stellar transaction hash; obtain that from the RPC receipt/explorer. All state lives in instance storage with a monotonic `Counter` and per-participant afterglow entries keyed by `(id, address)`.
 
 ## 4. Contract methods
 
-MVP API:
+| Method | Actor | Effect |
+|---|---|---|
+| `create_encounter(creator, participant, asset, stake, terms_hash, expires_at)` | creator | Creates invitation; pulls stake into escrow; returns id |
+| `accept_encounter(participant, encounter_id)` | participant | Records explicit consent |
+| `decline_encounter(participant, encounter_id)` | participant | Cancels invitation and refunds creator |
+| `complete_encounter(caller, encounter_id)` | either party | Records one completion flag; both → `COMPLETED` |
+| `settle_encounter(caller, encounter_id)` | either party | Terminal; releases escrow to participant |
+| `cancel_encounter(caller, encounter_id)` | either party | Cancels an open encounter and refunds creator |
+| `expire_encounter(encounter_id)` | permissionless | Commits expiry and refunds creator |
+| `submit_afterglow(caller, encounter_id, score)` | either party | One bounded score per party, only after settlement |
+| `get_encounter(encounter_id)` | public | Reads state with derived expiry |
+| `get_afterglow(encounter_id, participant)` | public | Reads one submitted score |
 
-- `create_encounter(creator, participant, asset, stake, terms_hash, expires_at)`
-- `accept_encounter(participant, encounter_id)`
-- `decline_encounter(participant, encounter_id)`
-- `complete_encounter(caller, encounter_id)`
-- `settle_encounter(caller, encounter_id)`
-- `cancel_encounter(caller, encounter_id)` where the state permits it
-- `submit_afterglow(caller, encounter_id, score)`
-- `get_encounter(encounter_id)`
-
-The exact API can change during implementation; update this document in the same commit as any contract-interface change.
+Every mutating method returns `Result<(), EcstasyError>`; `create_encounter` returns `Result<u64, EcstasyError>`. Error codes (part of the ABI): `1 NotFound`, `2 NotParty`, `3 SelfEncounter`, `4 InvalidStake`, `5 InvalidExpiry`, `6 InvalidState`, `7 InvalidScore`, `8 AlreadyCompleted`, `9 AlreadySubmitted`, `10 Expired`.
 
 ## 5. Authorization
 
-Every state-changing method must authenticate the actor with Soroban `Address::require_auth()` semantics. Never trust a wallet address supplied by the client without contract-side authorization.
+Every state-changing method authenticates its actor with `Address::require_auth()`. A party check (`NotParty`) runs in the contract even when a signature exists. The contract never trusts a client-supplied address as proof of identity.
+
+Expiry refunds are committed by a **successful** permissionless transaction. A method that returns an error rolls back all state changes, so refunds cannot be performed in a call that also reports `Expired`.
 
 ## 6. Escrow model
 
-For MVP, the contract should support one fungible Stellar asset selected by configuration. Do not invent an asset issuer or pretend that a token exists.
+One fungible Stellar Asset Contract per deployment, configured by `assetContractId`. No issuer is invented: the demo uses the native XLM SAC (`CDLZFC3S…YSC`). A no-stake encounter is always possible (`stake = 0`), and no token call is made in that case.
 
 Escrow rules:
 
-1. creator funds the contract before or during creation;
+1. creator authorizes the pull into the contract during creation;
 2. participant accepts;
-3. completion requirements are satisfied;
-4. settlement transfers according to the explicit contract rule;
-5. every transfer emits an event suitable for demo evidence.
-
-A no-stake encounter must be possible.
+3. both parties record completion;
+4. settlement transfers the whole stake to the participant (an explicit conditional gift/commitment rule);
+5. decline, cancel or expiry refunds the creator;
+6. every transfer emits a standard SAC `transfer` event plus an ECSTASY `EncounterEvent`.
 
 ## 7. Terms hash
 
-The web client canonicalizes the private terms document, hashes it with SHA-256, and stores only the 32-byte digest on-chain.
-
-Canonicalization requirements:
-
-- UTF-8;
-- deterministic field ordering;
-- normalized line endings;
-- explicit schema version;
-- no wallet secrets;
-- no raw personal data unless the user deliberately chooses to expose it.
-
-The demo should show that changing one term changes the hash.
+The web client canonicalizes the private terms document (UTF-8, NFC, CRLF→LF, trailing whitespace removed, sorted keys, explicit `ecstasy.terms/v1` schema) and stores only the SHA-256 digest on-chain. The demo shows that changing one term changes the hash, and lets the participant paste the private document to verify it matches the commitment before consenting.
 
 ## 8. Afterglow
 
-After settlement, each participant may submit one bounded score. The score is reputation metadata, not a claim that the underlying encounter was objectively good, safe, legal, or truthful.
-
-MVP: integer score `0..100`, one submission per participant per encounter.
+After settlement, each participant may submit one integer score `0..100`. Scores are reputation metadata, not a claim that the encounter was good, safe, legal or truthful.
 
 ## 9. Frontend boundaries
 
 ```text
 UI
- ↓
-encounter service
- ↓
-wallet adapter
- ↓
-Stellar transaction builder
- ↓
+  ↓
+EncounterService (@ecstasy/stellar)
+  ↓
+WalletAdapter (Freighter)
+  ↓
+Stellar contract client / RPC
+  ↓
 Soroban contract
 ```
 
-Keep wallet-specific code behind an adapter so Freighter or another supported Stellar wallet can be changed without rewriting domain logic.
+Wallet-specific code stays behind `WalletAdapter`. The generated typed client embeds the contract spec, so no binding code is hand-written and no chain responses are mocked.
 
-## 10. Evidence requirements
+## 10. Events
 
-Every demo-critical flow must produce:
+Every transition emits `EncounterEvent` with topics `("ecstasy", id, name)` and data `{ status, stake, actor }`. No private payloads are included.
 
-- source commit;
-- contract ID;
-- transaction hash;
-- relevant event/state read;
-- screenshot or recorded UI state;
-- reproduction steps.
+## 11. Evidence requirements
 
-Do not claim E2E success from mocked responses.
+Every demo-critical flow must produce a source commit, contract ID, transaction hash, event/state read, screenshot or recorded UI state, and reproduction steps. See `docs/EVIDENCE.md`. Do not claim E2E success from mocked responses.

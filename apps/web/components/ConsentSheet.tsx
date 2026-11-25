@@ -1,0 +1,87 @@
+"use client";
+
+import { termsDigest, toHex, type Encounter, type TermsDocument } from "@ecstasy/stellar";
+import { useState } from "react";
+import { TermsHashBadge } from "./TermsHashBadge";
+
+export function ConsentSheet({
+  encounter,
+  disabled,
+  onAccept,
+  onDecline,
+}: {
+  encounter: Encounter;
+  disabled?: boolean;
+  onAccept: () => Promise<void>;
+  onDecline: () => Promise<void>;
+}) {
+  const [pasted, setPasted] = useState("");
+  const [match, setMatch] = useState<boolean | null>(null);
+  const [busy, setBusy] = useState(false);
+  const onChainHash = toHex(new Uint8Array(encounter.terms_hash));
+
+  async function verify() {
+    try {
+      const doc = JSON.parse(pasted) as TermsDocument;
+      const digest = toHex(await termsDigest(doc));
+      setMatch(digest === onChainHash);
+    } catch {
+      setMatch(false);
+    }
+  }
+
+  async function act(action: "accept" | "decline") {
+    setBusy(true);
+    try {
+      await (action === "accept" ? onAccept() : onDecline());
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="card">
+      <h3>Consent sheet</h3>
+      <p className="muted small">
+        Private terms are never stored on-chain. Paste the terms document you received out-of-band
+        to verify it matches the on-chain commitment before consenting.
+      </p>
+      <div className="row" style={{ marginBottom: 12 }}>
+        <TermsHashBadge hash={encounter.terms_hash} />
+      </div>
+      <textarea
+        className="textarea"
+        placeholder='Paste the private terms JSON here'
+        value={pasted}
+        onChange={(event) => {
+          setPasted(event.target.value);
+          setMatch(null);
+        }}
+        aria-label="Private terms document"
+      />
+      <div className="row" style={{ marginTop: 12 }}>
+        <button className="btn btn-small" onClick={verify} disabled={!pasted.trim()}>
+          Verify terms hash
+        </button>
+        {match === true && <span className="small success-text">✓ Terms match the commitment</span>}
+        {match === false && <span className="small" style={{ color: "var(--danger)" }}>✕ Terms do not match — do not consent</span>}
+      </div>
+      <div className="row" style={{ marginTop: 18 }}>
+        <button
+          className="btn btn-primary"
+          disabled={disabled || busy || match !== true}
+          onClick={() => act("accept")}
+        >
+          Consent / Accept
+        </button>
+        <button className="btn btn-danger" disabled={disabled || busy} onClick={() => act("decline")}>
+          Decline
+        </button>
+      </div>
+      <p className="muted small" style={{ marginTop: 12 }}>
+        Acceptance is gated on a verified hash so a substituted terms document cannot be consented
+        to from this screen.
+      </p>
+    </div>
+  );
+}

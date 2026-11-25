@@ -6,21 +6,22 @@ Ship a real, reproducible Stellar vertical slice by the end of the challenge win
 
 ## Mission mapping
 
-### Mission 02 — Toca Stellar
-Deliver:
-- Soroban contract compiles;
+### Mission 02 — Toca Stellar ✅
+Delivered:
+- Soroban contract compiles (`stellar contract build`, wasm 12.7 KB);
 - Testnet deployment;
-- contract ID recorded;
-- one real transaction and readback.
+- contract ID recorded in `docs/EVIDENCE.md`;
+- seven real transactions and readback.
 
-### Mission 03 — En el aire
-Deliver:
-- public web deployment;
-- wallet connection;
-- Testnet configuration;
+### Mission 03 — En el aire (build ready, hosting pending)
+Delivered:
+- Next.js production build passing;
+- Freighter wallet connection with network assertion;
+- Testnet configuration via public env vars;
 - no mock chain data in production build.
+Pending: choose a public host and deploy the built app.
 
-### Mission 04 — Demo
+### Mission 04 — Demo (script + CLI evidence ready, recording pending)
 Deliver a 2-minute path:
 
 ```text

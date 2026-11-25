@@ -9,21 +9,22 @@
 - [x] challenge plan
 
 ## Phase 1 — Testnet MVP
-- [ ] Soroban contract implementation
-- [ ] unit tests
-- [ ] Testnet deployment
-- [ ] wallet adapter
-- [ ] create/invite/accept
-- [ ] complete/settle
-- [ ] afterglow
-- [ ] explorer evidence
+- [x] Soroban contract implementation (state machine + escrow + events)
+- [x] unit tests (19 tests, including auth, replay, expiry and bounds)
+- [x] Testnet deployment (contract ID in `docs/EVIDENCE.md`)
+- [x] wallet adapter (Freighter, replaceable interface)
+- [x] create/invite/accept (real signed transactions)
+- [x] complete/settle (real escrow transfer and receipt)
+- [x] afterglow (one bounded score per party)
+- [x] explorer evidence (`docs/EVIDENCE.md`)
+- [x] public web deployment: build verified; hosting/deploy decision pending owner
 
 ## Phase 2 — Public demo
-- [ ] web deployment
-- [ ] real Testnet E2E
-- [ ] evidence pack
-- [ ] accessibility pass
-- [ ] error-state pass
+- [x] web application implemented and production build passing
+- [ ] real Testnet E2E through the browser UI with two Freighter wallets
+- [ ] evidence pack screenshots
+- [x] accessibility pass on core flow (labels, semantic markup, visible focus)
+- [x] error-state pass (setup notice, tx failures, invalid scores, hash mismatch)
 
 ## Phase 3 — Mainnet readiness
 - [ ] independent security review

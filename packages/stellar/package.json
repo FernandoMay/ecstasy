@@ -1,0 +1,33 @@
+{
+  "name": "@ecstasy/stellar",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared Stellar integration boundary for ECSTASY: network config, wallet adapter, contract client, terms hashing and explorer helpers.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "generate:bindings": "bash scripts/generate-bindings.sh"
+  },
+  "dependencies": {
+    "@stellar/freighter-api": "6.0.1",
+    "@stellar/stellar-sdk": "17.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.7",
+    "typescript": "7.0.2",
+    "vitest": "5.1.1"
+  }
+}

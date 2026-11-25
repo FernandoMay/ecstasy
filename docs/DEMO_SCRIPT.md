@@ -2,7 +2,9 @@
 
 ## Setup
 
-Use two real Stellar Testnet wallets. Fund them before recording. Open the app in two browser contexts.
+Use two real Stellar Testnet wallets with Freighter. Fund them before recording. Open the app in two browser contexts. The deployed contract/environment values are in `docs/EVIDENCE.md`; the private terms document is shared out-of-band so the participant can paste it to verify the on-chain hash before consenting.
+
+For CLI-only evidence (no browser), `contracts/ecstasy/scripts/smoke.sh` executes the same sequence with real signed transactions and prints every hash.
 
 ## Script
 

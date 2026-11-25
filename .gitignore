@@ -8,3 +8,9 @@ target/
 .DS_Store
 *.log
 coverage/
+
+# Soroban test snapshots (regenerated on failure)
+contracts/ecstasy/test_snapshots/
+
+# TypeScript incremental build info
+*.tsbuildinfo

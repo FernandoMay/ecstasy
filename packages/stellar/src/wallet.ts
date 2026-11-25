@@ -1,0 +1,104 @@
+/**
+ * Wallet boundary. Domain code depends only on this interface, so Freighter
+ * can be swapped without rewriting encounter logic. This package never sees
+ * private keys or seed phrases.
+ */
+
+import {
+  getAddress,
+  getNetwork,
+  isConnected,
+  requestAccess,
+  signAuthEntry,
+  signTransaction,
+} from "@stellar/freighter-api";
+import type { SignAuthEntryLike, SignTransactionLike } from "@stellar/stellar-sdk/contract";
+
+export interface WalletIdentity {
+  address: string;
+  kind: string;
+}
+
+export interface WalletAdapter {
+  readonly kind: string;
+  isConnected(): Promise<boolean>;
+  getAddress(): Promise<string | null>;
+  requestAccess(): Promise<string>;
+  signTransaction: SignTransactionLike;
+  signAuthEntry: SignAuthEntryLike;
+  getNetwork(): Promise<{ network: string; networkPassphrase: string }>;
+}
+
+function message(error: unknown): string {
+  if (error && typeof error === "object" && "message" in error) {
+    return String((error as { message: unknown }).message);
+  }
+  return String(error);
+}
+
+export class FreighterWallet implements WalletAdapter {
+  readonly kind = "freighter";
+
+  async isConnected(): Promise<boolean> {
+    const result = await isConnected();
+    if (result.error) return false;
+    return result.isConnected === true;
+  }
+
+  async getAddress(): Promise<string | null> {
+    const result = await getAddress();
+    if (result.error || !result.address) return null;
+    return result.address;
+  }
+
+  async requestAccess(): Promise<string> {
+    const result = await requestAccess();
+    if (result.error || !result.address) {
+      throw new Error(result.error ? message(result.error) : "Freighter did not return an address");
+    }
+    return result.address;
+  }
+
+  signTransaction: SignTransactionLike = async (xdr, opts) => {
+    const result = await signTransaction(xdr, {
+      networkPassphrase: opts?.networkPassphrase,
+      address: opts?.address,
+    });
+    if (result.error || !result.signedTxXdr) {
+      throw new Error(result.error ? message(result.error) : "Transaction rejected");
+    }
+    return { signedTxXdr: result.signedTxXdr, signerAddress: result.signerAddress };
+  };
+
+  signAuthEntry: SignAuthEntryLike = async (authEntry, opts) => {
+    const result = await signAuthEntry(authEntry, {
+      networkPassphrase: opts?.networkPassphrase,
+      address: opts?.address,
+    });
+    if (result.error || !result.signedAuthEntry) {
+      throw new Error(result.error ? message(result.error) : "Auth entry rejected");
+    }
+    return { signedAuthEntry: result.signedAuthEntry, signerAddress: result.signerAddress };
+  };
+
+  async getNetwork(): Promise<{ network: string; networkPassphrase: string }> {
+    const result = await getNetwork();
+    if (result.error || !result.networkPassphrase) {
+      throw new Error(result.error ? message(result.error) : "Could not read wallet network");
+    }
+    return { network: result.network, networkPassphrase: result.networkPassphrase };
+  }
+}
+
+/** Fail early if the wallet is on a different network than the app config. */
+export async function assertWalletNetwork(
+  wallet: WalletAdapter,
+  expectedPassphrase: string,
+): Promise<void> {
+  const actual = await wallet.getNetwork();
+  if (actual.networkPassphrase !== expectedPassphrase) {
+    throw new Error(
+      `Wallet is on "${actual.network}" but this demo expects "${expectedPassphrase}". Switch the wallet network and retry.`,
+    );
+  }
+}

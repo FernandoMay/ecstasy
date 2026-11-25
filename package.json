@@ -1,0 +1,19 @@
+{
+  "name": "ecstasy-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "ECSTASY — private agreements, public proof on Stellar",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=@ecstasy/stellar && npm run build --workspace=@ecstasy/web",
+    "test": "npm run test --workspace=@ecstasy/stellar",
+    "typecheck": "npm run typecheck --workspace=@ecstasy/stellar && npm run typecheck --workspace=@ecstasy/web",
+    "dev": "npm run dev --workspace=@ecstasy/web"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -35,11 +35,11 @@ Create → Invite → Consent → Optional Escrow → Complete → Settle → Af
 ## Repository
 
 ```text
-apps/web/                 Next.js frontend scaffold
-contracts/ecstasy/        Soroban contract
-packages/stellar/         shared Stellar integration boundary
-docs/                     product, protocol, security, branding and demo docs
-.github/workflows/        CI
+apps/web/                 Next.js demo dApp (real Testnet flows)
+contracts/ecstasy/        Soroban contract, tests and deploy/smoke scripts
+packages/stellar/         shared Stellar SDK, wallet adapter and typed bindings
+docs/                     product, protocol, security, evidence and demo docs
+.github/workflows/        CI (contract, web, docs)
 ```
 
 ## Build target
@@ -58,7 +58,29 @@ The Ship It: Builder Challenge target is a small, demonstrable vertical slice ra
 
 ## Current status
 
-**Stage: foundation / implementation ready.** This repository intentionally contains the architecture, contracts boundary, security model, branding system, demo script and delivery checklist before claiming functionality.
+**Stage: Testnet vertical slice shipped.** The Soroban contract, its test suite, the shared Stellar package and the Next.js demo are implemented. The contract is deployed on Testnet and the full create → consent → complete → settle → afterglow flow has been executed with two real signed transactions per party. See `docs/EVIDENCE.md`.
+
+### Quickstart
+
+```bash
+npm install                       # installs the web + shared package workspaces
+cp .env.example apps/web/.env.local
+npm run build                     # builds the shared package, then the web app
+npm test                          # shared package unit tests
+cd contracts/ecstasy && cargo test # 19 contract state-machine tests
+npm run dev                       # http://localhost:3000
+```
+
+Open the app with Freighter on Testnet. Use two wallets/contexts for the two roles. Private terms never leave the browser; the app only submits their SHA-256 commitment.
+
+### Deploy / smoke test
+
+```bash
+SOURCE=<stellar-identity> contracts/ecstasy/scripts/deploy.sh
+CREATOR=<identity-a> PARTICIPANT=<identity-b> contracts/ecstasy/scripts/smoke.sh
+```
+
+`deploy.sh` prints the public contract ID. `smoke.sh` runs the full flow on-chain and prints every transaction hash for the evidence pack.
 
 ## Stellar
 
