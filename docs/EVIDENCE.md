@@ -222,6 +222,10 @@ The generated TypeScript client was regenerated from this exact WASM. CI now fai
 
 CI and Netlify both use Node 24; Rust 1.99.1 is pinned in `rust-toolchain.toml`; Stellar CLI 30.0.1 is pinned in CI and scripts. CI runs cargo check, fmt, clippy, 24 contract tests, wasm build, npm ci, 12 shared + 12 web tests, typecheck, production build and the bindings-sync check. `getConfig()` rejects unknown networks and requires `NEXT_PUBLIC_MAINNET_RELEASE=confirmed` plus explicit valid IDs for Mainnet; two new tests cover those gates.
 
+### Production smoke after Sprint C
+
+`scripts/production-smoke.sh` against https://ecs-tasy.netlify.app (deploy of `9c1c985`) reports homepage 200, encounter route 200, and the public JS bundle contains the new contract ID `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY`. The payment step still returns HTTP 502 (Netlify function timeout with Friendbot latency), as documented above — this remains an open operational item, not a contract failure.
+
 ### Clean-clone verification
 
 Executed from a fresh `git clone https://github.com/FernandoMay/ecstasy.git` (commit `90b8471`): `npm ci`, `npm test` (12 shared + 12 web), `npm run typecheck` (clean), `npm run build` (compiled), `cargo clippy --all-targets -- -D warnings` (clean), `cargo test` (24 passed), `stellar contract build` (wasm hash `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61`), `npm run generate:bindings` + `git diff --exit-code` on the generated client (no diff). Two ordering issues found during this check were fixed: the root `test`/`typecheck` scripts now build the shared package first, and clippy lints in the contract/tests were resolved.
