@@ -14,6 +14,9 @@
 [build.environment]
   NODE_VERSION = "24"
 
-# The Next.js Runtime (OpenNext adapter) is installed automatically by Netlify
-# for Next.js 13.5+. It provisions serverless functions for App Router route
-# handlers such as POST /api/challenge-payment. No extra plugins are needed.
+# The Next.js Runtime (OpenNext adapter) is declared explicitly because this
+# is an npm-workspaces monorepo: Netlify auto-detection does not see `next` in
+# the root package.json. It provisions the serverless function that serves App
+# Router route handlers such as POST /api/challenge-payment. No other plugins.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
