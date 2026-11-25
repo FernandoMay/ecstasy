@@ -14,6 +14,7 @@ struct Setup {
     env: Env,
     client: EcstasyContractClient<'static>,
     token: TokenClient<'static>,
+    issuer: StellarAssetClient<'static>,
     contract_id: Address,
     creator: Address,
     participant: Address,
@@ -46,6 +47,7 @@ fn setup(_stake: i128) -> Setup {
         env,
         client,
         token,
+        issuer,
         contract_id,
         creator,
         participant,
@@ -476,4 +478,52 @@ fn terms_hash_changes_are_recorded_as_distinct_commitments() {
         ;
     assert_eq!(s.client.get_encounter(&id).terms_hash, s.terms_hash);
     assert_eq!(s.client.get_encounter(&2).terms_hash, different);
+}
+
+#[test]
+fn retirar_withdraws_only_surplus_and_protects_reserved_escrow() {
+    let s = setup(STAKE);
+    let id = create(&s);
+
+    // Simulate funds sent to the contract by mistake, outside any encounter.
+    let extra = 777i128;
+    s.issuer.mint(&s.contract_id, &extra);
+    assert_eq!(s.token.balance(&s.contract_id), STAKE + extra);
+
+    let withdrawn = s.client.retirar(&s.creator, &id);
+    let events = event_names(&s);
+
+    assert_eq!(withdrawn, extra);
+    assert_eq!(s.token.balance(&s.creator), FUNDS - STAKE + extra);
+    assert_eq!(s.token.balance(&s.contract_id), STAKE);
+    assert!(events.contains(&Symbol::new(&s.env, "funds_withdrawn")));
+
+    // A second call has no surplus: reserved escrow cannot be withdrawn.
+    assert_eq!(
+        s.client.try_retirar(&s.creator, &id),
+        Err(Ok(EcstasyError::InvalidState))
+    );
+    assert_eq!(s.token.balance(&s.contract_id), STAKE);
+
+    // The protected escrow still settles normally.
+    accept_and_complete(&s, id);
+    s.client.settle_encounter(&s.creator, &id);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+    assert_eq!(s.token.balance(&s.participant), STAKE);
+}
+
+#[test]
+fn retirar_rejects_non_creator_and_empty_surplus() {
+    let s = setup(STAKE);
+    let id = create(&s);
+
+    assert_eq!(
+        s.client.try_retirar(&s.outsider, &id),
+        Err(Ok(EcstasyError::NotParty))
+    );
+    assert_eq!(
+        s.client.try_retirar(&s.creator, &id),
+        Err(Ok(EcstasyError::InvalidState))
+    );
+    assert_eq!(s.token.balance(&s.contract_id), STAKE);
 }

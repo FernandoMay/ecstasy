@@ -36,7 +36,7 @@ Create → Invite → Consent → Optional Escrow → Complete → Settle → Af
 
 ```text
 apps/web/                 Next.js demo dApp (real Testnet flows)
-contracts/ecstasy/        Soroban contract, tests and deploy/smoke scripts
+contracts/ecstasy/        Soroban contract (incl. retirar), tests and deploy/smoke scripts
 packages/stellar/         shared Stellar SDK, wallet adapter and typed bindings
 docs/                     product, protocol, security, evidence and demo docs
 .github/workflows/        CI (contract, web, docs)

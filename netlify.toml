@@ -1,0 +1,19 @@
+# Netlify build configuration for the ECSTASY npm-workspaces monorepo.
+#
+# Netlify UI must use:
+#   Production branch: main
+#   Package directory: apps/web   (site files / config discovery)
+#   Base directory:    unset      (root, so npm workspaces resolve)
+# All values below are relative to the repository root (the base directory).
+
+[build]
+  command = "npm run build"
+  publish = "apps/web/.next"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# The Next.js Runtime (OpenNext adapter) is installed automatically by Netlify
+# for Next.js 13.5+. It provisions serverless functions for App Router route
+# handlers such as POST /api/challenge-payment. No extra plugins are needed.

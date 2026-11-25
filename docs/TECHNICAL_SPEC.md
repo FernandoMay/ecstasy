@@ -17,6 +17,8 @@ CREATED (invitation pending)
    └─ expiry → EXPIRED (via expire_encounter)
 ```
 
+`ReservedStake` tracks all locked stakes so `retirar` cannot withdraw escrow.
+
 `SETTLED`, `CANCELLED` and `EXPIRED` are terminal. The MVP has no separate `INVITED` or `ACTIVE` state: `create_encounter` emits the invitation and `accept_encounter` records consent directly. A later implementation may add `DISPUTED`, but the MVP should not ship an under-specified dispute system.
 
 ## 3. State
@@ -53,6 +55,7 @@ Encounter {
 | `settle_encounter(caller, encounter_id)` | either party | Terminal; releases escrow to participant |
 | `cancel_encounter(caller, encounter_id)` | either party | Cancels an open encounter and refunds creator |
 | `expire_encounter(encounter_id)` | permissionless | Commits expiry and refunds creator |
+| `retirar(caller, encounter_id) -> i128` | creator of that encounter | Withdraws contract surplus above `ReservedStake`; real token transfer + event |
 | `submit_afterglow(caller, encounter_id, score)` | either party | One bounded score per party, only after settlement |
 | `get_encounter(encounter_id)` | public | Reads state with derived expiry |
 | `get_afterglow(encounter_id, participant)` | public | Reads one submitted score |

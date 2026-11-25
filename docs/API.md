@@ -32,4 +32,4 @@ The ABI is generated from the contract spec; `packages/stellar/src/generated/ecs
 
 ## Events
 
-`EncounterEvent` — topics `("ecstasy", id, name)`, data `{ status, stake, actor }`. Names: `encounter_created`, `encounter_accepted`, `encounter_declined`, `encounter_completion`, `encounter_completed`, `encounter_settled`, `encounter_cancelled`, `encounter_expired`, `afterglow_submitted`. No private terms appear in events or state.
+`EncounterEvent` — topics `("ecstasy", id, name)`, data `{ status, stake, actor }`. Names: `encounter_created`, `encounter_accepted`, `encounter_declined`, `encounter_completion`, `encounter_completed`, `encounter_settled`, `encounter_cancelled`, `encounter_expired`, `afterglow_submitted`, `funds_withdrawn`. No private terms appear in events or state.

@@ -8,12 +8,13 @@ Everything below was produced by real signed Stellar Testnet transactions. No RP
 |---|---|
 | Network | Testnet (`Test SDF Network ; September 2015`) |
 | Source commit | `7c04816` (`feat: implement ECSTASY Testnet vertical slice`) |
-| Contract ID | `CBZKLJGQP6ZYYY7CV37RWAGU72U4I5HXXHAPYW657YI2VQIZDGLNBP7W` |
-| Wasm SHA-256 | `20babecd59bea1c0e94625f9a93143565f5aac34fcf28a0fe8f1eccdf3c8fcca` |
+| Contract ID (current, with `retirar`) | `CB7IX7KXOT7EDVNRFKN5UAT5TNNBVIAGM2IFLZIHIZXPXW7WH7I35DJV` |
+| Wasm SHA-256 (current) | `1b7f83741c8f00930649cef538d600be3794a79571a8eb71bd516c11a5a984ba` |
+| Previous contract ID | `CBZKLJGQP6ZYYY7CV37RWAGU72U4I5HXXHAPYW657YI2VQIZDGLNBP7W` (evidence below still valid) |
 | Escrow asset | native XLM SAC `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
 | Creator identity | `arceus-deployer` → `GAUZSVWQY5KOFMWZA5YJEBOECWBGSZHPSADVI6G3ZB54JULLDL6IKISJ` |
 | Participant identity | `suite-admin` → `GBQV7XDOMA6342BHICZGIRBDOZVTMRL7A7A3MWVL4SRP7EH37NAPO5KQ` |
-| Contract explorer | https://lab.stellar.org/r/testnet/contract/CBZKLJGQP6ZYYY7CV37RWAGU72U4I5HXXHAPYW657YI2VQIZDGLNBP7W |
+| Contract explorer (current) | https://lab.stellar.org/r/testnet/contract/CB7IX7KXOT7EDVNRFKN5UAT5TNNBVIAGM2IFLZIHIZXPXW7WH7I35DJV |
 
 ## Deployment transactions
 
@@ -105,6 +106,28 @@ Reproduce from the running app (the code that builds and submits lives in the co
 npm run dev
 curl -X POST http://localhost:3000/api/challenge-payment
 ```
+
+
+## New public function — `retirar`
+
+`retirar(caller, encounter_id)` withdraws funds held by the contract that are **not** reserved as escrow for any encounter. It requires the caller to be the creator of the referenced encounter, computes `balance - ReservedStake`, transfers that surplus, emits `funds_withdrawn`, and returns the amount. Locked escrow can never be drained; a second call with no surplus fails with `InvalidState` (error `#6`, verified on-chain). It has two dedicated tests in `contracts/ecstasy/tests/contract_test.rs` (21 tests total).
+
+| Step | Transaction hash |
+|---|---|
+| Create encounter with 1 XLM reserved stake | `c8351a20aecdb6b73f802d6ea14f2032abe8bd3694733057aa7af2162cfa9aa4` |
+| Send 2 XLM surplus to the contract via native SAC | `1c8f55c56d3b89c19605c18fa5ad7d15d0aa3733f99ceef4d4ab09fe76792eb5` |
+| **`retirar` — withdraw the 2 XLM surplus** | `14a8a267412de480364c8f27fdb021eb47c36e8190589fe998b7db752b0ecf0e` |
+
+stellar.expert link for the `retirar` transaction:
+https://stellar.expert/explorer/testnet/tx/14a8a267412de480364c8f27fdb021eb47c36e8190589fe998b7db752b0ecf0e
+
+Observed events: SAC `transfer` of `20000000` stroops contract → creator, and ECSTASY `EncounterEvent` with name `funds_withdrawn`, status `withdrawn`, stake `20000000`. Return value: `"20000000"`. Re-running `retirar` failed with `HostError: Error(Contract, #6)` as expected.
+
+## Netlify deployment configuration
+
+`netlify.toml` sets the monorepo build explicitly: base = repo root, `command = "npm run build"` (builds `@ecstasy/stellar` then `@ecstasy/web`), `publish = "apps/web/.next"`, Node 24. The Next.js Runtime (OpenNext adapter, auto-installed by Netlify) serves App Router route handlers, including `POST /api/challenge-payment`. No additional Netlify plugins are declared. Netlify UI package directory should be `apps/web`; no Stellar secret keys are configured in Netlify environment variables.
+
+Production verification of `/api/challenge-payment` from the public Netlify URL is pending until the site URL is available.
 
 ## Known limitations
 

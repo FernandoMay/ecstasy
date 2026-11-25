@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: contracts/ecstasy (wasm hash
-// 20babecd59bea1c0e94625f9a93143565f5aac34fcf28a0fe8f1eccdf3c8fcca)
+// 1b7f83741c8f00930649cef538d600be3794a79571a8eb71bd516c11a5a984ba)
 // Regenerate with: npm run generate:bindings --workspace=@ecstasy/stellar
 //
 import { Buffer } from "buffer";
@@ -89,6 +89,16 @@ export const EcstasyError = {
 export type EncounterStatus = {tag: "Created", values: void} | {tag: "Accepted", values: void} | {tag: "Completed", values: void} | {tag: "Settled", values: void} | {tag: "Cancelled", values: void} | {tag: "Expired", values: void};
 
 export interface Client {
+  /**
+   * Construct and simulate a retirar transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   * Withdraw funds sent to the contract that are not reserved as escrow
+   * for any encounter. Only the creator of the referenced encounter may
+   * call it, and only the surplus above `ReservedStake` is transferred.
+   * This is a real value-moving state transition with an event; it cannot
+   * drain locked stakes. Returns the amount withdrawn.
+   */
+  retirar: ({caller, encounter_id}: {caller: string, encounter_id: u64}, options?: MethodOptions) => Promise<AssembledTransaction<Result<i128>>>
+
   /**
    * Construct and simulate a get_afterglow transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    * Public read of one participant's afterglow, if submitted.
@@ -181,6 +191,7 @@ export class Client extends ContractClient {
         "AAAABAAAAEhDb250cmFjdCBlcnJvcnMuIE51bWVyaWMgY29kZXMgYXJlIHBhcnQgb2YgdGhlIEFCSSBhbmQgbXVzdCBzdGF5IHN0YWJsZS4AAAAAAAAADEVjc3Rhc3lFcnJvcgAAAAoAAAAAAAAACE5vdEZvdW5kAAAAAQAAAAAAAAAITm90UGFydHkAAAACAAAAAAAAAA1TZWxmRW5jb3VudGVyAAAAAAAAAwAAAAAAAAAMSW52YWxpZFN0YWtlAAAABAAAAAAAAAANSW52YWxpZEV4cGlyeQAAAAAAAAUAAAAAAAAADEludmFsaWRTdGF0ZQAAAAYAAAAAAAAADEludmFsaWRTY29yZQAAAAcAAAAAAAAAEEFscmVhZHlDb21wbGV0ZWQAAAAIAAAAAAAAABBBbHJlYWR5U3VibWl0dGVkAAAACQAAAAAAAAAHRXhwaXJlZAAAAAAK",
         "AAAABQAAAHFFdmVyeSBzdGF0ZSB0cmFuc2l0aW9uIGVtaXRzIHRoaXMgdHlwZWQgZXZlbnQuClRvcGljczogYCgiZWNzdGFzeSIsIGlkLCBuYW1lKWAsIGRhdGE6IGB7IHN0YXR1cywgc3Rha2UsIGFjdG9yIH1gLgAAAAAAAAAAAAAORW5jb3VudGVyRXZlbnQAAAAAAAEAAAAHZWNzdGFzeQAAAAAFAAAAAAAAAAJpZAAAAAAABgAAAAEAAAAAAAAABG5hbWUAAAARAAAAAQAAAAAAAAAGc3RhdHVzAAAAAAARAAAAAAAAAAAAAAAFc3Rha2UAAAAAAAALAAAAAAAAAAAAAAAFYWN0b3IAAAAAAAATAAAAAAAAAAI=",
         "AAAAAgAAANpMaWZlY3ljbGUgb2YgYW4gZW5jb3VudGVyLgoKYENyZWF0ZWRgIGlzIHRoZSBwZW5kaW5nIGludml0YXRpb24uIFRoZXJlIGlzIG5vIHNlcGFyYXRlIGBJTlZJVEVEYCBvcgpgQUNUSVZFYCBzdGF0ZSBpbiB0aGUgTVZQOiBgY3JlYXRlX2VuY291bnRlcmAgZW1pdHMgdGhlIGludml0YXRpb24gYW5kCmBhY2NlcHRfZW5jb3VudGVyYCBtb3ZlcyBkaXJlY3RseSB0byBgQWNjZXB0ZWRgLgAAAAAAAAAAAA9FbmNvdW50ZXJTdGF0dXMAAAAABgAAAAAAAAAAAAAAB0NyZWF0ZWQAAAAAAAAAAAAAAAAIQWNjZXB0ZWQAAAAAAAAAAAAAAAlDb21wbGV0ZWQAAAAAAAAAAAAAAAAAAAdTZXR0bGVkAAAAAAAAAAAAAAAACUNhbmNlbGxlZAAAAAAAAAAAAAAAAAAAB0V4cGlyZWQA",
+        "AAAAAAAAAURXaXRoZHJhdyBmdW5kcyBzZW50IHRvIHRoZSBjb250cmFjdCB0aGF0IGFyZSBub3QgcmVzZXJ2ZWQgYXMgZXNjcm93CmZvciBhbnkgZW5jb3VudGVyLiBPbmx5IHRoZSBjcmVhdG9yIG9mIHRoZSByZWZlcmVuY2VkIGVuY291bnRlciBtYXkKY2FsbCBpdCwgYW5kIG9ubHkgdGhlIHN1cnBsdXMgYWJvdmUgYFJlc2VydmVkU3Rha2VgIGlzIHRyYW5zZmVycmVkLgpUaGlzIGlzIGEgcmVhbCB2YWx1ZS1tb3Zpbmcgc3RhdGUgdHJhbnNpdGlvbiB3aXRoIGFuIGV2ZW50OyBpdCBjYW5ub3QKZHJhaW4gbG9ja2VkIHN0YWtlcy4gUmV0dXJucyB0aGUgYW1vdW50IHdpdGhkcmF3bi4AAAAHcmV0aXJhcgAAAAACAAAAAAAAAAZjYWxsZXIAAAAAABMAAAAAAAAADGVuY291bnRlcl9pZAAAAAYAAAABAAAD6QAAAAsAAAfQAAAADEVjc3Rhc3lFcnJvcg==",
         "AAAAAAAAADlQdWJsaWMgcmVhZCBvZiBvbmUgcGFydGljaXBhbnQncyBhZnRlcmdsb3csIGlmIHN1Ym1pdHRlZC4AAAAAAAANZ2V0X2FmdGVyZ2xvdwAAAAAAAAIAAAAAAAAADGVuY291bnRlcl9pZAAAAAYAAAAAAAAAC3BhcnRpY2lwYW50AAAAABMAAAABAAAD6AAAAAQ=",
         "AAAAAAAAAH1QdWJsaWMgcmVhZC4gRXhwaXJ5IGlzIGRlcml2ZWQgc28gYSBzdGFsZSBzdG9yZWQgc3RhdGUgaXMgcmVwb3J0ZWQKY29ycmVjdGx5IGV2ZW4gYmVmb3JlIGEgdHJhbnNhY3Rpb24gdG91Y2hlcyB0aGUgZW5jb3VudGVyLgAAAAAAAA1nZXRfZW5jb3VudGVyAAAAAAAAAQAAAAAAAAAMZW5jb3VudGVyX2lkAAAABgAAAAEAAAPpAAAH0AAAAAlFbmNvdW50ZXIAAAAAAAfQAAAADEVjc3Rhc3lFcnJvcg==",
         "AAAAAAAAACxFeHBsaWNpdCBjb25zZW50IGJ5IHRoZSBpbnZpdGVkIHBhcnRpY2lwYW50LgAAABBhY2NlcHRfZW5jb3VudGVyAAAAAgAAAAAAAAALcGFydGljaXBhbnQAAAAAEwAAAAAAAAAMZW5jb3VudGVyX2lkAAAABgAAAAEAAAPpAAAAAgAAB9AAAAAMRWNzdGFzeUVycm9y",
@@ -195,7 +206,8 @@ export class Client extends ContractClient {
     )
   }
   public readonly fromJSON = {
-    get_afterglow: this.txFromJSON<Option<u32>>,
+    retirar: this.txFromJSON<Result<i128>>,
+        get_afterglow: this.txFromJSON<Option<u32>>,
         get_encounter: this.txFromJSON<Result<Encounter>>,
         accept_encounter: this.txFromJSON<Result<void>>,
         cancel_encounter: this.txFromJSON<Result<void>>,

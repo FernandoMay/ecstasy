@@ -98,6 +98,9 @@ pub enum DataKey {
     Counter,
     Encounter(u64),
     Afterglow(u64, Address),
+    /// Total stake still locked across all non-terminal encounters. Used to
+    /// protect escrow from the `retirar` withdrawal of surplus funds.
+    ReservedStake,
 }
 
 #[contract]
@@ -105,6 +108,17 @@ pub struct EcstasyContract;
 
 /// Uniform event payload so demo tooling can parse every transition the
 /// same way: `[status_symbol, stake, actor]`, topics `("event_name", id)`.
+fn emit_symbol(env: &Env, name: &str, id: u64, status: Symbol, stake: i128, actor: &Address) {
+    EncounterEvent {
+        id,
+        name: Symbol::new(env, name),
+        status,
+        stake,
+        actor: actor.clone(),
+    }
+    .publish(env);
+}
+
 fn emit(env: &Env, name: &str, id: u64, status: EncounterStatus, stake: i128, actor: &Address) {
     let status_symbol = match status {
         EncounterStatus::Created => Symbol::new(env, "created"),
@@ -114,14 +128,29 @@ fn emit(env: &Env, name: &str, id: u64, status: EncounterStatus, stake: i128, ac
         EncounterStatus::Cancelled => Symbol::new(env, "cancelled"),
         EncounterStatus::Expired => Symbol::new(env, "expired"),
     };
-    EncounterEvent {
-        id,
-        name: Symbol::new(env, name),
-        status: status_symbol,
-        stake,
-        actor: actor.clone(),
-    }
-    .publish(env);
+    emit_symbol(env, name, id, status_symbol, stake, actor);
+}
+
+/// Accounting helpers for funds that belong to an encounter and therefore
+/// must never be withdrawable by `retirar`.
+fn reserved_stake(env: &Env) -> i128 {
+    env.storage().instance().get(&DataKey::ReservedStake).unwrap_or(0)
+}
+
+fn reserve(env: &Env, amount: i128) -> Result<(), EcstasyError> {
+    let next = reserved_stake(env)
+        .checked_add(amount)
+        .ok_or(EcstasyError::InvalidState)?;
+    env.storage().instance().set(&DataKey::ReservedStake, &next);
+    Ok(())
+}
+
+fn release(env: &Env, amount: i128) -> Result<(), EcstasyError> {
+    let next = reserved_stake(env)
+        .checked_sub(amount)
+        .ok_or(EcstasyError::InvalidState)?;
+    env.storage().instance().set(&DataKey::ReservedStake, &next);
+    Ok(())
 }
 
 /// Move tokens held by the contract. The contract authorizes as itself
@@ -212,6 +241,7 @@ impl EcstasyContract {
 
         if stake > 0 {
             pull_from_actor(&env, &asset, &creator, stake);
+            reserve(&env, stake)?;
         }
 
         let encounter = Encounter {
@@ -294,6 +324,7 @@ impl EcstasyContract {
 
         if encounter.stake > 0 {
             payout_from_contract(&env, &encounter.asset, &encounter.creator, encounter.stake);
+            release(&env, encounter.stake)?;
         }
         encounter.status = EncounterStatus::Cancelled;
         store(&env, &encounter);
@@ -387,6 +418,7 @@ impl EcstasyContract {
 
         if encounter.stake > 0 {
             payout_from_contract(&env, &encounter.asset, &encounter.participant, encounter.stake);
+            release(&env, encounter.stake)?;
         }
 
         let mut marker_input = Bytes::new(&env);
@@ -433,6 +465,7 @@ impl EcstasyContract {
 
         if encounter.stake > 0 {
             payout_from_contract(&env, &encounter.asset, &encounter.creator, encounter.stake);
+            release(&env, encounter.stake)?;
         }
         encounter.status = EncounterStatus::Cancelled;
         store(&env, &encounter);
@@ -459,6 +492,7 @@ impl EcstasyContract {
 
         if encounter.stake > 0 {
             payout_from_contract(&env, &encounter.asset, &encounter.creator, encounter.stake);
+            release(&env, encounter.stake)?;
         }
         encounter.status = EncounterStatus::Expired;
         store(&env, &encounter);
@@ -471,6 +505,41 @@ impl EcstasyContract {
             &encounter.creator,
         );
         Ok(())
+    }
+
+    /// Withdraw funds sent to the contract that are not reserved as escrow
+    /// for any encounter. Only the creator of the referenced encounter may
+    /// call it, and only the surplus above `ReservedStake` is transferred.
+    /// This is a real value-moving state transition with an event; it cannot
+    /// drain locked stakes. Returns the amount withdrawn.
+    pub fn retirar(
+        env: Env,
+        caller: Address,
+        encounter_id: u64,
+    ) -> Result<i128, EcstasyError> {
+        caller.require_auth();
+        let encounter = load(&env, encounter_id)?;
+        if caller != encounter.creator {
+            return Err(EcstasyError::NotParty);
+        }
+
+        let balance = TokenClient::new(&env, &encounter.asset).balance(&env.current_contract_address());
+        let reserved = reserved_stake(&env);
+        if balance <= reserved {
+            return Err(EcstasyError::InvalidState);
+        }
+        let amount = balance - reserved;
+
+        payout_from_contract(&env, &encounter.asset, &caller, amount);
+        emit_symbol(
+            &env,
+            "funds_withdrawn",
+            encounter_id,
+            Symbol::new(&env, "withdrawn"),
+            amount,
+            &caller,
+        );
+        Ok(amount)
     }
 
     /// One bounded afterglow score (0..=100) per participant, only after
