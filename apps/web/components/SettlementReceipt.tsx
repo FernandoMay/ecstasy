@@ -1,8 +1,20 @@
 "use client";
 
 import type { Receipt } from "@ecstasy/stellar";
+import { formatVerification } from "@/lib/receipt";
+import { copyToClipboard } from "@/lib/format";
 
-export function SettlementReceipt({ receipt }: { receipt: Receipt }) {
+export function SettlementReceipt({
+  receipt,
+  encounterId,
+  action = "transaction",
+  contractId,
+}: {
+  receipt: Receipt;
+  encounterId?: string;
+  action?: string;
+  contractId?: string;
+}) {
   return (
     <div className="card">
       <h3>Settlement receipt</h3>
@@ -20,6 +32,17 @@ export function SettlementReceipt({ receipt }: { receipt: Receipt }) {
             View transaction in explorer ↗
           </a>
         </p>
+      )}
+      {receipt.hash && (
+        <button
+          className="btn btn-small"
+          style={{ marginTop: 8 }}
+          onClick={() =>
+            copyToClipboard(formatVerification({ encounterId, action, hash: receipt.hash, contractId }))
+          }
+        >
+          Copiar verificación
+        </button>
       )}
     </div>
   );
