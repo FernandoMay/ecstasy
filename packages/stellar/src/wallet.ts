@@ -29,7 +29,7 @@ export interface WalletAdapter {
   signAuthEntry: SignAuthEntryLike;
   getNetwork(): Promise<{ network: string; networkPassphrase: string }>;
   /** Subscribe to account/network changes; returns an unsubscribe function. */
-  watchChanges(callback: (info: { address: string; networkPassphrase: string }) => void): () => void;
+  watchChanges(callback: (info: { address: string; network: string; networkPassphrase: string }) => void): () => void;
 }
 
 function message(error: unknown): string {
@@ -92,11 +92,15 @@ export class FreighterWallet implements WalletAdapter {
     return { network: result.network, networkPassphrase: result.networkPassphrase };
   }
 
-  watchChanges(callback: (info: { address: string; networkPassphrase: string }) => void): () => void {
+  watchChanges(callback: (info: { address: string; network: string; networkPassphrase: string }) => void): () => void {
     const watcher = new WatchWalletChanges(3000);
     watcher.watch((params) => {
       if (params.error || !params.address) return;
-      callback({ address: params.address, networkPassphrase: params.networkPassphrase });
+      callback({
+        address: params.address,
+        network: params.network,
+        networkPassphrase: params.networkPassphrase,
+      });
     });
     return () => watcher.stop();
   }
