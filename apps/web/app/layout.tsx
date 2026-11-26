@@ -22,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Link>
               <nav className="row small">
                 <Link href="/encounters">Encuentros</Link>
+                <Link href="/evidence">Evidencia</Link>
                 <Link href="/boveda">Bóveda</Link>
               </nav>
               <WalletStatus />
