@@ -836,3 +836,32 @@ fn creator_cannot_decline_an_invitation() {
     assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Created);
     assert_eq!(s.token.balance(&s.contract_id), STAKE);
 }
+
+#[test]
+fn surplus_withdrawal_preserves_all_active_escrows() {
+    let s = setup(STAKE);
+    let first = create(&s);
+    let second = create(&s);
+    assert_eq!(s.token.balance(&s.contract_id), 2 * STAKE);
+
+    s.issuer.mint(&s.contract_id, &700);
+    assert_eq!(s.client.retirar(&s.creator, &first), 700);
+    assert_eq!(s.token.balance(&s.contract_id), 2 * STAKE);
+    assert_eq!(s.token.balance(&s.creator), FUNDS - 2 * STAKE + 700);
+
+    accept_and_complete(&s, first);
+    s.client.settle_encounter(&s.creator, &first);
+    assert_eq!(s.token.balance(&s.contract_id), STAKE);
+    assert_eq!(s.token.balance(&s.participant), STAKE);
+
+    // No surplus remains: the second encounter's reserve is protected.
+    assert_eq!(
+        s.client.try_retirar(&s.creator, &second),
+        Err(Ok(EcstasyError::InvalidState))
+    );
+
+    accept_and_complete(&s, second);
+    s.client.settle_encounter(&s.creator, &second);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+    assert_eq!(s.token.balance(&s.participant), 2 * STAKE);
+}
