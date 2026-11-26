@@ -388,6 +388,16 @@ This is an automated/static inspection of storage and source, not a signed Freig
 
 Properties and limits: authenticated encryption detects tampering and wrong passphrases (4 tests); there is no forward secrecy, no key recovery without the passphrase, and the passphrase must be shared out-of-band through a different channel. This is a transport convenience, not an anonymity or identity system.
 
+
+## Product surfaces added for the contest sprint
+
+- `/evidence` — public Evidence Center with 18 curated real Testnet transactions (state machine, vault, payments, idempotency), each with a stellar.expert link and expected/observed result.
+- `/encounters/:id` — detail view with a five-step on-chain timeline (CREATED → ACCEPTED → CREATOR COMPLETED → PARTICIPANT COMPLETED → SETTLED) and copyable verification block per action.
+- Consent now displays canonicalization validity and hash match as separate signals; Accept stays disabled until both are satisfied.
+- Activity events link to the encounter detail route.
+
+Counts after this sprint: 33 shared + 69 web + 38 ECSTASY Rust + 2 vault Rust = **142 automated tests**. No browser wallet signing was executed by this work; G3 remains pending.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

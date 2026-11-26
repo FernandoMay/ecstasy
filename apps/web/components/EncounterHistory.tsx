@@ -103,7 +103,8 @@ export function EncounterHistory() {
           <ul className="muted small">
             {activity.slice(0, 5).map((item, index) => (
               <li key={`${item.id}-${item.at}-${index}`}>
-                Encounter #{item.id}: {item.from} → {item.to} ({new Date(item.at).toLocaleString()})
+                <Link href={`/encounters/${item.id}`}>Encounter #{item.id}</Link>: {item.from} →{" "}
+                {item.to} ({new Date(item.at).toLocaleString()})
               </li>
             ))}
           </ul>

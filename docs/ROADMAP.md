@@ -22,7 +22,7 @@
 ## Phase 2 — Public demo / release candidate
 - [x] web application implemented and production build passing
 - [x] browser Lighthouse 1.00 on `/` and `/boveda`
-- [x] local encounter inbox + in-app activity feed
+- [x] local encounter inbox + in-app activity feed + detail timeline + public Evidence Center
 - [ ] real Testnet E2E through the browser UI with two Freighter wallets — **G3 pending, 0/9 scenarios**
 - [ ] screenshots and hashes for the nine E2E scenarios
 - [x] accessibility pass (automated) and error-state pass
