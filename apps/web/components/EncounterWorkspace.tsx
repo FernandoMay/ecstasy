@@ -18,6 +18,7 @@ import { StakePanel } from "./StakePanel";
 import { TermsHashBadge } from "./TermsHashBadge";
 import { useWallet } from "./WalletProvider";
 import { withRetry } from "@/lib/retry";
+import { availableActions } from "@/lib/action-policy";
 
 function message(cause: unknown): string {
   const raw = cause instanceof Error ? cause.message : String(cause);
@@ -119,6 +120,16 @@ export function EncounterWorkspace({ id }: { id: string }) {
   const isCreator = Boolean(address && address === encounter.creator);
   const isParticipant = Boolean(address && address === encounter.participant);
   const isParty = isCreator || isParticipant;
+  const afterglowSubmitted = isCreator
+    ? scores.creator !== undefined
+    : scores.participant !== undefined;
+  const actions = availableActions({
+    status,
+    role: isCreator ? "creator" : isParticipant ? "participant" : "viewer",
+    creatorCompleted: encounter.creator_completed,
+    participantCompleted: encounter.participant_completed,
+    afterglowSubmitted,
+  });
   const encounterId = parseEncounterId(id);
 
   return (
@@ -197,7 +208,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
           </div>
         )}
 
-        {status === "Created" && isParticipant && (
+        {actions.includes("accept") && (
           <ConsentSheet
             encounter={encounter}
             disabled={busy}
@@ -206,7 +217,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
           />
         )}
 
-        {status === "Created" && isCreator && (
+        {status === "Created" && actions.includes("cancel") && (
           <div className="card">
             <h3>Invitation pending</h3>
             <p className="muted small">
@@ -219,7 +230,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
           </div>
         )}
 
-        {status === "Accepted" && isParty && (
+        {status === "Accepted" && actions.includes("complete") && (
           <div className="card">
             <h3>Complete</h3>
             <p className="muted small">
@@ -242,7 +253,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
           </div>
         )}
 
-        {status === "Completed" && isParty && (
+        {actions.includes("settle") && (
           <div className="card">
             <h3>Settle</h3>
             <p className="muted small">
@@ -259,7 +270,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
           <>
             <AfterglowSlider
               disabled={busy}
-              alreadySubmitted={isCreator ? scores.creator !== undefined : scores.participant !== undefined}
+              alreadySubmitted={!actions.includes("afterglow")}
               onSubmit={(score) => run(() => service.afterglow(address!, encounterId, score))}
             />
             <div className="card">
@@ -274,7 +285,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
           </>
         )}
 
-        {status === "Expired" && (
+        {actions.includes("expire") && (
           <div className="card">
             <h3>Expired</h3>
             <p className="muted small">
