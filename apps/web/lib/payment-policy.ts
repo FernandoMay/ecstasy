@@ -77,22 +77,19 @@ export class RateLimiter {
 }
 
 /** Minimal subset of Netlify Blobs used by the distributed limiter. */
-export type LimitWriteOptions =
-  | { onlyIfMatch: string; onlyIfNew?: never }
-  | { onlyIfNew: boolean; onlyIfMatch?: never };
-
 export interface LimitStore {
-  getWithMetadata(
+  get(
     key: string,
-    options: { type: "json" },
-  ): Promise<{ data: unknown; etag?: string } | null>;
-  setJSON(key: string, data: unknown, options: LimitWriteOptions): Promise<{ modified?: boolean }>;
+    options: { type: "json"; consistency?: "strong" | "eventual" },
+  ): Promise<unknown>;
+  setJSON(key: string, data: unknown): Promise<unknown>;
 }
 
 /**
- * Distributed sliding-window limiter using Netlify Blobs with optimistic
- * concurrency (ETag / onlyIfNew). Multiple function instances share the same
- * key, so the cap holds across instances. Fails closed on heavy contention.
+ * Distributed sliding-window limiter using Netlify Blobs. Strongly consistent
+ * reads with last-write-wins updates: getWithMetadata + conditional writes
+ * hang in the Next.js function runtime, while get + setJSON are verified by
+ * the /api/status probe.
  */
 export class SharedRateLimiter {
   constructor(
@@ -102,23 +99,19 @@ export class SharedRateLimiter {
   ) {}
 
   async check(key: string, now: number = Date.now()): Promise<boolean> {
-    for (let attempt = 0; attempt < 3; attempt += 1) {
-      const entry = await this.store.getWithMetadata(key, { type: "json" });
-      const raw = Array.isArray(entry?.data) ? (entry!.data as unknown[]) : [];
-      const recent = raw.filter(
-        (at): at is number => typeof at === "number" && now - at < this.windowMs,
-      );
-      if (recent.length >= this.maxRequests) return false;
+    const raw = await this.store.get(key, {
+      type: "json",
+      consistency: "strong",
+    });
+    const values = Array.isArray(raw) ? (raw as unknown[]) : [];
+    const recent = values.filter(
+      (at): at is number => typeof at === "number" && now - at < this.windowMs,
+    );
+    if (recent.length >= this.maxRequests) return false;
 
-      recent.push(now);
-      const result = await this.store.setJSON(
-        key,
-        recent,
-        entry?.etag ? { onlyIfMatch: entry.etag } : { onlyIfNew: true },
-      );
-      if (result.modified !== false) return true;
-    }
-    return false;
+    recent.push(now);
+    await this.store.setJSON(key, recent);
+    return true;
   }
 }
 

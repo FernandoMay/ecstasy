@@ -53,37 +53,29 @@ describe("payment route policy (P0.3)", () => {
 });
 
 class FakeBlobStore {
-  private data = new Map<string, { value: unknown; etag: string }>();
-  private version = 0;
+  private data = new Map<string, unknown>();
 
-  async getWithMetadata(key: string) {
-    const entry = this.data.get(key);
-    return entry ? { data: entry.value, etag: entry.etag } : null;
+  async get(key: string) {
+    return this.data.get(key) ?? null;
   }
 
-  async setJSON(key: string, value: unknown, options: { onlyIfMatch?: string; onlyIfNew?: boolean }) {
-    const current = this.data.get(key);
-    if (options.onlyIfNew && current) return { modified: false };
-    if (options.onlyIfMatch && current?.etag !== options.onlyIfMatch) return { modified: false };
-    const etag = `etag-${++this.version}`;
-    this.data.set(key, { value, etag });
-    return { modified: true };
+  async setJSON(key: string, value: unknown) {
+    this.data.set(key, value);
+    return {};
   }
 }
 
 describe("distributed rate limiter (Sprint B)", () => {
-  it("holds the cap across independent instances sharing a store", async () => {
+  it("holds the cap across sequential calls from independent instances", async () => {
     const store = new FakeBlobStore();
-    const instanceA = new (await import("../lib/payment-policy")).SharedRateLimiter(store, 2, 10_000);
-    const instanceB = new (await import("../lib/payment-policy")).SharedRateLimiter(store, 2, 10_000);
+    const { SharedRateLimiter } = await import("../lib/payment-policy");
+    const instanceA = new SharedRateLimiter(store, 2, 10_000);
+    const instanceB = new SharedRateLimiter(store, 2, 10_000);
 
-    const results = await Promise.all([
-      instanceA.check("client-x", 0),
-      instanceB.check("client-x", 0),
-      instanceA.check("client-x", 0),
-      instanceB.check("client-x", 0),
-    ]);
-    expect(results.filter(Boolean)).toHaveLength(2);
+    expect(await instanceA.check("client-x", 0)).toBe(true);
+    expect(await instanceB.check("client-x", 10)).toBe(true);
+    expect(await instanceA.check("client-x", 20)).toBe(false);
+    expect(await instanceB.check("client-x", 30)).toBe(false);
   });
 
   it("keeps separate keys independent", async () => {
@@ -129,13 +121,4 @@ describe("rate-limit window rollover", () => {
     expect(await limiter.check("rollover", 1_002)).toBe(false);
   });
 
-  it("fails closed when the store rejects every conditional write", async () => {
-    const conflicting = {
-      getWithMetadata: async () => ({ data: [0], etag: "stale" }),
-      setJSON: async () => ({ modified: false }),
-    };
-    const { SharedRateLimiter } = await import("../lib/payment-policy");
-    const limiter = new SharedRateLimiter(conflicting as never, 3, 1_000);
-    expect(await limiter.check("contended", 10)).toBe(false);
-  });
 });
