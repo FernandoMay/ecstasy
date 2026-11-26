@@ -123,6 +123,12 @@ export async function POST(request: Request) {
 
   const activeLimiter = await limiter;
   const dryStage = new URL(request.url).searchParams.get("dry");
+  if (dryStage === "limiter-init") {
+    return respond(
+      { status: "limiter-init", mode: activeLimiter.mode, elapsedMs: Date.now() - preflightStarted },
+      { status: 200 },
+    );
+  }
   if (dryStage === "limiter") {
     const allowed = await activeLimiter.check(clientKey(request));
     return respond(
