@@ -398,6 +398,15 @@ Properties and limits: authenticated encryption detects tampering and wrong pass
 
 Counts after this sprint: 33 shared + 69 web + 38 ECSTASY Rust + 2 vault Rust = **142 automated tests**. No browser wallet signing was executed by this work; G3 remains pending.
 
+
+## Final contest sprint: reconciliation, coverage and negative cases
+
+- `/encounters/:id` now displays three evidence layers: local index status, live contract status and the last Horizon receipt status, with an explicit `consistent` / `divergent` / `incomplete` result. It never claims consistency when a layer is missing.
+- `/evidence` adds a protocol coverage matrix (Verified only when a full 64-hex transaction exists) and a table of 12 deliberate failure cases, classified honestly as unit, simulation or transaction evidence. Rejected operations have no fabricated hash.
+- Counts after this sprint: 33 shared + 74 web + 38 ECSTASY Rust + 2 vault Rust = **147 automated tests**.
+
+G3 (Freighter signing) remains a separate gate; it is not inferred from these checks.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
