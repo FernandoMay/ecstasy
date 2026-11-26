@@ -11,16 +11,19 @@ import {
   type EncounterRef,
 } from "@/lib/encounter-history";
 import { useWallet } from "./WalletProvider";
+import { ACTIVITY_KEY, diffStatuses, mergeActivity, parseActivity, type ActivityItem } from "@/lib/activity";
 
 /** Local inbox of encounters. Statuses are read live from the contract. */
 export function EncounterHistory() {
   const { service } = useWallet();
   const [refs, setRefs] = useState<EncounterRef[]>([]);
   const [statuses, setStatuses] = useState<Record<string, string>>({});
+  const [activity, setActivity] = useState<ActivityItem[]>([]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     setRefs(parseHistory(window.localStorage.getItem(HISTORY_KEY)));
+    setActivity(parseActivity(window.localStorage.getItem(ACTIVITY_KEY)));
   }, []);
 
   useEffect(() => {
@@ -36,7 +39,24 @@ export function EncounterHistory() {
           }
         }),
       );
-      if (!cancelled) setStatuses(Object.fromEntries(entries));
+      if (cancelled) return;
+      const current = Object.fromEntries(entries);
+      setStatuses(current);
+      if (typeof window === "undefined") return;
+      const raw = window.localStorage.getItem(ACTIVITY_KEY);
+      const baselineRaw = window.localStorage.getItem("ecstasy:activity-baseline");
+      let baseline: Record<string, string> = {};
+      try {
+        baseline = baselineRaw ? (JSON.parse(baselineRaw) as Record<string, string>) : {};
+      } catch {
+        baseline = {};
+      }
+      const diff = diffStatuses(baseline, current);
+      if (diff.items.length) {
+        window.localStorage.setItem(ACTIVITY_KEY, mergeActivity(raw, diff.items));
+        setActivity(parseActivity(mergeActivity(raw, diff.items)));
+      }
+      window.localStorage.setItem("ecstasy:activity-baseline", JSON.stringify(diff.next));
     })();
     return () => {
       cancelled = true;
@@ -67,7 +87,19 @@ export function EncounterHistory() {
     <div className="card">
       <h2>Mis encuentros</h2>
       <p className="muted small">Índice local de encuentros creados o abiertos en este navegador.</p>
-      <div style={{ height: 14 }} />
+      {activity.length > 0 && (
+        <>
+          <h3>Actividad reciente</h3>
+          <ul className="muted small">
+            {activity.slice(0, 5).map((item, index) => (
+              <li key={`${item.id}-${item.at}-${index}`}>
+                Encounter #{item.id}: {item.from} → {item.to} ({new Date(item.at).toLocaleString()})
+              </li>
+            ))}
+          </ul>
+          <div style={{ height: 14 }} />
+        </>
+      )}
       <div className="grid">
         {refs.map((ref) => (
           <div className="card" key={ref.id} style={{ padding: 16 }}>
