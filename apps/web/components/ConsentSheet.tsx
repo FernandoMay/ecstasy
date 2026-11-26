@@ -3,6 +3,7 @@
 import { termsDigest, toHex, type Encounter, type TermsDocument } from "@ecstasy/stellar";
 import { useState } from "react";
 import { TermsHashBadge } from "./TermsHashBadge";
+import { decryptTerms, parseEnvelopeText } from "@/lib/terms-envelope";
 
 export function ConsentSheet({
   encounter,
@@ -18,6 +19,9 @@ export function ConsentSheet({
   const [pasted, setPasted] = useState("");
   const [match, setMatch] = useState<boolean | null>(null);
   const [busy, setBusy] = useState(false);
+  const [encrypted, setEncrypted] = useState("");
+  const [envelopePassphrase, setEnvelopePassphrase] = useState("");
+  const [importError, setImportError] = useState<string | null>(null);
   const onChainHash = toHex(new Uint8Array(encounter.terms_hash));
 
   async function verify() {
@@ -59,6 +63,42 @@ export function ConsentSheet({
         }}
         aria-label="Private terms document"
       />
+      <div className="field" style={{ marginTop: 16 }}>
+        <label className="label" htmlFor="encrypted-terms">Términos cifrados (opcional)</label>
+        <textarea
+          id="encrypted-terms"
+          className="textarea"
+          value={encrypted}
+          onChange={(event) => setEncrypted(event.target.value)}
+          placeholder="ECSTASY-TERMS-1:..."
+        />
+        <input
+          className="input"
+          type="password"
+          aria-label="Frase secreta para descifrar"
+          value={envelopePassphrase}
+          onChange={(event) => setEnvelopePassphrase(event.target.value)}
+          placeholder="Frase secreta"
+        />
+        <button
+          className="btn btn-small"
+          disabled={!encrypted.trim() || !envelopePassphrase}
+          onClick={async () => {
+            setImportError(null);
+            try {
+              const document = await decryptTerms(parseEnvelopeText(encrypted), envelopePassphrase);
+              setPasted(JSON.stringify(document, null, 2));
+              setMatch(null);
+            } catch (cause) {
+              setImportError(cause instanceof Error ? cause.message : String(cause));
+            }
+          }}
+        >
+          Descifrar y cargar términos
+        </button>
+        {importError && <div className="notice error">{importError}</div>}
+      </div>
+
       <div className="row" style={{ marginTop: 12 }}>
         <button className="btn btn-small" onClick={verify} disabled={!pasted.trim()}>
           Verify terms hash

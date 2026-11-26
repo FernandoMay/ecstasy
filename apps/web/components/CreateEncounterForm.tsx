@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { copyToClipboard, xlmToStroops } from "@/lib/format";
 import { HISTORY_KEY, addEncounterRef } from "@/lib/encounter-history";
+import { encryptTerms, envelopeToText } from "@/lib/terms-envelope";
 import {
   commitmentBytes,
   commitmentForFields,
@@ -36,6 +37,8 @@ export function CreateEncounterForm() {
   const [busy, setBusy] = useState(false);
   const [keepLocal, setKeepLocal] = useState(false);
   const [cleared, setCleared] = useState(false);
+  const [passphrase, setPassphrase] = useState("");
+  const [envelope, setEnvelope] = useState("");
 
   const fields: TermsFormFields = {
     title,
@@ -217,6 +220,46 @@ export function CreateEncounterForm() {
               ? "These are the exact terms whose digest was submitted. Share them through your own channel; the invitation link contains only the encounter id."
               : "Share these private terms through your own channel. The invitation link contains only the encounter id — never the terms."}
           </p>
+        </div>
+      )}
+
+      {shownCommitment && (
+        <div className="field" style={{ marginTop: 16 }}>
+          <label className="label" htmlFor="terms-passphrase">Intercambio cifrado (opcional)</label>
+          <input
+            id="terms-passphrase"
+            className="input"
+            type="password"
+            value={passphrase}
+            onChange={(event) => setPassphrase(event.target.value)}
+            placeholder="Frase secreta compartida (mín. 8 caracteres)"
+          />
+          <p className="muted small">
+            Cifra los términos con AES-GCM y una clave derivada por PBKDF2. Comparte el sobre y la
+            frase por canales distintos; no se guarda ninguna clave.
+          </p>
+          <div className="row">
+            <button
+              className="btn btn-small"
+              disabled={passphrase.length < 8}
+              onClick={async () => {
+                try {
+                  const encrypted = await encryptTerms(shownCommitment.terms, passphrase);
+                  setEnvelope(envelopeToText(encrypted));
+                } catch (cause) {
+                  setError(cause instanceof Error ? cause.message : String(cause));
+                }
+              }}
+            >
+              Cifrar términos
+            </button>
+            {envelope && (
+              <button className="btn btn-small" onClick={() => copyToClipboard(envelope)}>
+                Copiar sobre cifrado
+              </button>
+            )}
+          </div>
+          {envelope && <textarea className="textarea" readOnly value={envelope} aria-label="Sobre cifrado" />}
         </div>
       )}
 
