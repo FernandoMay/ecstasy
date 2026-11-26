@@ -75,8 +75,6 @@ Avoid:
 
 - `Bet`
 - `Win/lose`
-- `Hook up`
-- `Secret lover`
 - `Guaranteed trust`
 - `Anonymous` unless the exact privacy property is technically true.
 
