@@ -70,7 +70,14 @@ export default async (request) => {
   );
 
   if (claim.modified === false) {
-    const existing = await store.get(key, { type: "json", consistency: "strong" });
+    let existing = await store.get(key, { type: "json", consistency: "strong" });
+    // Wait for the winning request to finish so every caller receives the
+    // same final outcome when it can be observed within the function budget.
+    const deadline = Date.now() + 9_000;
+    while (existing?.status === "pending" && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      existing = await store.get(key, { type: "json", consistency: "strong" });
+    }
     return json({ ...existing, reused: true, correlation });
   }
 
