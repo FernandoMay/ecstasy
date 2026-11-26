@@ -45,7 +45,7 @@ cd contracts/ecstasy && stellar contract build
 ## Known limitations (release blockers for "fully validated")
 
 1. Two-wallet Freighter browser E2E and screenshots are not executed; CLI/RPC evidence is not a substitute.
-2. Netlify Blobs context is absent in the function runtime, so the payment rate limiter runs in `local` mode (per instance) rather than shared.
+2. Netlify Blobs is now available and `/api/status` reports `shared` mode, but real cross-instance rate-limit enforcement cannot be demonstrated while the payment function times out before responding.
 3. `/api/challenge-payment` returns 502/504 when Friendbot latency exceeds the function timeout. The historical transaction above was successful; this is an operational limitation, not a contract failure.
 4. One asset and one escrow rule; no dispute arbitration, identity verification or encrypted off-chain storage.
 5. Mainnet deployment, independent security review and license choice are separate owner decisions.

@@ -266,6 +266,13 @@ New: idempotency keys are remembered as pending when a submit outcome is unknown
 
 Local verification of the new payment classification: a slow Friendbot request returned HTTP 504 with code `friendbot_timeout` and header `x-correlation-id: review-run-1234`, demonstrating the timeout is now reported explicitly instead of a generic failure. Production behaviour still depends on the Netlify function runtime as documented above.
 
+
+## Netlify Blobs availability (updated)
+
+`GET /api/status` on the current production deploy reports `rateLimitMode: "shared"`, `blobsAvailable: true`, `rpc: "healthy"` and `health.degraded: false`. The store probe performs a real `setJSON` + strongly consistent `get` against `ecstasy-payment-limits`, so availability and read/write are confirmed in the target runtime.
+
+A real concurrency test against production remains inconclusive: the payment function returns 502/504 from the Friendbot timeout before returning any response headers, so the per-client header cannot be observed. The shared-store limiter is implemented and unit-tested with two simulated instances, but strict global enforcement in production is not yet demonstrated end-to-end.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
