@@ -8,8 +8,8 @@
 
 /** @type {{ A: { label: string, role: string }, B: { label: string, role: string } }} */
 export const TEST_WALLETS = {
-  A: { label: "Wallet A", role: "creator" },
-  B: { label: "Wallet B", role: "participant" },
+  A: { label: "Wallet A", role: "creator", version: "fill-at-execution" },
+  B: { label: "Wallet B", role: "participant", version: "fill-at-execution" },
 };
 
 /** @type {E2eScenario[]} */
@@ -80,6 +80,16 @@ export const SCENARIOS = [
     steps: [
       { id: "pc-1", actor: "any", action: "Send 8 parallel POSTs with the same x-idempotency-key", selector: "POST /api/challenge-payment", expect: "exactly 1 accepted, 7 duplicates", evidence: "responses + hashes" },
       { id: "pc-2", actor: "any", action: "Verify Horizon for the source account", selector: "stellar.expert / Horizon", expect: "exactly one successful challenge payment", evidence: "tx hash" },
+    ],
+  },
+  {
+    id: "wallet-reconnect",
+    name: "Reconnect after pending signature / session loss",
+    steps: [
+      { id: "wr-1", actor: "A", action: "Start a write and reject the Freighter prompt", selector: "Freighter extension", expect: "Explicit rejection message, no false success", evidence: "screenshot" },
+      { id: "wr-2", actor: "A", action: "Disconnect and reconnect the same account", selector: "button:has-text('Disconnect')", expect: "Identity restored, no stale actor", evidence: "screenshot" },
+      { id: "wr-3", actor: "A", action: "Reconnect with a different Freighter account", selector: "Freighter extension", expect: "App shows new identity; old actions hidden", evidence: "screenshot + account" },
+      { id: "wr-4", actor: "any", action: "Confirm both operations in Horizon", selector: "stellar.expert", expect: "Only real successful transactions recorded", evidence: "tx hashes" },
     ],
   },
   {

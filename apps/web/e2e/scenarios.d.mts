@@ -12,8 +12,8 @@ export interface E2eScenario {
   steps: E2eStep[];
 }
 export declare const TEST_WALLETS: {
-  A: { label: string; role: string };
-  B: { label: string; role: string };
+  A: { label: string; role: string; version: string };
+  B: { label: string; role: string; version: string };
 };
 export declare const SCENARIOS: E2eScenario[];
 export declare function validateScenarios(scenarios?: E2eScenario[]): {

@@ -1,6 +1,6 @@
 # Browser E2E checklist — generated
 
-Generated from `apps/web/e2e/scenarios.mjs`: 8 scenarios, 28 steps.
+Generated from `apps/web/e2e/scenarios.mjs`: 9 scenarios, 32 steps.
 Not executed: requires Freighter with two funded Testnet wallets.
 
 - Wallet A: creator
@@ -66,6 +66,15 @@ Not executed: requires Freighter with two funded Testnet wallets.
 |---|---|---|---|---|---|---|
 | pc-1 | any | Send 8 parallel POSTs with the same x-idempotency-key | `POST /api/challenge-payment` | exactly 1 accepted, 7 duplicates | responses + hashes | [ ] |
 | pc-2 | any | Verify Horizon for the source account | `stellar.expert / Horizon` | exactly one successful challenge payment | tx hash | [ ] |
+
+## Reconnect after pending signature / session loss (`wallet-reconnect`)
+
+| Step | Actor | Action | Selector | Expected | Evidence | Done |
+|---|---|---|---|---|---|---|
+| wr-1 | A | Start a write and reject the Freighter prompt | `Freighter extension` | Explicit rejection message, no false success | screenshot | [ ] |
+| wr-2 | A | Disconnect and reconnect the same account | `button:has-text('Disconnect')` | Identity restored, no stale actor | screenshot | [ ] |
+| wr-3 | A | Reconnect with a different Freighter account | `Freighter extension` | App shows new identity; old actions hidden | screenshot + account | [ ] |
+| wr-4 | any | Confirm both operations in Horizon | `stellar.expert` | Only real successful transactions recorded | tx hashes | [ ] |
 
 ## Participant cannot consent to substituted terms (`terms-tampering`)
 
