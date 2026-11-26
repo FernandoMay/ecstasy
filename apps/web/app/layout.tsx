@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </nav>
               <WalletStatus />
             </header>
-            {children}
+            <main>{children}</main>
             <footer className="footer">
               Private by default. Settled on Stellar. &nbsp;·&nbsp; A hash is a commitment, not
               encryption. &nbsp;·&nbsp; On-chain state proves an agreed transition, not that a
