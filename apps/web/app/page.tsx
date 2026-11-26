@@ -27,6 +27,7 @@ export default function Home() {
         <div className="hero-actions">
           <a className="btn btn-primary" href="#create">Create encounter</a>
           <a className="btn" href="#enter">Enter invitation</a>
+          <Link className="btn" href="/boveda">Bóveda 5555 XLM</Link>
         </div>
       </section>
 

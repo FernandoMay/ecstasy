@@ -39,3 +39,8 @@ export {
   Client as GeneratedEcstasyClient,
 } from "./generated/ecstasy";
 export type { Encounter, EncounterStatus } from "./generated/ecstasy";
+
+export {
+  Client as BovedaClient,
+  BovedaError,
+} from "./generated/boveda";

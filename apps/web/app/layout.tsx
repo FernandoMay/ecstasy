@@ -20,6 +20,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/" className="wordmark">
                 ECSTASY
               </Link>
+              <nav className="row small">
+                <Link href="/boveda">Bóveda</Link>
+              </nav>
               <WalletStatus />
             </header>
             {children}

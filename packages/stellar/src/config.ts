@@ -15,6 +15,7 @@ export interface NetworkPreset {
   /** Public deployment defaults; environment variables override them. */
   contractId: string;
   assetContractId: string;
+  bovedaContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -24,6 +25,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     explorerBaseUrl: "https://explorer.stellar.org",
     contractId: "CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65",
     assetContractId: "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
+    bovedaContractId: "CDJNBZDPR633QEAWNQ2FOCJCMIMJSXFA3LHY6SV2WGPQPV6WATERIZUM",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -31,6 +33,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     explorerBaseUrl: "https://explorer.stellar.org",
     contractId: "",
     assetContractId: "",
+    bovedaContractId: "",
   },
 };
 
@@ -42,6 +45,8 @@ export interface AppConfig extends NetworkPreset {
   assetContractId: string;
   /** Human-readable asset code shown in the UI. */
   assetSymbol: string;
+  /** Bóveda vault contract ID. */
+  bovedaContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -84,6 +89,7 @@ export function getConfig(
     contractId,
     assetContractId,
     assetSymbol: env("NEXT_PUBLIC_ASSET_SYMBOL", source) ?? "XLM",
+    bovedaContractId: env("NEXT_PUBLIC_BOVEDA_CONTRACT_ID", source) ?? preset.bovedaContractId,
   };
 }
 
