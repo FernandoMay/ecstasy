@@ -16,8 +16,11 @@ Cuando una función tiene varias ejecuciones, los enlaces se agrupan en la misma
 | `submit_afterglow (creador)` | [CBZKL](https://stellar.expert/explorer/testnet/tx/3846b16768b4cd66f56475cd36ded29d343f832c6927543f6bc60c1c989ddd95) · [CBX2](https://stellar.expert/explorer/testnet/tx/a9388eb82a64d83ed75ed4c4080ad6c8c5f0687f5a94dbef30925a40c4e248e8) · [CARK](https://stellar.expert/explorer/testnet/tx/f17e588fce802ac7d83a9d69922cbf5ef16c534041fb1c1bdd5563084b84e467) · [CDG4](https://stellar.expert/explorer/testnet/tx/e897b11a77124e94b5dbe1d56e1ea4641b988bf45fd6722c94e9ac840cfbe625) |
 | `submit_afterglow (participante)` | [CBZKL](https://stellar.expert/explorer/testnet/tx/2c6fbc5f45ecf45d95fea97dabd8bf629e6c4a9d2d3306c9c7b6005996537aa8) · [CBX2](https://stellar.expert/explorer/testnet/tx/4ec7f294d50b86b23a6fa344f5fc98fffd32b675f1cabaa773a81d0620fe856c) · [CARK](https://stellar.expert/explorer/testnet/tx/af6bf77993ee06633c7af88cfeb4c1b9c2b6d28159fcacb0344ec77c96c68b3f) · [CDG4](https://stellar.expert/explorer/testnet/tx/4f32c16bff15ec124bad51f474d46a90c14310f64f1ae90f97811c3c7d87e52a) |
 | `retirar(caller, encounter_id)` — **función nueva** | [CB7IX](https://stellar.expert/explorer/testnet/tx/14a8a267412de480364c8f27fdb021eb47c36e8190589fe998b7db752b0ecf0e) · [CARK](https://stellar.expert/explorer/testnet/tx/1f595ef796ff309c630b5d909cd7a27dd57a2c826b5d6c651139fb230b6d9ec6) · [CDG4](https://stellar.expert/explorer/testnet/tx/2333ac89b2e536506d174a0fff690aadc636432ebeb9fd3a4a435be665559bfe) |
-| `decline_encounter` / `cancel_encounter` / `expire_encounter` | N/A — ejercitadas en tests Rust y simulación; sin transacción publicada |
-| `get_encounter` / `get_afterglow` | N/A — solo lectura |
+| `decline_encounter` | [decline](https://stellar.expert/explorer/testnet/tx/f9a03e14d9ab7d6f907bcca55fbedff6936f99c20ae962e175d56b2f74500afb) |
+| `cancel_encounter` | [cancel](https://stellar.expert/explorer/testnet/tx/80d8a4748e3b3ac9c35776b49a5a7b1f95177fa54955128c8d9ec73b6c6879a1) |
+| `expire_encounter` | [expire](https://stellar.expert/explorer/testnet/tx/d7a4f6eb73d018e99418986ef831f3ff5cc29c0f8a36e4ba7c499bdac2cc977d) |
+| `get_encounter` | [read tx](https://stellar.expert/explorer/testnet/tx/0017a93ee0284d52553c7fd652366e36f28cc8cec03eebcf2b35ad375b7084c9) (ejecutada con `--send=yes`; solo lectura) |
+| `get_afterglow` | [read tx](https://stellar.expert/explorer/testnet/tx/d155b9193d50f7f3a6cbee17032a7a92e1ddfd5e43ad06db7bd5e54b216ef3d1) (ejecutada con `--send=yes`; solo lectura) |
 
 ## B. Bóveda (reto exprés, contrato `boveda`)
 
@@ -26,7 +29,7 @@ Cuando una función tiene varias ejecuciones, los enlaces se agrupan en la misma
 | `fund(caller, amount)` — fondeo de 5555 XLM | [fondeo](https://stellar.expert/explorer/testnet/tx/9cc9866247bdb5975f56b677645187739fecebf463cb0e9905f434476fc9ad01) |
 | `reclamar(caller, code_hash)` — **función nueva** | [demo 1 XLM](https://stellar.expert/explorer/testnet/tx/d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a) |
 | `__constructor(asset, code_hash)` | [deploy](https://stellar.expert/explorer/testnet/tx/beb1ad83b831dbc3d3c3e81b4ab2d8e0d81c710a0403c9daffc1c47aa99b98ca) |
-| `status()` | N/A — solo lectura |
+| `status()` | [read tx](https://stellar.expert/explorer/testnet/tx/8d83b3d72251afbd5a071e6c1be2f96822b3922dfdddbdba47d739d9e734ddb3) (ejecutada con `--send=yes`; solo lectura) |
 
 ## C. Endpoints y funciones de aplicación
 

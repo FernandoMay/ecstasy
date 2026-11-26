@@ -317,6 +317,13 @@ Se intentó una guarda compartida con Netlify Blobs usando únicamente `get` + `
 
 Verificación pública: `GET https://ecs-tasy.netlify.app/boveda` → 200 y el navegador muestra "Fondada" y "5,555 XLM" leídos desde el contrato. El contrato principal conserva los 5555 XLM para que el jurado los reclame desde la app pública con el código del reto. La función `reclamar` se ejerció en un contrato demo separado para no vaciar la bóveda del premio. Dos tests Rust cubren código inválido, saldo vacío, claim correcto y reclamación duplicada.
 
+
+## Terminal branches and on-chain reads executed (26 nov)
+
+`decline_encounter` (`f9a03e14…`), `cancel_encounter` (`80d8a474…`) and `expire_encounter` (`d7a4f6eb…`) were executed on Testnet against contract `CDG4L3FJ…` with 1 XLM stakes. All three Horizon lookups returned `successful: true` and emitted `encounter_declined`, `encounter_cancelled` and `encounter_expired`. The expiry was finalized by a non-party identity, proving the action is permissionless and refunds the creator.
+
+`get_encounter` (`0017a93e…`), `get_afterglow` (`d155b919…`) and the vault `status` (`8d83b3d7…`) were submitted with `--send=yes` so they also have verifiable transaction hashes; they remain read-only functions in the app. Full links: `docs/TESTNET_TRANSACTIONS.md` and `docs/FUNCTIONS_FOR_REVIEW.md`.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

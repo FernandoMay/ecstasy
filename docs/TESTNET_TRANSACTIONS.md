@@ -99,6 +99,19 @@ Cada secuencia corresponde a: create → accept → complete ×2 → settle → 
 | `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65` · submit_afterglow (creador, 88) | `e897b11a77124e94b5dbe1d56e1ea4641b988bf45fd6722c94e9ac840cfbe625` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e897b11a77124e94b5dbe1d56e1ea4641b988bf45fd6722c94e9ac840cfbe625) |
 | `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65` · submit_afterglow (participante, 92) | `4f32c16bff15ec124bad51f474d46a90c14310f64f1ae90f97811c3c7d87e52a` | [Ver tx](https://stellar.expert/explorer/testnet/tx/4f32c16bff15ec124bad51f474d46a90c14310f64f1ae90f97811c3c7d87e52a) |
 
+## 2b. Terminal branches y lecturas on-chain (ejecutadas 26 nov)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| `decline_encounter` (encuentro #3) | `f9a03e14d9ab7d6f907bcca55fbedff6936f99c20ae962e175d56b2f74500afb` | [Ver tx](https://stellar.expert/explorer/testnet/tx/f9a03e14d9ab7d6f907bcca55fbedff6936f99c20ae962e175d56b2f74500afb) |
+| `cancel_encounter` (encuentro #4) | `80d8a4748e3b3ac9c35776b49a5a7b1f95177fa54955128c8d9ec73b6c6879a1` | [Ver tx](https://stellar.expert/explorer/testnet/tx/80d8a4748e3b3ac9c35776b49a5a7b1f95177fa54955128c8d9ec73b6c6879a1) |
+| `expire_encounter` (encuentro #5, permissionless desde Wallet B) | `d7a4f6eb73d018e99418986ef831f3ff5cc29c0f8a36e4ba7c499bdac2cc977d` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d7a4f6eb73d018e99418986ef831f3ff5cc29c0f8a36e4ba7c499bdac2cc977d) |
+| `get_encounter` (`--send=yes`) | `0017a93ee0284d52553c7fd652366e36f28cc8cec03eebcf2b35ad375b7084c9` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0017a93ee0284d52553c7fd652366e36f28cc8cec03eebcf2b35ad375b7084c9) |
+| `get_afterglow` (`--send=yes`) | `d155b9193d50f7f3a6cbee17032a7a92e1ddfd5e43ad06db7bd5e54b216ef3d1` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d155b9193d50f7f3a6cbee17032a7a92e1ddfd5e43ad06db7bd5e54b216ef3d1) |
+| `status` de la bóveda (`--send=yes`) | `8d83b3d72251afbd5a071e6c1be2f96822b3922dfdddbdba47d739d9e734ddb3` | [Ver tx](https://stellar.expert/explorer/testnet/tx/8d83b3d72251afbd5a071e6c1be2f96822b3922dfdddbdba47d739d9e734ddb3) |
+
+Las tres ramas terminales devolvieron eventos `encounter_declined`, `encounter_cancelled` y `encounter_expired` respectivamente. `expire_encounter` fue llamada por una wallet que no es parte del encuentro, confirmando que es permisionless y que el reembolso va al creador. Los hashes de lectura se generaron con `--send=yes`; las mismas funciones siguen siendo de solo lectura en la app.
+
 ## 3. `retirar` y contabilidad de escrow
 
 | Acción | Hash | Enlace stellar.expert |
