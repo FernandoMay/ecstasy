@@ -222,7 +222,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
       </div>
 
       <div className="card" style={{ marginTop: 20 }}>
-        <h3>Verificación de三层</h3>
+        <h3>Verificación de capas</h3>
         <dl className="kv">
           <dt>Índice local</dt>
           <dd>{localStatus ?? "sin dato local"}</dd>
