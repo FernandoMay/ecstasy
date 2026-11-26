@@ -19,8 +19,8 @@ describe("local encounter history", () => {
     raw = addEncounterRef(raw, { id: "2", role: "participant", addedAt: 200 });
     raw = addEncounterRef(raw, { id: "1", role: "viewer", addedAt: 300 });
     const list = parseHistory(raw);
-    expect(list.map((item) => item.id)).toEqual(["1", "2"]);
-    expect(list[0]?.role).toBe("viewer");
+    expect(list.map((item) => item.id)).toEqual(["2", "1"]);
+    expect(list.find((item) => item.id === "1")?.role).toBe("creator");
   });
 
   it("preserves a known role and original timestamp when re-opening an encounter", () => {
