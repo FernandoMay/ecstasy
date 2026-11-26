@@ -165,7 +165,9 @@ export async function createPaymentRateLimiter(): Promise<{
 export function detectRateLimitMode(
   source: Record<string, string | undefined> = process.env,
 ): "shared" | "local" {
-  return Boolean(source.NETLIFY_BLOBS_CONTEXT) ? "shared" : "local";
+  return Boolean(source.NETLIFY_BLOBS_CONTEXT) && source.USE_SHARED_RATE_LIMITER === "1"
+    ? "shared"
+    : "local";
 }
 
 /** Stable, secret-free telemetry headers on every payment response. */

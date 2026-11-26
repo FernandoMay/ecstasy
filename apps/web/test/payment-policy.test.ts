@@ -100,7 +100,10 @@ describe("rate limit telemetry", () => {
   it("detects the backend from the Netlify environment", async () => {
     const { detectRateLimitMode, rateLimitHeaders } = await import("../lib/payment-policy");
     expect(detectRateLimitMode({})).toBe("local");
-    expect(detectRateLimitMode({ NETLIFY_BLOBS_CONTEXT: "xxx" })).toBe("shared");
+    expect(detectRateLimitMode({ NETLIFY_BLOBS_CONTEXT: "xxx" })).toBe("local");
+    expect(
+      detectRateLimitMode({ NETLIFY_BLOBS_CONTEXT: "xxx", USE_SHARED_RATE_LIMITER: "1" }),
+    ).toBe("shared");
     expect(rateLimitHeaders("local")["x-ecstasy-blobs-context"]).toBe("absent");
     expect(rateLimitHeaders("shared")["x-ecstasy-rate-limit-mode"]).toBe("shared");
   });
