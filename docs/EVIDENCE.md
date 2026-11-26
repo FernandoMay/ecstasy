@@ -287,7 +287,9 @@ Causa raíz del 502 previo: el limitador compartido usaba `getWithMetadata` + es
 
 ## G2 — Concurrencia real (abierta)
 
-Ocho peticiones paralelas con la **misma** `x-idempotency-key` desde la URL pública produjeron **7 pagos aceptados y 1 `friendbot_timeout`**, con hashes distintos. La guarda de idempotencia en memoria no se comparte entre instancias de Netlify, por lo que no garantiza "exactamente uno" en producción. El test unitario sigue demostrando el comportamiento dentro de una instancia. Para cerrar G2 hace falta un estado de idempotencia compartido que no reproduzca el cuelgue de Blobs descrito arriba.
+Ocho peticiones paralelas con la **misma** `x-idempotency-key` desde la URL pública produjeron **7 pagos aceptados y 1 `friendbot_timeout`**, con hashes distintos. La guarda de idempotencia en memoria no se comparte entre instancias de Netlify, por lo que no garantiza "exactamente uno" en producción. El test unitario sigue demostrando el comportamiento dentro de una instancia.
+
+Se intentó una guarda compartida con Netlify Blobs usando únicamente `get` + `setJSON` (el mismo patrón que funciona en `/api/status`), con flag opt-in y re-lectura del propietario. Cualquier acceso a Blobs desde la ruta de pago volvió a colgar la Function (504/30 s), por lo que se revirtió (`f3b046b`) para preservar G1. Tras el revert, un nuevo pago público confirmó el restablecimiento: `494d9e603cfb470ce6356027f199b6c95641839eaa237d11cdb2e739a138fc02` (memo `SHIP-S97KF8`, HTTP 200). Conclusión: el store compartido no puede residir en el bundle de esta ruta; G2 requiere mover la idempotencia a una Netlify Function nativa o a un store externo, sin reintroducir el timeout en el pago.
 
 ## Known limitations
 
