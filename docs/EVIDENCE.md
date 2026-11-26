@@ -260,7 +260,7 @@ New deployment: contract `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT
 
 Additional automated invariants added after RC-1: state-transition module (6 states), outsider authorization matrix, expiry/cancel races, contract/asset ID mismatch rejection, rate-limit rollover and CAS contention, payment idempotency (collision, expiry, 8 concurrent identical requests), strict Stellar account validation, dirty-tree CI detection and correlation IDs on payment responses/logs.
 
-Counts after deep hardening: 38 Rust + 26 shared + 42 web = **106 automated tests** (unit/invariant level, not E2E). Typecheck, production build, Clippy `-D warnings`, wasm fingerprint, version drift and production smoke remain green.
+Counts after deep hardening: 38 Rust + 26 shared + 47 web = **111 automated tests** (unit/invariant level, not E2E). Typecheck, production build, Clippy `-D warnings`, wasm fingerprint, version drift and production smoke remain green.
 
 New: idempotency keys are remembered as pending when a submit outcome is unknown, so a retry returns 409 `duplicate_request_pending` with a reconciliation URL instead of risking a second payment. `GET /api/challenge-payment?key=...` queries Horizon using the stored ephemeral source address and resolves the key to the confirmed hash when the payment landed. No secret material is stored. Action visibility is derived from a single policy module used by the UI, and a submitted transaction's source account is verified against the connected wallet after signing. Contract tests now cover escrow conservation across mixed terminal paths and zero-stake expiry.
 
