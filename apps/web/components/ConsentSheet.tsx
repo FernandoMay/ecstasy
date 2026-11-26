@@ -1,6 +1,6 @@
 "use client";
 
-import { termsDigest, toHex, type Encounter, type TermsDocument } from "@ecstasy/stellar";
+import { canonicalizeTerms, termsDigest, toHex, type Encounter, type TermsDocument } from "@ecstasy/stellar";
 import { useState } from "react";
 import { TermsHashBadge } from "./TermsHashBadge";
 import { decryptTerms, parseEnvelopeText } from "@/lib/terms-envelope";
@@ -18,6 +18,7 @@ export function ConsentSheet({
 }) {
   const [pasted, setPasted] = useState("");
   const [match, setMatch] = useState<boolean | null>(null);
+  const [canonicalValid, setCanonicalValid] = useState(false);
   const [busy, setBusy] = useState(false);
   const [encrypted, setEncrypted] = useState("");
   const [envelopePassphrase, setEnvelopePassphrase] = useState("");
@@ -27,6 +28,8 @@ export function ConsentSheet({
   async function verify() {
     try {
       const doc = JSON.parse(pasted) as TermsDocument;
+      const canonical = canonicalizeTerms(doc);
+      setCanonicalValid(canonical.length > 0 && canonical.startsWith("{"));
       const digest = toHex(await termsDigest(doc));
       setMatch(digest === onChainHash);
     } catch {
@@ -60,6 +63,7 @@ export function ConsentSheet({
         onChange={(event) => {
           setPasted(event.target.value);
           setMatch(null);
+          setCanonicalValid(false);
         }}
         aria-label="Private terms document"
       />
@@ -89,6 +93,7 @@ export function ConsentSheet({
               const document = await decryptTerms(parseEnvelopeText(encrypted), envelopePassphrase);
               setPasted(JSON.stringify(document, null, 2));
               setMatch(null);
+              setCanonicalValid(true);
             } catch (cause) {
               setImportError(cause instanceof Error ? cause.message : String(cause));
             }
@@ -103,7 +108,8 @@ export function ConsentSheet({
         <button className="btn btn-small" onClick={verify} disabled={!pasted.trim()}>
           Verify terms hash
         </button>
-        {match === true && <span className="small success-text">✓ Terms match the commitment</span>}
+        {canonicalValid && <span className="small success-text">✓ Canonicalization valid</span>}
+        {match === true && <span className="small success-text">✓ Hash matches on-chain</span>}
         {match === false && <span className="small" style={{ color: "var(--danger)" }}>✕ Terms do not match — do not consent</span>}
       </div>
       <div className="row" style={{ marginTop: 18 }}>
