@@ -16,6 +16,10 @@ import {
   isPaymentRouteEnabled,
   resolveDestination,
 } from "@/lib/payment-policy";
+import {
+  PaymentRouteError,
+  classifyPaymentFailure,
+} from "@/lib/payment-errors";
 
 /**
  * Mission 02 payment, enabled only on Testnet.
@@ -66,7 +70,10 @@ export async function POST(request: Request) {
   const activeLimiter = await limiter;
   const limitHeaders = { "x-ecstasy-rate-limit-mode": activeLimiter.mode };
   if (!(await activeLimiter.check(clientKey(request)))) {
-    return NextResponse.json({ error: "Too many requests" }, { status: 429, headers: limitHeaders });
+    return NextResponse.json(
+      { error: "Too many requests", code: "rate_limited" },
+      { status: 429, headers: limitHeaders },
+    );
   }
 
   let destination: string;
@@ -74,7 +81,7 @@ export async function POST(request: Request) {
     destination = resolveDestination(process.env.PAYMENT_DESTINATION);
   } catch (cause) {
     return NextResponse.json(
-      { error: cause instanceof Error ? cause.message : String(cause) },
+      { error: "The payment destination is not configured correctly.", code: "invalid_configuration" },
       { status: 500 },
     );
   }
@@ -85,10 +92,18 @@ export async function POST(request: Request) {
     const started = Date.now();
     const source = Keypair.random();
     const keygenMs = Date.now() - started;
-    const fundResponse = await fetch(`${FRIEND_BOT}?addr=${source.publicKey()}`);
+    let fundResponse: Response;
+    try {
+      fundResponse = await fetch(`${FRIEND_BOT}?addr=${source.publicKey()}`, {
+        signal: AbortSignal.timeout(9_000),
+      });
+    } catch (cause) {
+      const timedOut = cause instanceof Error && /timeout|abort/i.test(cause.message);
+      throw new PaymentRouteError(timedOut ? "friendbot_timeout" : "friendbot_unavailable");
+    }
     if (!fundResponse.ok) {
       console.warn(JSON.stringify({ event: "friendbot_failed", status: fundResponse.status }));
-      throw new Error(`Friendbot failed with HTTP ${fundResponse.status}`);
+      throw new PaymentRouteError("friendbot_unavailable");
     }
 
     // Derive the new account's sequence from the friendbot transaction ledger
@@ -97,7 +112,9 @@ export async function POST(request: Request) {
     let sequence: string | undefined;
     const funded = (await fundResponse.json()) as { hash?: string };
     if (funded.hash) {
-      const fundingTx = await fetch(`${HORIZON_TESTNET}/transactions/${funded.hash}`);
+      const fundingTx = await fetch(`${HORIZON_TESTNET}/transactions/${funded.hash}`, {
+        signal: AbortSignal.timeout(6_000),
+      });
       if (fundingTx.ok) {
         const info = (await fundingTx.json()) as { ledger?: number };
         if (typeof info.ledger === "number") {
@@ -126,16 +143,25 @@ export async function POST(request: Request) {
       .build();
     transaction.sign(source);
 
-    const submitResponse = await fetch(`${HORIZON_TESTNET}/transactions`, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ tx: transaction.toXdr() }).toString(),
-    });
+    let submitResponse: Response;
+    try {
+      submitResponse = await fetch(`${HORIZON_TESTNET}/transactions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ tx: transaction.toXdr() }).toString(),
+        signal: AbortSignal.timeout(8_000),
+      });
+    } catch {
+      throw new PaymentRouteError("rpc_unavailable");
+    }
     const submitted = (await submitResponse.json()) as { hash?: string; result_codes?: unknown };
     console.info(JSON.stringify({ event: "payment_timing", keygenMs, fundedMs, accountMs, totalMs: Date.now() - started }));
     if (!submitResponse.ok || !submitted.hash) {
       console.warn(JSON.stringify({ event: "payment_rejected", detail: submitted }));
-      return NextResponse.json({ error: "Transaction rejected", detail: submitted }, { status: 502 });
+      return NextResponse.json(
+        { error: classifyPaymentFailure(new PaymentRouteError("transaction_rejected")).message, code: "transaction_rejected", detail: submitted },
+        { status: 502, headers: limitHeaders },
+      );
     }
 
     console.info(
@@ -159,9 +185,11 @@ export async function POST(request: Request) {
       network: "testnet",
     }, { headers: limitHeaders });
   } catch (cause) {
+    const failure = classifyPaymentFailure(cause);
+    console.warn(JSON.stringify({ event: "payment_failed", kind: failure.kind }));
     return NextResponse.json(
-      { error: cause instanceof Error ? cause.message : String(cause) },
-      { status: 500 },
+      { error: failure.message, code: failure.kind },
+      { status: failure.httpStatus, headers: limitHeaders },
     );
   }
 }
