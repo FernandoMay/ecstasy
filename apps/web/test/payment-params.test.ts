@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PAYMENT_PARAMS, samePaymentParams } from "../../../netlify/functions/payment-params.mjs";
+import { PAYMENT_PARAMS, samePaymentParams } from "../../../netlify/lib/payment-params.mjs";
 
 describe("immutable payment parameters", () => {
   it("accepts the fixed params or an absent legacy field", () => {

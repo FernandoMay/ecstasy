@@ -1,5 +1,5 @@
 import { getStore } from "@netlify/blobs";
-import { PAYMENT_PARAMS, samePaymentParams } from "./payment-params.mjs";
+import { PAYMENT_PARAMS, samePaymentParams } from "../lib/payment-params.mjs";
 import {
   Account,
   Asset,
