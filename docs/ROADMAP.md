@@ -10,7 +10,7 @@
 
 ## Phase 1 — Testnet MVP
 - [x] Soroban contract implementation (state machine + escrow + events + `retirar`)
-- [x] unit tests (21 tests, including auth, replay, expiry, bounds and `retirar`)
+- [x] unit tests (38 tests, including auth, replay, expiry, bounds, multi-asset, TTL and `retirar`)
 - [x] Testnet deployment (contract ID in `docs/EVIDENCE.md`)
 - [x] wallet adapter (Freighter, replaceable interface)
 - [x] create/invite/accept (real signed transactions)

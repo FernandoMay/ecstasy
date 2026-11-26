@@ -83,7 +83,7 @@ cd contracts/ecstasy && cargo test # 38 tests del contrato
 cd ../.. && npm run dev            # http://localhost:3000
 ```
 
-Total: **110 tests automatizados** (unitarios y de invariantes; **no** son 110 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
+Total: **121 tests automatizados** = 33 shared + 48 web + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 121 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
 
 Abre la app con Freighter en Testnet. Usa dos wallets/contextos para los dos roles. Los términos privados se guardan solo en el navegador si haces opt-in y se pueden borrar desde el formulario.
 

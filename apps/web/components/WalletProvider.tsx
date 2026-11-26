@@ -3,6 +3,7 @@
 import {
   assertWalletNetwork,
   connectWallet,
+  networkMatches,
   EcstasyService,
   FreighterWallet,
   getConfig,
@@ -91,7 +92,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   // React to account/network switches made inside Freighter while the app is open.
   useEffect(() => {
     return wallet.watchChanges(({ address: nextAddress, networkPassphrase }) => {
-      if (networkPassphrase !== config.networkPassphrase) {
+      const sameNetwork = networkMatches(
+        { network: params.network ?? "", networkPassphrase },
+        config.networkPassphrase,
+      );
+      if (!sameNetwork) {
         setAddress(null);
         setNetworkMismatch(true);
         setError("Wallet switched to another network. Switch back to Testnet and reconnect.");
