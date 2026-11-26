@@ -1,6 +1,7 @@
 "use client";
 
-import { EVIDENCE, explorerUrl, shortAddress } from "@ecstasy/stellar";
+import { shortAddress } from "@ecstasy/stellar";
+import { EVIDENCE, explorerUrl } from "@/lib/evidence";
 import Link from "next/link";
 
 export default function EvidencePage() {
