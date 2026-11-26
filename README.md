@@ -61,6 +61,8 @@ Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archi
 | E2E en navegador con dos wallets Freighter | ⏳ G3 |
 | Mainnet | ❌ decisión separada |
 
+Registro para revisión: `docs/FUNCTIONS_FOR_REVIEW.md` (nombre de la función + transacción en Testnet) y `docs/TESTNET_TRANSACTIONS.md` (todos los hashes).
+
 Dos pagos públicos verificados en Horizon:
 
 - https://stellar.expert/explorer/testnet/tx/07a3183f03be6c6cea24e3380e84d5786217e2145a6f48d875081af7886d1064

@@ -126,7 +126,7 @@ El evento observado en cada `retirar` fue `EncounterEvent` con `name=funds_withd
 
 Todos los pagos anteriores fueron verificados en Horizon con `successful: true`, `memo_type: text` y `memo: SHIP-S97KF8`. Formato de verificación alternativo: `https://horizon-testnet.stellar.org/transactions/<hash>`
 
-## 5. Prueba de concurrencia (G2, abierta)
+## 5. Prueba de concurrencia inicial (G2: evidencia del fallo)
 
 Ocho peticiones paralelas con la misma `x-idempotency-key` desde la URL pública: **7 pagos aceptados y 1 `friendbot_timeout`**. Esto demuestra que la guarda en memoria no se comparte entre instancias de Netlify.
 
