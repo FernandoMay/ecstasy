@@ -86,12 +86,12 @@ Dos pagos públicos verificados en Horizon:
 npm install                        # workspaces: apps/web + packages/stellar
 cp .env.example apps/web/.env.local
 npm run build                      # shared package, luego web
-npm test                           # 26 shared + 46 web
+npm test                           # 33 shared + 55 web
 cd contracts/ecstasy && cargo test # 38 tests del contrato
 cd ../.. && npm run dev            # http://localhost:3000
 ```
 
-Total: **124 tests automatizados** = 33 shared + 55 web + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 121 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
+Total: **124 tests automatizados** = 33 shared + 55 web + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 124 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
 
 Abre la app con Freighter en Testnet. Usa dos wallets/contextos para los dos roles. Los términos privados se guardan solo en el navegador si haces opt-in y se pueden borrar desde el formulario.
 
