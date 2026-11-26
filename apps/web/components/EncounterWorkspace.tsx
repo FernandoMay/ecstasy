@@ -17,6 +17,7 @@ import { SettlementReceipt } from "./SettlementReceipt";
 import { StakePanel } from "./StakePanel";
 import { TermsHashBadge } from "./TermsHashBadge";
 import { useWallet } from "./WalletProvider";
+import { withRetry } from "@/lib/retry";
 
 function message(cause: unknown): string {
   const raw = cause instanceof Error ? cause.message : String(cause);
@@ -44,7 +45,10 @@ export function EncounterWorkspace({ id }: { id: string }) {
       return false;
     }
     try {
-      const next = await service.read(parsed);
+      const next = await withRetry(() => service.read(parsed), {
+        attempts: 3,
+        delaysMs: [300, 700],
+      });
       setEncounter(next);
       setReadError(null);
       setStale(false);
