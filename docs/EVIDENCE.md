@@ -336,6 +336,25 @@ Lighthouse against the public Netlify deployment after adding the `<main>` landm
 
 Initial measurements found two real defects (missing `main` landmark, unlabeled asset/invitation inputs); both were fixed and re-measured. This is an automated audit of the rendered pages, not the two-wallet Freighter E2E, which remains pending.
 
+
+## G3 — user-flow attempt (26 nov, blocked by wallet extension)
+
+An actual browser attempt was made against the public app at `https://ecs-tasy.netlify.app/boveda`:
+
+1. The page loaded, showed the vault as `Fondada` with `5,555 XLM` read from the contract.
+2. The `Conectar y reclamar` flow was clicked.
+3. The app returned the real error state: *"Freighter is not installed or locked. Install/unlock it and retry."* with a link to https://www.freighter.app/.
+4. No wallet signature was requested and no encounter/vault transaction was produced by this attempt. This is **not** counted as executed E2E.
+
+Two independent Testnet identities are prepared and funded (public addresses only; no seed phrases or keys are recorded here):
+
+| Wallet | Public address | Balance (Horizon, 26 nov) |
+|---|---|---|
+| Wallet A (creator) | `GAUZSVWQY5KOFMWZA5YJEBOECWBGSZHPSADVI6G3ZB54JULLDL6IKISJ` | 4359.6893204 XLM |
+| Wallet B (participant) | `GBQV7XDOMA6342BHICZGIRBDOZVTMRL7A7A3MWVL4SRP7EH37NAPO5KQ` | 10004.9294107 XLM |
+
+`docs/E2E_CHECKLIST.md` still has 9 scenarios / 32 steps with none checked. G3 remains open until both wallets are available as browser extensions and the signed flow is captured with hashes and screenshots.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
