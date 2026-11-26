@@ -27,7 +27,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     explorerBaseUrl: "https://explorer.stellar.org",
     contractId: "CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65",
     assetContractId: "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-    bovedaContractId: "CDJNBZDPR633QEAWNQ2FOCJCMIMJSXFA3LHY6SV2WGPQPV6WATERIZUM",
+    bovedaContractId: "CAWOC5VH7QFM55YT7ICEACGTEOS5BF747IREQWK2DHTYKG25UTISAVZC",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",

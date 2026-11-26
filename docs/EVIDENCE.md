@@ -307,15 +307,16 @@ Se intentó una guarda compartida con Netlify Blobs usando únicamente `get` + `
 
 | Item | Valor |
 |---|---|
-| Contrato principal (5555 XLM bloqueados) | `CDJNBZDPR633QEAWNQ2FOCJCMIMJSXFA3LHY6SV2WGPQPV6WATERIZUM` |
+| Contrato principal (5555 XLM bloqueados) | `CAWOC5VH7QFM55YT7ICEACGTEOS5BF747IREQWK2DHTYKG25UTISAVZC` |
 | Wasm hash | `7d19a5e979def3bb33cbfdabb91dea167e837abe8e9186d0542d97d3a5a30d5a` |
 | Deploy tx | https://stellar.expert/explorer/testnet/tx/beb1ad83b831dbc3d3c3e81b4ab2d8e0d81c710a0403c9daffc1c47aa99b98ca |
-| Fondeo 5555 XLM tx | https://stellar.expert/explorer/testnet/tx/9cc9866247bdb5975f56b677645187739fecebf463cb0e9905f434476fc9ad01 |
+| Fondeo original 5555 XLM tx | https://stellar.expert/explorer/testnet/tx/9cc9866247bdb5975f56b677645187739fecebf463cb0e9905f434476fc9ad01 |
+| Nuevo fondeo 5555 XLM (bóveda re-abierta) | https://stellar.expert/explorer/testnet/tx/d31078891788f47453833ccc71794d92973a00fcda9bb60d814df5b191868f9a |
 | App pública | https://ecs-tasy.netlify.app/boveda |
 | Contrato demo (1 XLM, reclamado) | `CAXMW6JYOZZ2OO2XWZ35E6EI7SNO6QV7ACPVJA2RZSXXZ6YX6D7DDUYD` |
 | `reclamar` tx (función nueva) | https://stellar.expert/explorer/testnet/tx/d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a |
 
-Verificación pública: `GET https://ecs-tasy.netlify.app/boveda` → 200 y el navegador muestra "Fondada" y "5,555 XLM" leídos desde el contrato. El contrato principal conserva los 5555 XLM para que el jurado los reclame desde la app pública con el código del reto. La función `reclamar` se ejerció en un contrato demo separado para no vaciar la bóveda del premio. Dos tests Rust cubren código inválido, saldo vacío, claim correcto y reclamación duplicada.
+La bóveda original fue reclamada (`status` → `[true,"0"]`), por lo que es terminal y no admite recarga. Se desplegó una bóveda nueva con el mismo WASM y se fondeó de nuevo con 5555 XLM desde Wallet B; `status` → `[false,"55550000000"]`. Verificación pública: `GET https://ecs-tasy.netlify.app/boveda` → 200 y el navegador muestra "Fondada" y "5,555 XLM" leídos desde el contrato activo. La función `reclamar` se ejerció en un contrato demo separado para no vaciar la bóveda del premio. Dos tests Rust cubren código inválido, saldo vacío, claim correcto y reclamación duplicada.
 
 
 ## Terminal branches and on-chain reads executed (26 nov)

@@ -50,7 +50,7 @@ Cuando una función tiene varias ejecuciones, los enlaces se agrupan en la misma
 
 ### `reclamar(caller, code_hash)`
 
-- Bóveda principal `CDJNBZDPR633QEAWNQ2FOCJCMIMJSXFA3LHY6SV2WGPQPV6WATERIZUM` con 5555 XLM **sin reclamar**; la transacción enlazada usa una bóveda demo de 1 XLM (`CAXMW6JYOZZ2OO2XWZ35E6EI7SNO6QV7ACPVJA2RZSXXZ6YX6D7DDUYD`) para no vaciar el premio.
+- Bóveda principal `CAWOC5VH7QFM55YT7ICEACGTEOS5BF747IREQWK2DHTYKG25UTISAVZC` con 5555 XLM **sin reclamar**; la transacción enlazada usa una bóveda demo de 1 XLM (`CAXMW6JYOZZ2OO2XWZ35E6EI7SNO6QV7ACPVJA2RZSXXZ6YX6D7DDUYD`) para no vaciar el premio.
 - Compara el SHA-256 del código con el digest fijado en el constructor; transfiere todo el saldo una sola vez y emite `ClaimEvent`. Código inválido → #1; duplicado → #2.
 - Test: `contracts/boveda/tests/boveda_test.rs`.
 
