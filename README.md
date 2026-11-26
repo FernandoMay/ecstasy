@@ -10,7 +10,7 @@ ECSTASY es un protocolo de acuerdos privados entre dos partes, construido sobre 
 
 ## Qué es (y qué no es)
 
-Es una primitiva Web3 neutral para acuerdos bilaterales: privacidad, consentimiento explícito, compromisos criptográficos, liquidación y consecuencias. **No es una app de citas** y no requiere contenido sexual. Un "encuentro" puede ser una cita, una experiencia, un reto, una colaboración, un regalo condicional o cualquier otro acuerdo entre dos partes.
+Es una primitiva Web3 neutral para acuerdos bilaterales: privacidad, consentimiento explícito, compromisos criptográficos, liquidación y consecuencias.
 
 Lo que dice la cadena no es la verdad del encuentro: es la prueba de que el contrato aceptó una transición de estado bajo sus reglas.
 

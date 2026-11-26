@@ -14,7 +14,7 @@ Assume:
 ## Non-negotiables
 
 1. Never request or store seed phrases/private keys.
-2. Never put private terms, chat, photos, sexual content, or unnecessary PII on-chain.
+2. Never put private terms, chat, photos, or unnecessary PII on-chain.
 3. Never describe a hash as privacy if the preimage is public elsewhere.
 4. Never call an encounter `verified` merely because a transaction exists.
 5. All contract authorization must be enforced on-chain.

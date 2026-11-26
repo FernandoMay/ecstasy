@@ -12,7 +12,7 @@
 
 ## Positioning
 
-ECSTASY is not a dating app, casino, anonymous marketplace, or adult-content platform. It is a Web3 primitive for bilateral agreements where private context stays off-chain and verifiable state transitions settle on Stellar.
+ECSTASY is a Web3 primitive for bilateral agreements where private context stays off-chain and verifiable state transitions settle on Stellar.
 
 ## Voice
 
