@@ -2,8 +2,10 @@
 
 import { BovedaClaim } from "@/components/BovedaClaim";
 import { ExplorerEvidence } from "@/components/ExplorerEvidence";
+import { useWallet } from "@/components/WalletProvider";
 
 export default function BovedaPage() {
+  const { config } = useWallet();
   return (
     <>
       <section className="hero" style={{ paddingTop: 36 }}>
@@ -18,7 +20,7 @@ export default function BovedaPage() {
       </section>
       <div className="grid" style={{ alignItems: "start" }}>
         <BovedaClaim />
-        <ExplorerEvidence />
+        <ExplorerEvidence contractId={config.bovedaContractId} />
       </div>
     </>
   );
