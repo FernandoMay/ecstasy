@@ -1,27 +1,33 @@
 "use client";
 
-import { statusName, type Encounter, type EncounterStatus } from "@ecstasy/stellar";
-
-const STEPS = ["Created", "Accepted", "Completed", "Settled"] as const;
-
-function rank(status: EncounterStatus): number {
-  const name = statusName(status);
-  const index = STEPS.indexOf(name as (typeof STEPS)[number]);
-  if (index >= 0) return index + 1;
-  return -1;
-}
+import type { Encounter } from "@ecstasy/stellar";
+import { timelineSteps } from "@/lib/encounter-timeline";
 
 export function EncounterTimeline({ encounter }: { encounter: Encounter }) {
-  const current = rank(encounter.status);
+  const steps = timelineSteps(
+    typeof encounter.status === "string" ? (encounter.status as never) : encounter.status.tag,
+    {
+      creatorCompleted: encounter.creator_completed,
+      participantCompleted: encounter.participant_completed,
+    },
+  );
   return (
-    <ul className="timeline">
-      {STEPS.map((step, index) => (
-        <li key={step} className={current >= index + 1 ? "done" : undefined}>
-          {current >= index + 1 ? "✓ " : ""}
-          {step}
+    <ol className="timeline" style={{ listStyle: "none", padding: 0, margin: 0 }}>
+      {steps.map((step, index) => (
+        <li
+          key={step.key}
+          className={step.done ? "done" : undefined}
+          style={{
+            marginBottom: 8,
+            borderLeft: `3px solid ${step.done ? "var(--success)" : "var(--border)"}`,
+            paddingLeft: 10,
+          }}
+        >
+          <span className="muted small">{index + 1}. </span>
+          {step.done ? "✓ " : ""}
+          {step.label}
         </li>
       ))}
-      {current === -1 && <li className="done">✕ {statusName(encounter.status)}</li>}
-    </ul>
+    </ol>
   );
 }
