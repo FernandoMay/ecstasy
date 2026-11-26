@@ -25,6 +25,7 @@ export type { EcstasyClient, ClientOptions } from "./contract";
 
 export { EcstasyService, parseEncounterId, statusName } from "./encounter";
 export { canTransition, isTerminal, nextStates, statusNameOf } from "./state-machine";
+export { assertStellarAccount, isStellarAccount } from "./validation";
 export type { StatusName } from "./state-machine";
 export type { CreateEncounterInput, Receipt, WriteResult } from "./encounter";
 

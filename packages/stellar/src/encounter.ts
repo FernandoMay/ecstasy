@@ -7,6 +7,7 @@ import { transactionUrl } from "./explorer";
 import type { Encounter, EncounterStatus } from "./generated/ecstasy";
 import type { WalletAdapter } from "./wallet";
 import { assertWalletIdentity, assertWalletNetwork } from "./wallet";
+import { assertStellarAccount } from "./validation";
 
 export interface Receipt {
   hash: string;
@@ -114,6 +115,8 @@ export class EcstasyService {
     if (input.stake < 0n) {
       throw new Error("stake cannot be negative");
     }
+    assertStellarAccount(input.creator, "creator");
+    assertStellarAccount(input.participant, "participant");
     if (!/^C[A-Z2-7]{55}$/.test(this.config.assetContractId)) {
       throw new Error("NEXT_PUBLIC_ASSET_CONTRACT_ID is not configured for this network");
     }
