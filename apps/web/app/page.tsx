@@ -44,6 +44,8 @@ export default function Home() {
         <p className="muted small">An invitation link contains only an encounter id — never private terms.</p>
         <div className="row">
           <input
+            id="encounter-id"
+            aria-label="Encounter id"
             className="input"
             style={{ maxWidth: 220 }}
             placeholder="Encounter id"
