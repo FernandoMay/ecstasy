@@ -302,6 +302,21 @@ Se intentó una guarda compartida con Netlify Blobs usando únicamente `get` + `
 
 `apps/web/e2e/scenarios.mjs` now has 9 scenarios / 32 steps, including reconnect after a rejected or pending signature, account switch during signing and wallet version placeholders. `docs/E2E_CHECKLIST.md` is generated from it. No Freighter extension is available in this execution environment, so G3 remains pending.
 
+
+## Bóveda · reto exprés 26 nov
+
+| Item | Valor |
+|---|---|
+| Contrato principal (5555 XLM bloqueados) | `CDJNBZDPR633QEAWNQ2FOCJCMIMJSXFA3LHY6SV2WGPQPV6WATERIZUM` |
+| Wasm hash | `7d19a5e979def3bb33cbfdabb91dea167e837abe8e9186d0542d97d3a5a30d5a` |
+| Deploy tx | https://stellar.expert/explorer/testnet/tx/beb1ad83b831dbc3d3c3e81b4ab2d8e0d81c710a0403c9daffc1c47aa99b98ca |
+| Fondeo 5555 XLM tx | https://stellar.expert/explorer/testnet/tx/9cc9866247bdb5975f56b677645187739fecebf463cb0e9905f434476fc9ad01 |
+| App pública | https://ecs-tasy.netlify.app/boveda |
+| Contrato demo (1 XLM, reclamado) | `CAXMW6JYOZZ2OO2XWZ35E6EI7SNO6QV7ACPVJA2RZSXXZ6YX6D7DDUYD` |
+| `reclamar` tx (función nueva) | https://stellar.expert/explorer/testnet/tx/d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a |
+
+El contrato principal conserva los 5555 XLM para que el jurado los reclame desde la app pública con el código del reto. La función `reclamar` se ejerció en un contrato demo separado para no vaciar la bóveda del premio. Dos tests Rust cubren código inválido, saldo vacío, claim correcto y reclamación duplicada.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

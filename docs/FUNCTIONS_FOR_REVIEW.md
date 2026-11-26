@@ -3,10 +3,18 @@
 Registro dedicado — **se actualiza cada vez que se añade una funcionalidad nueva**. Para cada entrada se anota el **nombre de la función** y el **enlace a la transacción en Testnet que la usa**. Este documento existe para envío a revisión; no sustituye a `docs/EVIDENCE.md`, que contiene el resto de hashes y repro steps.
 
 | Nombre de la función | Tipo | Enlace a la transacción que la usa |
+| `reclamar(caller, code_hash)` (bóveda, nueva función pública) | Contrato Soroban `boveda` | https://stellar.expert/explorer/testnet/tx/d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a |
 |---|---|---|
 | `retirar(caller, encounter_id)` | Contrato Soroban (nueva función pública) | https://stellar.expert/explorer/testnet/tx/2333ac89b2e536506d174a0fff690aadc636432ebeb9fd3a4a435be665559bfe |
 | `POST /api/challenge-payment` (pago Testnet con memo `SHIP-S97KF8`) | Endpoint de la app | https://stellar.expert/explorer/testnet/tx/84d812fbbcc5098f6c028eda6a4396ae07fde049db74f0ef27d86762561e9fd8 |
 | `GET /api/status` (health de despliegue y RPC) | Endpoint de solo lectura | N/A — no crea transacciones; ver `GET /api/status` en producción |
+
+## Detalle de `reclamar`
+
+- Contrato principal de la bóveda: `CDJNBZDPR633QEAWNQ2FOCJCMIMJSXFA3LHY6SV2WGPQPV6WATERIZUM` (5555 XLM bloqueados, sin reclamar).
+- Contrato demo usado para ejecutar la función: `CAXMW6JYOZZ2OO2XWZ35E6EI7SNO6QV7ACPVJA2RZSXXZ6YX6D7DDUYD` (1 XLM, reclamado).
+- Compara el SHA-256 del código write-only con el digest fijado en el constructor; transfiere todo el saldo una sola vez y emite `ClaimEvent`. Código inválido → `#1`, reclamación duplicada → `#2`.
+- Test en `contracts/boveda/tests/boveda_test.rs`.
 
 ## Detalle de `retirar`
 

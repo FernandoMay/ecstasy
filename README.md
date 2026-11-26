@@ -96,6 +96,10 @@ npm run docs:matrix && npm run verify:wasm && npm run verify:versions
 
 `deploy.sh` fija el asset de escrow en el constructor e imprime el contract ID. `smoke.sh` ejecuta el flujo completo y printed cada hash. El checklist del E2E pendiente está en `docs/E2E_CHECKLIST.md`.
 
+## Bóveda · reto exprés
+
+`https://ecs-tasy.netlify.app/boveda` despliega una pantalla pública donde conectar un wallet de Testnet, escribir el código y reclamar los 5555 XLM bloqueados en `CDJNBZDPR633QEAWNQ2FOCJCMIMJSXFA3LHY6SV2WGPQPV6WATERIZUM`. La nueva función pública `reclamar` se ejerció en Testnet en una bóveda demo de 1 XLM: https://stellar.expert/explorer/testnet/tx/d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a
+
 ## Seguridad y límites de confianza
 
 - Nunca se piden ni se guardan seed phrases o claves privadas.

@@ -151,6 +151,14 @@ Ocho peticiones concurrentes con la misma `x-idempotency-key`: **1 pago, 1 hash,
 | Pago vía coordinador (directo) | `d108b2ab77456cc9caa99258a2f4ccce8d27a414b47b9d685d89e3dfa14796e3` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d108b2ab77456cc9caa99258a2f4ccce8d27a414b47b9d685d89e3dfa14796e3) |
 | Pago vía ruta → coordinador | `0018e35b01026504533c8845c2fa649993c8d10108da1da00577a82f94810bbc` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0018e35b01026504533c8845c2fa649993c8d10108da1da00577a82f94810bbc) |
 
+## 5c. Bóveda (reto exprés 26 nov)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Deploy bóveda principal | `beb1ad83b831dbc3d3c3e81b4ab2d8e0d81c710a0403c9daffc1c47aa99b98ca` | [Ver tx](https://stellar.expert/explorer/testnet/tx/beb1ad83b831dbc3d3c3e81b4ab2d8e0d81c710a0403c9daffc1c47aa99b98ca) |
+| Fondeo 5555 XLM | `9cc9866247bdb5975f56b677645187739fecebf463cb0e9905f434476fc9ad01` | [Ver tx](https://stellar.expert/explorer/testnet/tx/9cc9866247bdb5975f56b677645187739fecebf463cb0e9905f434476fc9ad01) |
+| `reclamar` en bóveda demo | `d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a) |
+
 ## 6. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |
