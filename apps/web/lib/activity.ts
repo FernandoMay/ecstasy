@@ -36,15 +36,28 @@ export function diffStatuses(
   maxItems = 20,
 ): { items: ActivityItem[]; next: Record<string, string> } {
   const items: ActivityItem[] = [];
+  const next: Record<string, string> = {};
   for (const [id, to] of Object.entries(current)) {
+    // A transient RPC failure must not become a fake transition, nor poison
+    // the baseline so the next successful read looks like "unknown → X".
+    if (to === "unknown") continue;
+    next[id] = to;
     const from = previous[id];
-    if (from && from !== to && to !== "unknown") {
+    if (from && from !== "unknown" && from !== to) {
       items.push({ id, from, to, at: now });
     }
   }
-  return { items, next: { ...previous, ...current } };
+  return { items: items.slice(0, maxItems), next };
 }
 
 export function mergeActivity(raw: string | null, items: ActivityItem[], maxItems = 20): string {
-  return JSON.stringify([...items, ...parseActivity(raw)].slice(0, maxItems));
+  const seen = new Set<string>();
+  const merged: ActivityItem[] = [];
+  for (const item of [...items, ...parseActivity(raw)]) {
+    const key = `${item.id}|${item.from}|${item.to}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push(item);
+  }
+  return JSON.stringify(merged.slice(0, maxItems));
 }
