@@ -65,6 +65,31 @@ export async function POST(request: Request) {
     return respond({ error: "Too many requests", code: "rate_limited" }, { status: 429 });
   }
 
+  // On Netlify, all financial processing and idempotency live in the native
+  // coordinator function with an atomic Blobs claim. Nothing from that store
+  // is touched in this Next.js bundle.
+  if (process.env.NETLIFY && process.env.URL) {
+    const key = request.headers.get("x-idempotency-key")?.trim() || crypto.randomUUID();
+    try {
+      const forwarded = await fetch(
+        new URL("/.netlify/functions/payment-coordinator", process.env.URL),
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            "x-idempotency-key": key,
+            "x-correlation-id": correlation,
+          },
+          body: "{}",
+          signal: AbortSignal.timeout(25_000),
+        },
+      );
+      return respond(await forwarded.json(), { status: forwarded.status });
+    } catch {
+      return respond({ code: "coordinator_unavailable" }, { status: 502 });
+    }
+  }
+
   const idemKey = request.headers.get("x-idempotency-key")?.trim() ?? "";
   if (idemKey && !idempotency.isValidKey(idemKey)) {
     return respond({ error: "Invalid idempotency key", code: "invalid_idempotency_key" }, { status: 400 });
