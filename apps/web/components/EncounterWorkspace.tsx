@@ -20,6 +20,7 @@ import { useWallet } from "./WalletProvider";
 import { withRetry } from "@/lib/retry";
 import { availableActions } from "@/lib/action-policy";
 import { HISTORY_KEY, addEncounterRef } from "@/lib/encounter-history";
+import { reconcile } from "@/lib/reconciliation";
 
 function message(cause: unknown): string {
   const raw = cause instanceof Error ? cause.message : String(cause);
@@ -36,6 +37,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
   const [stale, setStale] = useState(false);
   const [pendingConfirm, setPendingConfirm] = useState(false);
   const [lastAction, setLastAction] = useState("transaction");
+  const [localStatus, setLocalStatus] = useState<string | undefined>(undefined);
   const [scores, setScores] = useState<{ creator?: number; participant?: number }>({});
 
   const refresh = useCallback(async (): Promise<boolean> => {
@@ -69,6 +71,17 @@ export function EncounterWorkspace({ id }: { id: string }) {
   useEffect(() => {
     refresh();
   }, [refresh]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = window.localStorage.getItem("ecstasy:activity-baseline");
+      const baseline = raw ? (JSON.parse(raw) as Record<string, string>) : {};
+      setLocalStatus(baseline[id]);
+    } catch {
+      setLocalStatus(undefined);
+    }
+  }, [id, encounter]);
 
   useEffect(() => {
     if (!encounter || typeof window === "undefined") return;
@@ -141,6 +154,11 @@ export function EncounterWorkspace({ id }: { id: string }) {
   }
 
   const status = statusNameOf(encounter.status);
+  const reconciliation = reconcile({
+    local: localStatus,
+    contract: status,
+    horizon: receipt?.status,
+  });
   const isCreator = Boolean(address && address === encounter.creator);
   const isParticipant = Boolean(address && address === encounter.participant);
   const isParty = isCreator || isParticipant;
@@ -201,6 +219,25 @@ export function EncounterWorkspace({ id }: { id: string }) {
           <div style={{ height: 18 }} />
           <ExplorerEvidence contractId={config.contractId} />
         </div>
+      </div>
+
+      <div className="card" style={{ marginTop: 20 }}>
+        <h3>Verificación de三层</h3>
+        <dl className="kv">
+          <dt>Índice local</dt>
+          <dd>{localStatus ?? "sin dato local"}</dd>
+          <dt>Contrato</dt>
+          <dd>{status}</dd>
+          <dt>Horizon</dt>
+          <dd>{receipt?.status ?? "sin recibo confirmado"}</dd>
+        </dl>
+        <p
+          className="small"
+          style={{ marginTop: 12, color: reconciliation.state === "consistent" ? "var(--success)" : "var(--warning)" }}
+        >
+          {reconciliation.state === "consistent" ? "✓ " : "⚠ "}
+          {reconciliation.reason}
+        </p>
       </div>
 
       {(stale || pendingConfirm) && (
