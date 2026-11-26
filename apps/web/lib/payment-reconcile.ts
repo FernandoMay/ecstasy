@@ -18,3 +18,19 @@ export function findChallengePayment(transactions: readonly HorizonTransaction[]
   }
   return null;
 }
+
+export type ReconciliationStatus = "settled" | "pending" | "unknown";
+
+/**
+ * A transaction not yet found in Horizon is *pending*, never failed. Only an
+ * explicit successful match resolves to `settled`; a missing idempotency
+ * record is `unknown`.
+ */
+export function reconciliationStatus(input: {
+  recordExists: boolean;
+  foundHash?: string | null;
+}): ReconciliationStatus {
+  if (!input.recordExists) return "unknown";
+  if (input.foundHash) return "settled";
+  return "pending";
+}

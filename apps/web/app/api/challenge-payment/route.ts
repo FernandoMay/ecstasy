@@ -19,7 +19,11 @@ import {
   resolveDestination,
 } from "@/lib/payment-policy";
 import { correlationId, sanitizeCorrelationId } from "@/lib/correlation";
-import { findChallengePayment, type HorizonTransaction } from "@/lib/payment-reconcile";
+import {
+  findChallengePayment,
+  reconciliationStatus,
+  type HorizonTransaction,
+} from "@/lib/payment-reconcile";
 import { IdempotencyGuard } from "@/lib/idempotency";
 import {
   PaymentRouteError,
