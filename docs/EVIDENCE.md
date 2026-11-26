@@ -291,6 +291,17 @@ Ocho peticiones paralelas con la **misma** `x-idempotency-key` desde la URL púb
 
 Se intentó una guarda compartida con Netlify Blobs usando únicamente `get` + `setJSON` (el mismo patrón que funciona en `/api/status`), con flag opt-in y re-lectura del propietario. Cualquier acceso a Blobs desde la ruta de pago volvió a colgar la Function (504/30 s), por lo que se revirtió (`f3b046b`) para preservar G1. Tras el revert, un nuevo pago público confirmó el restablecimiento: `494d9e603cfb470ce6356027f199b6c95641839eaa237d11cdb2e739a138fc02` (memo `SHIP-S97KF8`, HTTP 200). Conclusión: el store compartido no puede residir en el bundle de esta ruta; G2 requiere mover la idempotencia a una Netlify Function nativa o a un store externo, sin reintroducir el timeout en el pago.
 
+
+## G2 security review follow-up
+
+- **Pending recovery:** pending records keep the ephemeral source address and are reconciled by the native coordinator (`GET /.netlify/functions/payment-coordinator?key=...`). A successful challenge payment found on Horizon resolves the key to `settled`; not-found stays `pending`, never `failed`. The public `GET /api/challenge-payment?key=...` forwards to the coordinator in production. Verified: a settled key returned `{"status":"settled","hash":"d108b2ab…","reused":true}` and an unknown key returned HTTP 404 `{"status":"unknown"}`.
+- **Immutable parameters:** keys are bound to a fixed destination, amount, asset and memo (`netlify/functions/payment-params.mjs`). Reusing a key with different parameters returns 409 `params_mismatch`; three regression tests cover destination, amount and memo tampering.
+- **Indeterminate outcomes:** timeouts remain `pending` with the source address stored. Only an explicit successful Horizon transaction, or an explicit rejection, changes the state. No path releases a pending reservation while the original transaction is indeterminate.
+
+## G3 preparation (not executed)
+
+`apps/web/e2e/scenarios.mjs` now has 9 scenarios / 32 steps, including reconnect after a rejected or pending signature, account switch during signing and wallet version placeholders. `docs/E2E_CHECKLIST.md` is generated from it. No Freighter extension is available in this execution environment, so G3 remains pending.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
