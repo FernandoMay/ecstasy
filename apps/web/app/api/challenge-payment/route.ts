@@ -18,6 +18,7 @@ import {
   rateLimitHeaders,
   resolveDestination,
 } from "@/lib/payment-policy";
+import { IdempotencyGuard } from "@/lib/idempotency";
 import {
   PaymentRouteError,
   classifyPaymentFailure,
@@ -38,6 +39,7 @@ export const runtime = "nodejs";
 const HORIZON_TESTNET = "https://horizon-testnet.stellar.org";
 const FRIEND_BOT = "https://friendbot.stellar.org";
 const limiter = createPaymentRateLimiter();
+const idempotency = new IdempotencyGuard();
 
 function explorerUrl(hash: string): string {
   return `https://stellar.expert/explorer/testnet/tx/${hash}`;
@@ -70,6 +72,20 @@ export async function POST(request: Request) {
   if (bodyTooLarge(request.headers.get("content-length"))) {
     return NextResponse.json({ error: "Request too large", code: "payload_too_large" }, { status: 413, headers: telemetry });
   }
+  const idemKey = request.headers.get("x-idempotency-key")?.trim() ?? "";
+  if (idemKey && !idempotency.isValidKey(idemKey)) {
+    return NextResponse.json(
+      { error: "Invalid idempotency key", code: "invalid_idempotency_key" },
+      { status: 400 },
+    );
+  }
+  if (idemKey && idempotency.isDuplicate(idemKey)) {
+    return NextResponse.json(
+      { error: "Duplicate payment request", code: "duplicate_request", hash: idempotency.recordedHash(idemKey) },
+      { status: 409 },
+    );
+  }
+
   const activeLimiter = await limiter;
   const limitHeaders = rateLimitHeaders(activeLimiter.mode);
   if (!(await activeLimiter.check(clientKey(request)))) {
@@ -178,6 +194,8 @@ export async function POST(request: Request) {
         hash: submitted.hash,
       }),
     );
+
+    if (idemKey) idempotency.remember(idemKey, submitted.hash);
 
     return NextResponse.json({
       hash: submitted.hash,
