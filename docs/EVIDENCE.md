@@ -368,6 +368,19 @@ After deployment, the user must retry `Connect wallet` with Freighter unlocked a
 
 A fresh smoke run against the active ECSTASY contract `CDG4L3FJ…` produced seven successful transactions: create `cb9554a1fa2568e0254cdf9a1d59932b5edb8e1e65f3782e859b3a7204ec6347`, accept `5c26b980c2cb32878caeda0e5482f58d3bdc6f8dc813e97be0429ecd6e16894f`, complete×2 `e69577c0acdd05f7282b9cf802c8e661f8d833dd37ee7fe609a9a1b4934a099c` / `0acb3f850db6ff5433caf63d686fc04e9bcb78537ea42d4ec2f5e238953d4113`, settle `e18c7ed7ddf14e3fd3ecb99d731f4d09f9d920e14425faed9ca06504fe523fc8` and afterglow×2 `d8697cf74935c3c4f17b7d085d9338f51088d0ca8c463d1a2b248e4a3aae3290` / `e264b7fa210390068d2410fee0c36418ecf4221c8be604a2a13022cc9ae1f3fa`. The active vault `CAWOC5VH…` was read with `--send=yes`, producing `2a2eca8edab6c991e2e7d779fbd08c60fc240972330e6535e7f24c11aebfa9b9` and confirming `[false,"55550000000"]`. All eight hashes were found on Horizon with `successful: true`. Full links: `docs/TESTNET_TRANSACTIONS.md`.
 
+
+## Consistency and privacy pass (new UI, 26 nov)
+
+Three real defects were found and fixed in the local inbox/activity layer:
+
+1. Re-opening an encounter downgraded a known `creator`/`participant` role to `viewer` and reset the first-seen timestamp (`b07c498`, `8ad668c`). The index now preserves the strongest known role and the original timestamp.
+2. A transient contract/RPC read failure was stored as status `unknown` in the activity baseline, producing fake `unknown → Settled` transitions on the next read (`e555601`). Failed reads are now skipped entirely, and the same transition observed from two tabs is deduplicated.
+3. Local changes in another browser tab were not reflected until a manual reload (`c9aee49`). A `storage` listener now refreshes the inbox and activity feed.
+
+Privacy inspection on the public deployment (`/`, `/encounters`, `/boveda`) via browser `evaluate`: `localStorage` contained only `ecstasy:activity-baseline = {}` and `sessionStorage` was empty. No private terms, titles, summaries, boundaries, seed phrases or keys were present. Source review confirms terms are written to `sessionStorage` only when the user opts in, and server logs emit only public hashes/addresses/correlation IDs.
+
+This is an automated/static inspection of storage and source, not a signed Freighter session; G3 remains 0/9.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
