@@ -355,6 +355,13 @@ Two independent Testnet identities are prepared and funded (public addresses onl
 
 `docs/E2E_CHECKLIST.md` still has 9 scenarios / 32 steps with none checked. G3 remains open until both wallets are available as browser extensions and the signed flow is captured with hashes and screenshots.
 
+
+## G3 defect fixed: network mismatch on Freighter (26 nov)
+
+A user-reported error — `Wallet is on "TESTNET" but this demo expects "Testnet SDF"` — exposed a real compatibility defect: `assertWalletNetwork` required an exact passphrase string, while Freighter reports the network name `TESTNET` and may return a longer passphrase. `networkMatches` now accepts exact passphrases or a consistent name+family match (Testnet/Mainnet) and rejects mixed or unknown combinations. Four regression tests cover exact match, Freighter-style longer passphrase, mixed families and Mainnet.
+
+After deployment, the user must retry `Connect wallet` with Freighter unlocked and Testnet selected; no signature has been captured from this fix yet.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

@@ -20,6 +20,8 @@ export {
   assertWalletIdentity,
   assertWalletNetwork,
   connectWallet,
+  networkFamily,
+  networkMatches,
 } from "./wallet";
 export type { WalletAdapter, WalletIdentity } from "./wallet";
 

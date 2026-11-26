@@ -58,3 +58,41 @@ describe("connectWallet", () => {
     expect(calls).toEqual(["requestAccess"]);
   });
 });
+
+describe("network matching", () => {
+  it("accepts the exact configured passphrase", async () => {
+    const { networkMatches } = await import("../src/wallet");
+    expect(networkMatches({ network: "TESTNET", networkPassphrase: "Testnet SDF" }, "Testnet SDF")).toBe(true);
+  });
+
+  it("accepts Freighter's network name with a longer Testnet passphrase", async () => {
+    const { networkMatches } = await import("../src/wallet");
+    expect(
+      networkMatches(
+        { network: "TESTNET", networkPassphrase: "Testnet SDF ; September 2015" },
+        "Testnet SDF",
+      ),
+    ).toBe(true);
+  });
+
+  it("rejects mixed or wrong families", async () => {
+    const { networkMatches } = await import("../src/wallet");
+    expect(
+      networkMatches({ network: "TESTNET", networkPassphrase: "Futurenet SDF" }, "Testnet SDF"),
+    ).toBe(false);
+    expect(
+      networkMatches({ network: "PUBLIC", networkPassphrase: "Testnet SDF" }, "Testnet SDF"),
+    ).toBe(false);
+  });
+
+  it("recognises Mainnet and rejects the wrong preset", async () => {
+    const { networkMatches, networkFamily } = await import("../src/wallet");
+    expect(networkFamily("Public Global Stellar Network ; September 2015")).toBe("mainnet");
+    expect(
+      networkMatches(
+        { network: "PUBLIC", networkPassphrase: "Public Global Stellar Network ; September 2015" },
+        "Public Global Stellar Network ; September 2015",
+      ),
+    ).toBe(true);
+  });
+});

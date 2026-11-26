@@ -116,13 +116,65 @@ export async function connectWallet(
   return address;
 }
 
+function normalize(value: string): string {
+  return value.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+const TESTNET_NAMES = new Set(["testnet", "test", "test sdf"]);
+const MAINNET_NAMES = new Set(["public", "mainnet", "public global", "pub net"]);
+
+export type NetworkFamily = "testnet" | "mainnet" | "unknown";
+
+export function networkFamily(passphrase: string): NetworkFamily {
+  const value = normalize(passphrase);
+  if (value.includes("testnet") || value.includes("test sdf")) return "testnet";
+  if (value.includes("public global") || value.includes("mainnet")) return "mainnet";
+  return "unknown";
+}
+
+/**
+ * Freighter may report the network name ("TESTNET") and a longer passphrase
+ * than the app preset ("Testnet SDF"). Accept exact passphrase matches or a
+ * consistent name+family match, and reject mixed or unknown combinations.
+ */
+export function networkMatches(
+  actual: { network: string; networkPassphrase: string },
+  expectedPassphrase: string,
+): boolean {
+  const actualPass = normalize(actual.networkPassphrase);
+  const expectedPass = normalize(expectedPassphrase);
+  const family = networkFamily(expectedPassphrase);
+  const name = normalize(actual.network);
+  const nameFamily: NetworkFamily = TESTNET_NAMES.has(name)
+    ? "testnet"
+    : MAINNET_NAMES.has(name)
+      ? "mainnet"
+      : "unknown";
+  const actualFamily = networkFamily(actual.networkPassphrase);
+
+  // Wallets that do not report a usable network name fall back to the exact
+  // passphrase comparison.
+  if (nameFamily === "unknown" || family === "unknown") {
+    return actualPass === expectedPass && actualPass.length > 0;
+  }
+  // Never accept a wallet whose reported network name contradicts the
+  // configured family, even if its passphrase string happens to match.
+  if (nameFamily !== family) return false;
+
+  return (
+    actualPass === expectedPass ||
+    actualFamily === family ||
+    actualPass.includes(family)
+  );
+}
+
 /** Fail early if the wallet is on a different network than the app config. */
 export async function assertWalletNetwork(
   wallet: WalletAdapter,
   expectedPassphrase: string,
 ): Promise<void> {
   const actual = await wallet.getNetwork();
-  if (actual.networkPassphrase !== expectedPassphrase) {
+  if (!networkMatches(actual, expectedPassphrase)) {
     throw new Error(
       `Wallet is on "${actual.network}" but this demo expects "${expectedPassphrase}". Switch the wallet network and retry.`,
     );
