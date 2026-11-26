@@ -324,6 +324,18 @@ Verificación pública: `GET https://ecs-tasy.netlify.app/boveda` → 200 y el n
 
 `get_encounter` (`0017a93e…`), `get_afterglow` (`d155b919…`) and the vault `status` (`8d83b3d7…`) were submitted with `--send=yes` so they also have verifiable transaction hashes; they remain read-only functions in the app. Full links: `docs/TESTNET_TRANSACTIONS.md` and `docs/FUNCTIONS_FOR_REVIEW.md`.
 
+
+## Accessibility pass (26 nov, measured on production)
+
+Lighthouse against the public Netlify deployment after adding the `<main>` landmark, associating every form control with a label/aria-label, `aria-live` on dynamic status panels, visible focus styles and `prefers-reduced-motion` support:
+
+| URL | Accessibility | Best Practices | SEO | Failures |
+|---|---|---|---|---|
+| https://ecs-tasy.netlify.app/ | 1.00 | 1.00 | 1.00 | none |
+| https://ecs-tasy.netlify.app/boveda | 1.00 | 1.00 | 1.00 | none |
+
+Initial measurements found two real defects (missing `main` landmark, unlabeled asset/invitation inputs); both were fixed and re-measured. This is an automated audit of the rendered pages, not the two-wallet Freighter E2E, which remains pending.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
