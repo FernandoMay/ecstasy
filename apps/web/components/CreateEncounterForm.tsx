@@ -124,8 +124,8 @@ export function CreateEncounterForm() {
         />
       </div>
       <div className="field">
-        <label className="label">Asset contract (single escrow asset)</label>
-        <input className="input mono" value={config.assetContractId} readOnly aria-readonly="true" />
+        <label className="label" htmlFor="asset-contract">Asset contract (single escrow asset)</label>
+        <input id="asset-contract" className="input mono" value={config.assetContractId} readOnly aria-readonly="true" />
         <p className="muted small">
           {assetReady
             ? `Pinned by this deployment (${config.assetSymbol}). A no-stake encounter is allowed.`
