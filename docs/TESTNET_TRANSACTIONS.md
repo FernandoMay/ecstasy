@@ -140,6 +140,17 @@ Ocho peticiones paralelas con la misma `x-idempotency-key` desde la URL pública
 | Pago concurrente #6 | `45c4e47ca09fe6bdbdd418d5473dcfe55328509a277ce9b3dbdef34c9352c49c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/45c4e47ca09fe6bdbdd418d5473dcfe55328509a277ce9b3dbdef34c9352c49c) |
 | Pago concurrente #7 | `3528d684e4a02aa7b998f3e93efc452845fa217a5e2bad0449e9c0eb25e2f754` | [Ver tx](https://stellar.expert/explorer/testnet/tx/3528d684e4a02aa7b998f3e93efc452845fa217a5e2bad0449e9c0eb25e2f754) |
 
+## 5b. Idempotencia atómica distribuida (G2)
+
+Ocho peticiones concurrentes con la misma `x-idempotency-key`: **1 pago, 1 hash, 7 respuestas reutilizadas**. Coordinador nativo con `onlyIfNew` en Netlify Blobs.
+
+| Ronda | Hash ganador | Enlace |
+|---|---|---|
+| Concurrencia final | `d4cc0b48cf1e8295cfb46164156c62430b4452a147622e646f4771457a63361e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d4cc0b48cf1e8295cfb46164156c62430b4452a147622e646f4771457a63361e) |
+| Concurrencia con espera de resultados | `3defdf7822d33aed8cab1eabc7f4a793bdcd1fbf67effda4103eac173997c723` | [Ver tx](https://stellar.expert/explorer/testnet/tx/3defdf7822d33aed8cab1eabc7f4a793bdcd1fbf67effda4103eac173997c723) |
+| Pago vía coordinador (directo) | `d108b2ab77456cc9caa99258a2f4ccce8d27a414b47b9d685d89e3dfa14796e3` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d108b2ab77456cc9caa99258a2f4ccce8d27a414b47b9d685d89e3dfa14796e3) |
+| Pago vía ruta → coordinador | `0018e35b01026504533c8845c2fa649993c8d10108da1da00577a82f94810bbc` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0018e35b01026504533c8845c2fa649993c8d10108da1da00577a82f94810bbc) |
+
 ## 6. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |

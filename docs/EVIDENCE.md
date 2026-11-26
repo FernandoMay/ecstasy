@@ -285,7 +285,7 @@ Tras retirar Netlify Blobs del camino crítico (commit `e6a0438`), `POST https:/
 
 Causa raíz del 502 previo: el limitador compartido usaba `getWithMetadata` + escrituras condicionales de Netlify Blobs, que cuelgan en el runtime de Functions de Next.js; además se inicializaba a nivel de módulo. La ruta ahora usa el limitador local comprobado, idempotencia en memoria y reconciliación contra Horizon.
 
-## G2 — Concurrencia real (abierta)
+## G2 — Idempotencia atómica distribuida (cerrada)
 
 Ocho peticiones paralelas con la **misma** `x-idempotency-key` desde la URL pública produjeron **7 pagos aceptados y 1 `friendbot_timeout`**, con hashes distintos. La guarda de idempotencia en memoria no se comparte entre instancias de Netlify, por lo que no garantiza "exactamente uno" en producción. El test unitario sigue demostrando el comportamiento dentro de una instancia.
 

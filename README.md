@@ -57,7 +57,7 @@ Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archi
 | Pago real desde la URL pública con memo `SHIP-S97KF8` | ✅ G1 |
 | Match de términos, asset único fijado en constructor, auth y expiración | ✅ |
 | Blobs disponible en producción (`shared` reportado por `/api/status`) | ✅ infra |
-| Idempotencia shared entre instancias (8 peticiones → exactamente 1 pago) | ⏳ G2 |
+| Idempotencia atómica compartida (8 peticiones → 1 pago, 1 hash) | ✅ G2 |
 | E2E en navegador con dos wallets Freighter | ⏳ G3 |
 | Mainnet | ❌ decisión separada |
 
