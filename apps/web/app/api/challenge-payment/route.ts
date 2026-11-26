@@ -20,6 +20,12 @@ import {
 import { PaymentRouteError, classifyPaymentFailure } from "@/lib/payment-errors";
 import { IdempotencyGuard } from "@/lib/idempotency";
 import {
+  claimShared,
+  failShared,
+  finishShared,
+  sharedIdempotencyEnabled,
+} from "@/lib/blob-idempotency";
+import {
   findChallengePayment,
   reconciliationStatus,
   type HorizonTransaction,
@@ -68,6 +74,20 @@ export async function POST(request: Request) {
   const idemKey = request.headers.get("x-idempotency-key")?.trim() ?? "";
   if (idemKey && !idempotency.isValidKey(idemKey)) {
     return respond({ error: "Invalid idempotency key", code: "invalid_idempotency_key" }, { status: 400 });
+  }
+  if (idemKey && sharedIdempotencyEnabled() && !idempotency.isDuplicate(idemKey)) {
+    const claim = await claimShared(idemKey, correlation);
+    if (!claim.claimed) {
+      const pending = claim.record?.status === "pending";
+      return respond(
+        {
+          error: pending ? "Payment already in progress" : "Duplicate payment request",
+          code: pending ? "duplicate_request_pending" : "duplicate_request",
+          hash: claim.record?.hash,
+        },
+        { status: 409 },
+      );
+    }
   }
   if (idemKey && idempotency.isDuplicate(idemKey)) {
     const pending = idempotency.isPending(idemKey);
@@ -160,7 +180,10 @@ export async function POST(request: Request) {
     const submitted = (await submitResponse.json()) as { hash?: string };
     if (!submitResponse.ok || !submitted.hash) throw new PaymentRouteError("transaction_rejected");
 
-    if (idemKey) idempotency.remember(idemKey, submitted.hash, Date.now(), sourcePublicKey);
+    if (idemKey) {
+      idempotency.remember(idemKey, submitted.hash, Date.now(), sourcePublicKey);
+      if (sharedIdempotencyEnabled()) await finishShared(idemKey, submitted.hash);
+    }
     console.info(
       JSON.stringify({
         event: "challenge_payment_submitted",
@@ -183,7 +206,10 @@ export async function POST(request: Request) {
       network: "testnet",
     });
   } catch (cause) {
-    if (idemKey && reachedSubmit) idempotency.rememberPending(idemKey, Date.now(), sourcePublicKey);
+    if (idemKey && reachedSubmit) {
+      idempotency.rememberPending(idemKey, Date.now(), sourcePublicKey);
+      if (sharedIdempotencyEnabled()) await failShared(idemKey, classifyPaymentFailure(cause).kind);
+    }
     const failure = classifyPaymentFailure(cause);
     console.warn(JSON.stringify({ event: "payment_failed", kind: failure.kind, correlation }));
     return respond(
