@@ -44,7 +44,11 @@ export const runtime = "nodejs";
 
 const HORIZON_TESTNET = "https://horizon-testnet.stellar.org";
 const FRIEND_BOT = "https://friendbot.stellar.org";
-const limiter = createPaymentRateLimiter();
+let limiterPromise: ReturnType<typeof createPaymentRateLimiter> | null = null;
+function getLimiter(): ReturnType<typeof createPaymentRateLimiter> {
+  if (!limiterPromise) limiterPromise = createPaymentRateLimiter();
+  return limiterPromise;
+}
 const idempotency = new IdempotencyGuard();
 
 function explorerUrl(hash: string): string {
@@ -121,7 +125,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const activeLimiter = await limiter;
+  const activeLimiter = await getLimiter();
   const dryStage = new URL(request.url).searchParams.get("dry");
   if (dryStage === "limiter-init") {
     return respond(
