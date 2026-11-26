@@ -18,6 +18,7 @@ import {
   rateLimitHeaders,
   resolveDestination,
 } from "@/lib/payment-policy";
+import { correlationId } from "@/lib/correlation";
 import { IdempotencyGuard } from "@/lib/idempotency";
 import {
   PaymentRouteError,
@@ -62,25 +63,31 @@ async function waitForAccount(address: string): Promise<{ sequence: string }> {
 }
 
 export async function POST(request: Request) {
+  const correlation = correlationId(request.headers.get("x-correlation-id"));
+  const respond = (body: unknown, init: ResponseInit = {}) =>
+    NextResponse.json(body, {
+      ...init,
+      headers: { ...(init.headers ?? {}), "x-correlation-id": correlation },
+    });
   const telemetry = rateLimitHeaders(detectRateLimitMode());
   if (!isPaymentRouteEnabled(process.env.NEXT_PUBLIC_STELLAR_NETWORK)) {
-    return NextResponse.json({ error: "Payment route is Testnet-only", code: "wrong_network" }, { status: 403, headers: telemetry });
+    return respond({ error: "Payment route is Testnet-only", code: "wrong_network" }, { status: 403, headers: telemetry });
   }
   if (request.method !== "POST") {
-    return NextResponse.json({ error: "Method not allowed", code: "method_not_allowed" }, { status: 405, headers: telemetry });
+    return respond({ error: "Method not allowed", code: "method_not_allowed" }, { status: 405, headers: telemetry });
   }
   if (bodyTooLarge(request.headers.get("content-length"))) {
-    return NextResponse.json({ error: "Request too large", code: "payload_too_large" }, { status: 413, headers: telemetry });
+    return respond({ error: "Request too large", code: "payload_too_large" }, { status: 413, headers: telemetry });
   }
   const idemKey = request.headers.get("x-idempotency-key")?.trim() ?? "";
   if (idemKey && !idempotency.isValidKey(idemKey)) {
-    return NextResponse.json(
+    return respond(
       { error: "Invalid idempotency key", code: "invalid_idempotency_key" },
       { status: 400 },
     );
   }
   if (idemKey && idempotency.isDuplicate(idemKey)) {
-    return NextResponse.json(
+    return respond(
       { error: "Duplicate payment request", code: "duplicate_request", hash: idempotency.recordedHash(idemKey) },
       { status: 409 },
     );
@@ -89,7 +96,7 @@ export async function POST(request: Request) {
   const activeLimiter = await limiter;
   const limitHeaders = rateLimitHeaders(activeLimiter.mode);
   if (!(await activeLimiter.check(clientKey(request)))) {
-    return NextResponse.json(
+    return respond(
       { error: "Too many requests", code: "rate_limited" },
       { status: 429, headers: limitHeaders },
     );
@@ -99,7 +106,7 @@ export async function POST(request: Request) {
   try {
     destination = resolveDestination(process.env.PAYMENT_DESTINATION);
   } catch (cause) {
-    return NextResponse.json(
+    return respond(
       { error: "The payment destination is not configured correctly.", code: "invalid_configuration" },
       { status: 500 },
     );
@@ -177,7 +184,7 @@ export async function POST(request: Request) {
     console.info(JSON.stringify({ event: "payment_timing", keygenMs, fundedMs, accountMs, totalMs: Date.now() - started }));
     if (!submitResponse.ok || !submitted.hash) {
       console.warn(JSON.stringify({ event: "payment_rejected", detail: submitted }));
-      return NextResponse.json(
+      return respond(
         { error: classifyPaymentFailure(new PaymentRouteError("transaction_rejected")).message, code: "transaction_rejected", detail: submitted },
         { status: 502, headers: limitHeaders },
       );
@@ -197,7 +204,7 @@ export async function POST(request: Request) {
 
     if (idemKey) idempotency.remember(idemKey, submitted.hash);
 
-    return NextResponse.json({
+    return respond({
       hash: submitted.hash,
       explorerUrl: explorerUrl(submitted.hash),
       memo: CHALLENGE_CODE,
@@ -207,8 +214,8 @@ export async function POST(request: Request) {
     }, { headers: limitHeaders });
   } catch (cause) {
     const failure = classifyPaymentFailure(cause);
-    console.warn(JSON.stringify({ event: "payment_failed", kind: failure.kind }));
-    return NextResponse.json(
+    console.warn(JSON.stringify({ event: "payment_failed", kind: failure.kind, correlation }));
+    return respond(
       { error: failure.message, code: failure.kind },
       { status: failure.httpStatus, headers: limitHeaders },
     );
