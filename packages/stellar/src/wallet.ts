@@ -136,3 +136,15 @@ export async function assertWalletIdentity(
     throw new Error("Wallet account changed since the page loaded — reconnect and retry");
   }
 }
+
+/**
+ * The wallet may switch accounts while a signature request is open. If the
+ * RPC reports the submitted transaction source, require it to match the
+ * actor the UI intended to sign with.
+ */
+export function assertTransactionSource(expected: string, sourceAccount?: string): void {
+  if (!sourceAccount) return;
+  if (sourceAccount !== expected) {
+    throw new Error("Transaction source does not match the connected wallet — do not retry blindly");
+  }
+}

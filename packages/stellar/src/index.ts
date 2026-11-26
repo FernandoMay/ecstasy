@@ -14,7 +14,12 @@ export type { TermsDocument } from "./terms";
 
 export { accountUrl, contractUrl, shortAddress, transactionUrl } from "./explorer";
 
-export { FreighterWallet, assertWalletIdentity, assertWalletNetwork } from "./wallet";
+export {
+  FreighterWallet,
+  assertTransactionSource,
+  assertWalletIdentity,
+  assertWalletNetwork,
+} from "./wallet";
 export type { WalletAdapter, WalletIdentity } from "./wallet";
 
 export { CONTRACT_ERRORS, describeContractError, parseContractErrorCode } from "./errors";

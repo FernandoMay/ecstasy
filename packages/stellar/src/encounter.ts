@@ -6,7 +6,11 @@ import { createEcstasyClient, createReadOnlyClient, type EcstasyClient } from ".
 import { transactionUrl } from "./explorer";
 import type { Encounter, EncounterStatus } from "./generated/ecstasy";
 import type { WalletAdapter } from "./wallet";
-import { assertWalletIdentity, assertWalletNetwork } from "./wallet";
+import {
+  assertTransactionSource,
+  assertWalletIdentity,
+  assertWalletNetwork,
+} from "./wallet";
 import { assertStellarAccount } from "./validation";
 
 export interface Receipt {
@@ -96,6 +100,9 @@ export class EcstasyService {
       throw errorMessage(result.unwrapErr());
     }
     const response = sent.getTransactionResponse;
+    const sourceAccount =
+      response && "source_account" in response ? String(response.source_account) : undefined;
+    assertTransactionSource(this.address, sourceAccount);
     const hash = response && "hash" in response ? String(response.hash) : "";
     const status = response && "status" in response ? String(response.status) : "PENDING";
     return {
