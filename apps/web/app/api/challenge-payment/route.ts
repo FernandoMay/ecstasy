@@ -75,6 +75,17 @@ export async function POST(request: Request) {
       ...init,
       headers: { ...(init.headers ?? {}), "x-correlation-id": correlation },
     });
+  if (new URL(request.url).searchParams.has("dry")) {
+    return respond(
+      {
+        status: "preflight-ok",
+        rateLimitMode: detectRateLimitMode(),
+        elapsedMs: Date.now() - preflightStarted,
+        correlation,
+      },
+      { status: 200 },
+    );
+  }
   const telemetry = rateLimitHeaders(detectRateLimitMode());
   if (!isPaymentRouteEnabled(process.env.NEXT_PUBLIC_STELLAR_NETWORK)) {
     return respond({ error: "Payment route is Testnet-only", code: "wrong_network" }, { status: 403, headers: telemetry });
@@ -129,18 +140,6 @@ export async function POST(request: Request) {
   }
   // The request body is deliberately ignored: no caller-controlled input can
   // change the memo, amount, asset or destination.
-
-  if (new URL(request.url).searchParams.has("dry")) {
-    return respond(
-      {
-        status: "preflight-ok",
-        rateLimitMode: activeLimiter.mode,
-        elapsedMs: Date.now() - preflightStarted,
-        correlation,
-      },
-      { status: 200 },
-    );
-  }
 
   let reachedSubmit = false;
   let sourcePublicKey: string | undefined;
