@@ -786,3 +786,53 @@ fn permissionless_expiry_refunds_creator_not_caller() {
     assert_eq!(s.token.balance(&s.outsider), 0);
     assert_eq!(s.token.balance(&s.contract_id), 0);
 }
+
+#[test]
+fn completed_encounter_cannot_be_expired() {
+    let s = setup(STAKE);
+    let id = create(&s);
+    accept_and_complete(&s, id);
+
+    s.env.ledger().with_mut(|li| li.timestamp = EXPIRY + 1);
+
+    assert_eq!(
+        s.client.try_expire_encounter(&id),
+        Err(Ok(EcstasyError::InvalidState))
+    );
+    s.client.settle_encounter(&s.creator, &id);
+    assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Settled);
+    assert_eq!(s.token.balance(&s.participant), STAKE);
+}
+
+#[test]
+fn accepted_cancel_is_terminal_and_refunds_creator() {
+    let s = setup(STAKE);
+    let id = create(&s);
+    s.client.accept_encounter(&s.participant, &id);
+
+    s.client.cancel_encounter(&s.participant, &id);
+
+    assert_eq!(
+        s.client.get_encounter(&id).status,
+        EncounterStatus::Cancelled
+    );
+    assert_eq!(
+        s.client.try_cancel_encounter(&s.creator, &id),
+        Err(Ok(EcstasyError::InvalidState))
+    );
+    assert_eq!(s.token.balance(&s.creator), FUNDS);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+}
+
+#[test]
+fn creator_cannot_decline_an_invitation() {
+    let s = setup(STAKE);
+    let id = create(&s);
+
+    assert_eq!(
+        s.client.try_decline_encounter(&s.creator, &id),
+        Err(Ok(EcstasyError::NotParty))
+    );
+    assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Created);
+    assert_eq!(s.token.balance(&s.contract_id), STAKE);
+}
