@@ -27,6 +27,16 @@ export function EncounterHistory() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === HISTORY_KEY) setRefs(parseHistory(event.newValue));
+      if (event.key === ACTIVITY_KEY) setActivity(parseActivity(event.newValue));
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  useEffect(() => {
     let cancelled = false;
     (async () => {
       const entries = await Promise.all(
