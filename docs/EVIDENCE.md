@@ -414,6 +414,11 @@ The project owner reported that the nine Freighter browser scenarios were execut
 
 This distinction is deliberate: the 18 transactions in the Evidence Center and the Horizon lookups documented here were captured by this session; the browser signatures were not. When the owner attaches the per-scenario hashes/captures, `docs/E2E_CHECKLIST.md` can be updated from "owner-reported" to "verified".
 
+
+## Post-G3 product extensions
+
+After the owner reported the Freighter flow closed, three more product surfaces were added without changing deployed contracts: role/state filters and pending-action suggestions in `/encounters`, a vault dashboard (`/vault`) with on-chain state plus local claim history, and an analytics page (`/analytics`) derived only from observed encounters and the 18 verified transactions. Counts: 33 shared + 80 web + 38 ECSTASY Rust + 2 vault Rust = **153 automated tests**. The G3 browser evidence itself remains owner-reported and is not duplicated here.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
