@@ -68,11 +68,13 @@ export async function POST(request: Request) {
   // On Netlify, all financial processing and idempotency live in the native
   // coordinator function with an atomic Blobs claim. Nothing from that store
   // is touched in this Next.js bundle.
-  if (process.env.NETLIFY && process.env.URL) {
+  const production = process.env.NODE_ENV === "production" || Boolean(process.env.NETLIFY);
+  if (production) {
     const key = request.headers.get("x-idempotency-key")?.trim() || crypto.randomUUID();
+    const siteUrl = process.env.URL ?? process.env.DEPLOY_URL ?? "https://ecs-tasy.netlify.app";
     try {
       const forwarded = await fetch(
-        new URL("/.netlify/functions/payment-coordinator", process.env.URL),
+        new URL("/.netlify/functions/payment-coordinator", siteUrl),
         {
           method: "POST",
           headers: {
@@ -84,7 +86,10 @@ export async function POST(request: Request) {
           signal: AbortSignal.timeout(25_000),
         },
       );
-      return respond(await forwarded.json(), { status: forwarded.status });
+      const body = (await forwarded.json()) as Record<string, unknown>;
+      const response = respond(body, { status: forwarded.status });
+      response.headers.set("x-ecstasy-payment-path", "coordinator");
+      return response;
     } catch {
       return respond({ code: "coordinator_unavailable" }, { status: 502 });
     }
