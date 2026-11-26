@@ -1,7 +1,25 @@
 import { getConfig } from "@ecstasy/stellar";
+import { detectRateLimitMode } from "@/lib/payment-policy";
+import { summarizeHealth } from "@/lib/health";
 import { NextResponse } from "next/server";
 
 /** Read-only deployment health. No private terms, wallet data or secrets. */
+
+async function blobsAvailable(): Promise<boolean> {
+  if (!process.env.NETLIFY_BLOBS_CONTEXT) return false;
+  try {
+    const { getStore } = await import("@netlify/blobs");
+    const store = getStore("ecstasy-payment-limits");
+    await store.setJSON("health-probe", { at: Date.now() });
+    const value = await store.get("health-probe", {
+      type: "json",
+      consistency: "strong",
+    });
+    return Boolean(value);
+  } catch {
+    return false;
+  }
+}
 export const runtime = "nodejs";
 
 export async function GET() {
@@ -27,8 +45,15 @@ export async function GET() {
     // Report the outage; never fabricate a healthy response.
   }
 
+  const rateLimitMode = detectRateLimitMode();
+  const blobsOk = await blobsAvailable();
+  const health = summarizeHealth({ rpc, rateLimitMode, blobsAvailable: blobsOk });
+
   return NextResponse.json(
     {
+      rateLimitMode,
+      blobsAvailable: blobsOk,
+      health,
       network: config.network,
       contractId: config.contractId,
       assetContractId: config.assetContractId,
