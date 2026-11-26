@@ -14,3 +14,11 @@ describe("correlation IDs", () => {
     expect(correlationId("valid-key-1234")).toBe("valid-key-1234");
   });
 });
+
+describe("correlation ID abuse resistance", () => {
+  it("caps long headers and never reflects control characters", () => {
+    const long = "a".repeat(500);
+    expect(sanitizeCorrelationId(long)).toHaveLength(64);
+    expect(sanitizeCorrelationId("abc\n\rdef\tghi")).toBe("abcdefghi");
+  });
+});

@@ -20,3 +20,29 @@ describe("payment failure classification", () => {
     expect(failure.message).not.toMatch(/SC1234|seed/);
   });
 });
+
+describe("upstream status distinction", () => {
+  it("maps Friendbot and RPC failures to different observable codes", () => {
+    expect(classifyPaymentFailure(new PaymentRouteError("friendbot_timeout"))).toMatchObject({
+      kind: "friendbot_timeout",
+      httpStatus: 504,
+    });
+    expect(classifyPaymentFailure(new PaymentRouteError("friendbot_unavailable"))).toMatchObject({
+      kind: "friendbot_unavailable",
+      httpStatus: 502,
+    });
+    expect(classifyPaymentFailure(new PaymentRouteError("rpc_unavailable"))).toMatchObject({
+      kind: "rpc_unavailable",
+      httpStatus: 502,
+    });
+    expect(classifyPaymentFailure(new PaymentRouteError("transaction_rejected"))).toMatchObject({
+      kind: "transaction_rejected",
+      httpStatus: 400,
+    });
+  });
+
+  it("keeps upstream detail out of user-facing messages", () => {
+    const failure = classifyPaymentFailure(new Error("friendbot upstream secret-token-abc detail"));
+    expect(failure.message).not.toContain("secret-token-abc");
+  });
+});
