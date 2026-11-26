@@ -58,7 +58,7 @@ export class PaymentRouteError extends Error {
 export function classifyPaymentFailure(cause: unknown): PaymentFailure {
   if (cause instanceof PaymentRouteError) return FAILURES[cause.kind];
   const text = cause instanceof Error ? cause.message : String(cause);
-  if (/friendbot/i.test(text) && /timeout|abort/i.test(text)) return FAILURES.friendbot_timeout;
+  if (/friendbot/i.test(text) && /time(d)?\s*out|abort/i.test(text)) return FAILURES.friendbot_timeout;
   if (/friendbot/i.test(text) || /HTTP 429|HTTP 5\d\d/.test(text)) return FAILURES.friendbot_unavailable;
   if (/timeout|abort|fetch failed|network/i.test(text)) return FAILURES.rpc_unavailable;
   if (/transaction|tx_bad_seq|op_/.test(text)) return FAILURES.transaction_rejected;
