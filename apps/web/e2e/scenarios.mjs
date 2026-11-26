@@ -65,6 +65,24 @@ export const SCENARIOS = [
     ],
   },
   {
+    id: "payment-reconciliation",
+    name: "Payment timeout → pending → Horizon reconciliation → resolved",
+    steps: [
+      { id: "pr-1", actor: "any", action: "Force a slow Friendbot response and POST with x-idempotency-key", selector: "POST /api/challenge-payment", expect: "504 friendbot_timeout or 200 with hash", evidence: "response + correlation id" },
+      { id: "pr-2", actor: "any", action: "Retry the same idempotency key", selector: "POST /api/challenge-payment", expect: "409 duplicate_request_pending with reconcile URL", evidence: "screenshot + response" },
+      { id: "pr-3", actor: "any", action: "Follow the reconciliation URL", selector: "GET /api/challenge-payment?key=...", expect: "settled with hash or pending (never failed)", evidence: "response" },
+      { id: "pr-4", actor: "any", action: "Re-run reconciliation until confirmed", selector: "GET /api/challenge-payment?key=...", expect: "settled, key no longer pending", evidence: "tx hash" },
+    ],
+  },
+  {
+    id: "payment-concurrency",
+    name: "Eight concurrent identical payment requests",
+    steps: [
+      { id: "pc-1", actor: "any", action: "Send 8 parallel POSTs with the same x-idempotency-key", selector: "POST /api/challenge-payment", expect: "exactly 1 accepted, 7 duplicates", evidence: "responses + hashes" },
+      { id: "pc-2", actor: "any", action: "Verify Horizon for the source account", selector: "stellar.expert / Horizon", expect: "exactly one successful challenge payment", evidence: "tx hash" },
+    ],
+  },
+  {
     id: "terms-tampering",
     name: "Participant cannot consent to substituted terms",
     steps: [

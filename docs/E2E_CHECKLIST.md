@@ -1,6 +1,6 @@
 # Browser E2E checklist — generated
 
-Generated from `apps/web/e2e/scenarios.mjs`: 6 scenarios, 22 steps.
+Generated from `apps/web/e2e/scenarios.mjs`: 8 scenarios, 28 steps.
 Not executed: requires Freighter with two funded Testnet wallets.
 
 - Wallet A: creator
@@ -50,6 +50,22 @@ Not executed: requires Freighter with two funded Testnet wallets.
 | ws-1 | A | Switch Freighter account while page open | `Freighter extension` | App updates identity; writes blocked | screenshot | [ ] |
 | ws-2 | A | Switch Freighter network to Mainnet | `Freighter extension` | Visible warning, no signing possible | screenshot | [ ] |
 | ws-3 | A | Reject a signature in Freighter | `Freighter extension` | Distinct wallet rejection message, state unchanged | screenshot | [ ] |
+
+## Payment timeout → pending → Horizon reconciliation → resolved (`payment-reconciliation`)
+
+| Step | Actor | Action | Selector | Expected | Evidence | Done |
+|---|---|---|---|---|---|---|
+| pr-1 | any | Force a slow Friendbot response and POST with x-idempotency-key | `POST /api/challenge-payment` | 504 friendbot_timeout or 200 with hash | response + correlation id | [ ] |
+| pr-2 | any | Retry the same idempotency key | `POST /api/challenge-payment` | 409 duplicate_request_pending with reconcile URL | screenshot + response | [ ] |
+| pr-3 | any | Follow the reconciliation URL | `GET /api/challenge-payment?key=...` | settled with hash or pending (never failed) | response | [ ] |
+| pr-4 | any | Re-run reconciliation until confirmed | `GET /api/challenge-payment?key=...` | settled, key no longer pending | tx hash | [ ] |
+
+## Eight concurrent identical payment requests (`payment-concurrency`)
+
+| Step | Actor | Action | Selector | Expected | Evidence | Done |
+|---|---|---|---|---|---|---|
+| pc-1 | any | Send 8 parallel POSTs with the same x-idempotency-key | `POST /api/challenge-payment` | exactly 1 accepted, 7 duplicates | responses + hashes | [ ] |
+| pc-2 | any | Verify Horizon for the source account | `stellar.expert / Horizon` | exactly one successful challenge payment | tx hash | [ ] |
 
 ## Participant cannot consent to substituted terms (`terms-tampering`)
 
