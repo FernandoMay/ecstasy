@@ -865,3 +865,64 @@ fn surplus_withdrawal_preserves_all_active_escrows() {
     assert_eq!(s.token.balance(&s.contract_id), 0);
     assert_eq!(s.token.balance(&s.participant), 2 * STAKE);
 }
+
+#[test]
+fn escrow_balance_conservation_across_mixed_terminal_paths() {
+    let s = setup(STAKE);
+    let first = create(&s);
+    let second = s.client.create_encounter(
+        &s.creator,
+        &s.participant,
+        &s.asset,
+        &(STAKE * 2),
+        &s.terms_hash,
+        &EXPIRY,
+    );
+
+    // Expected escrow is the sum of all non-terminal stakes.
+    let mut expected_escrow = STAKE + 2 * STAKE;
+    assert_eq!(s.token.balance(&s.contract_id), expected_escrow);
+
+    // Settle the first encounter: escrow decreases by exactly its stake.
+    accept_and_complete(&s, first);
+    s.client.settle_encounter(&s.creator, &first);
+    expected_escrow -= STAKE;
+    assert_eq!(s.token.balance(&s.contract_id), expected_escrow);
+
+    // Surplus withdrawal must not change escrow.
+    s.issuer.mint(&s.contract_id, &77);
+    assert_eq!(s.client.retirar(&s.creator, &second), 77);
+    assert_eq!(s.token.balance(&s.contract_id), expected_escrow);
+
+    // Cancel the second encounter: remaining escrow is refunded.
+    s.client.cancel_encounter(&s.participant, &second);
+    expected_escrow -= 2 * STAKE;
+    assert_eq!(expected_escrow, 0);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+    assert_eq!(s.token.balance(&s.participant), STAKE);
+    assert_eq!(s.token.balance(&s.creator), FUNDS - STAKE + 77);
+}
+
+#[test]
+fn zero_stake_expiry_refund_is_a_noop() {
+    let s = setup(0);
+    let id = s.client.create_encounter(
+        &s.creator,
+        &s.participant,
+        &s.asset,
+        &0,
+        &s.terms_hash,
+        &EXPIRY,
+    );
+    s.env.ledger().with_mut(|li| li.timestamp = EXPIRY + 1);
+
+    s.client.expire_encounter(&id);
+
+    assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Expired);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+    assert_eq!(s.token.balance(&s.creator), FUNDS);
+    assert_eq!(
+        s.client.try_expire_encounter(&id),
+        Err(Ok(EcstasyError::InvalidState))
+    );
+}
