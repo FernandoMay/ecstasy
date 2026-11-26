@@ -30,5 +30,5 @@ lines.push(
   "",
 );
 
-writeFileSync(new URL("../../docs/E2E_CHECKLIST.md", import.meta.url), lines.join("\n"));
+writeFileSync(new URL("../../../docs/E2E_CHECKLIST.md", import.meta.url), lines.join("\n"));
 console.log(`Wrote docs/E2E_CHECKLIST.md (${summary.scenarios} scenarios, ${summary.steps} steps)`);
