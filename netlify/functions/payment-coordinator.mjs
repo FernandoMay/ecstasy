@@ -55,7 +55,49 @@ async function fund(source) {
   throw new Error("rpc_unavailable");
 }
 
+function successfulChallengeHash(transactions) {
+  for (const tx of transactions) {
+    if (tx.successful === true && tx.memo_type === "text" && tx.memo === MEMO && tx.hash) {
+      return tx.hash;
+    }
+  }
+  return null;
+}
+
 export default async (request) => {
+  if (request.method === "GET") {
+    const key = request.headers.get("x-idempotency-key")?.trim()
+      ?? new URL(request.url).searchParams.get("key")?.trim();
+    if (!validKey(key)) return json({ code: "invalid_idempotency_key" }, 400);
+
+    const store = getStore("ecstasy-payment-idempotency");
+    const record = await store.get(key, { type: "json", consistency: "strong" });
+    if (!record) return json({ status: "unknown" }, 404);
+    if (record.status === "settled") return json({ status: "settled", hash: record.hash, reused: true });
+
+    if (record.status === "pending" && record.source) {
+      const response = await fetch(
+        `${HORIZON}/accounts/${encodeURIComponent(record.source)}/transactions?limit=20&order=desc`,
+        { signal: AbortSignal.timeout(6_000) },
+      );
+      if (!response.ok) return json({ status: "unavailable" }, 502);
+      const data = await response.json();
+      const hash = successfulChallengeHash(data._embedded?.records ?? []);
+      if (hash) {
+        await store.setJSON(key, {
+          status: "settled",
+          hash,
+          source: record.source,
+          correlation: record.correlation,
+          at: Date.now(),
+        });
+        return json({ status: "settled", hash, reconciled: true });
+      }
+    }
+    // Not found on Horizon is never a definitive failure.
+    return json({ status: "pending" });
+  }
+
   if (request.method !== "POST") return json({ code: "method_not_allowed" }, 405);
 
   const key = request.headers.get("x-idempotency-key")?.trim();
@@ -110,6 +152,7 @@ export default async (request) => {
       source,
       correlation,
       at: Date.now(),
+      params: { destination: DESTINATION, amount: AMOUNT, memo: MEMO },
     });
     return json({
       status: "settled",

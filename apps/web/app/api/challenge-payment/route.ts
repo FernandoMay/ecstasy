@@ -225,6 +225,19 @@ export async function POST(request: Request) {
 
 /** Reconcile an unknown outcome using the stored ephemeral source address. */
 export async function GET(request: Request) {
+  if (process.env.NODE_ENV === "production" || process.env.NETLIFY) {
+    const key = new URL(request.url).searchParams.get("key") ?? "";
+    const siteUrl = process.env.URL ?? process.env.DEPLOY_URL ?? "https://ecs-tasy.netlify.app";
+    try {
+      const forwarded = await fetch(
+        new URL(`/.netlify/functions/payment-coordinator?key=${encodeURIComponent(key)}`, siteUrl),
+        { signal: AbortSignal.timeout(10_000) },
+      );
+      return NextResponse.json(await forwarded.json(), { status: forwarded.status });
+    } catch {
+      return NextResponse.json({ status: "unavailable" }, { status: 502 });
+    }
+  }
   const key = sanitizeCorrelationId(new URL(request.url).searchParams.get("key"));
   if (!key) return NextResponse.json({ error: "Invalid key" }, { status: 400 });
   const source = idempotency.sourceOf(key);
