@@ -68,6 +68,7 @@ async function waitForAccount(address: string): Promise<{ sequence: string }> {
 }
 
 export async function POST(request: Request) {
+  const preflightStarted = Date.now();
   const correlation = correlationId(request.headers.get("x-correlation-id"));
   const respond = (body: unknown, init: ResponseInit = {}) =>
     NextResponse.json(body, {
@@ -128,6 +129,18 @@ export async function POST(request: Request) {
   }
   // The request body is deliberately ignored: no caller-controlled input can
   // change the memo, amount, asset or destination.
+
+  if (new URL(request.url).searchParams.has("dry")) {
+    return respond(
+      {
+        status: "preflight-ok",
+        rateLimitMode: activeLimiter.mode,
+        elapsedMs: Date.now() - preflightStarted,
+        correlation,
+      },
+      { status: 200 },
+    );
+  }
 
   let reachedSubmit = false;
   let sourcePublicKey: string | undefined;
