@@ -58,7 +58,7 @@ Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archi
 | Match de términos, asset único fijado en constructor, auth y expiración | ✅ |
 | Blobs disponible en producción (`shared` reportado por `/api/status`) | ✅ infra |
 | Idempotencia atómica compartida (8 peticiones → 1 pago, 1 hash) | ✅ G2 |
-| E2E en navegador con dos wallets Freighter | ⏳ G3 |
+| E2E en navegador con dos wallets Freighter | reportado cerrado por el owner; evidencia por adjuntar |
 | Mainnet | ❌ decisión separada |
 
 ### Funciones de producto disponibles

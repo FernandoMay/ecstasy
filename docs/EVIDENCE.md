@@ -407,6 +407,13 @@ Counts after this sprint: 33 shared + 69 web + 38 ECSTASY Rust + 2 vault Rust = 
 
 G3 (Freighter signing) remains a separate gate; it is not inferred from these checks.
 
+
+## G3 — owner-reported closure (26 nov)
+
+The project owner reported that the nine Freighter browser scenarios were executed successfully and that the wallet flow worked after the canonical passphrase fix. No transaction hashes, wallet addresses, screenshots or per-scenario results from those browser sessions were provided to this working session, so they are recorded here as **owner-reported**, not as independently verified evidence.
+
+This distinction is deliberate: the 18 transactions in the Evidence Center and the Horizon lookups documented here were captured by this session; the browser signatures were not. When the owner attaches the per-scenario hashes/captures, `docs/E2E_CHECKLIST.md` can be updated from "owner-reported" to "verified".
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
