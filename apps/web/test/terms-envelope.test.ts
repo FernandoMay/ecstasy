@@ -32,7 +32,7 @@ describe("encrypted terms envelope", () => {
     await expect(decryptTerms(tampered, "right-passphrase")).rejects.toThrow();
   });
 
-  it("requires a reasonable passphrase and validates the envelope", () => {
+  it("requires a reasonable passphrase and validates the envelope", async () => {
     await expect(encryptTerms(terms, "short")).rejects.toThrow(/8 characters/);
     expect(() => parseEnvelopeText("garbage")).toThrow();
     await expect(
