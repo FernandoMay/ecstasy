@@ -65,9 +65,10 @@ Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archi
 
 - `/encounters` — índice local de encuentros creados/abiertos, con estado leído en vivo desde el contrato. No guarda términos privados.
 - Actividad reciente — transiciones públicas de estado en la misma vista, sin contenido privado ni notificaciones push.
+- Intercambio cifrado de términos — el creador genera un sobre AES-GCM con clave PBKDF2 y el participante lo descifra en la app; la frase secreta se comparte fuera de la app. No hay claves persistentes, pero no hay secreto perfecto hacia adelante ni recuperación sin la frase.
 - `/boveda` — bóveda de 5555 XLM con reclamo por código.
 
-Diferido a V2 (decisiones de producto): intercambio cifrado de términos, disputas, multiasset y multipartito. No están implementados y no se presentan como disponibles.
+Diferido a V2 (decisiones de producto): disputas con árbitro, identidad verificada, multiasset y multipartito. No están implementados y no se presentan como disponibles.
 
 Registro para revisión: `docs/FUNCTIONS_FOR_REVIEW.md` (nombre de la función + transacción en Testnet) y `docs/TESTNET_TRANSACTIONS.md` (todos los hashes).
 
@@ -91,7 +92,7 @@ cd contracts/ecstasy && cargo test # 38 tests del contrato
 cd ../.. && npm run dev            # http://localhost:3000
 ```
 
-Total: **124 tests automatizados** = 33 shared + 55 web + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 124 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
+Total: **128 tests automatizados** = 33 shared + 61 web + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 124 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
 
 Abre la app con Freighter en Testnet. Usa dos wallets/contextos para los dos roles. Los términos privados se guardan solo en el navegador si haces opt-in y se pueden borrar desde el formulario.
 

@@ -38,7 +38,7 @@
 
 ## V2 — funcionalidades no incluidas en el MVP actual
 
-- [ ] Intercambio privado cifrado de términos (requiere diseño de claves y recuperación).
+- [x] Intercambio privado cifrado de términos (AES-GCM + PBKDF2 en el cliente; frase compartida fuera de la app).
 - [ ] Resolución de disputas con árbitro y política de fondos (requiere especificación).
 - [ ] Identidad verificada.
 - [ ] Soporte multiasset y multipartito.

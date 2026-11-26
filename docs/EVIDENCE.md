@@ -381,6 +381,13 @@ Privacy inspection on the public deployment (`/`, `/encounters`, `/boveda`) via 
 
 This is an automated/static inspection of storage and source, not a signed Freighter session; G3 remains 0/9.
 
+
+## Encrypted terms exchange (V2 feature, 26 nov)
+
+`apps/web/lib/terms-envelope.ts` encrypts the canonical terms document with AES-GCM-256 and a PBKDF2-SHA256 derived key (120k iterations, random 16-byte salt and 12-byte IV). The shareable envelope is a prefixed base64 JSON string. The creator can generate/copy it after previewing terms; the participant can paste it into the consent sheet, decrypt it and then run the existing hash verification before consenting. No key or plaintext envelope is stored by the app.
+
+Properties and limits: authenticated encryption detects tampering and wrong passphrases (4 tests); there is no forward secrecy, no key recovery without the passphrase, and the passphrase must be shared out-of-band through a different channel. This is a transport convenience, not an anonymity or identity system.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
