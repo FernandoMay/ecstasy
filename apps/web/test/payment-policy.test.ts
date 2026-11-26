@@ -113,3 +113,29 @@ describe("rate limit telemetry", () => {
     expect(rateLimitHeaders("shared")["x-ecstasy-rate-limit-mode"]).toBe("shared");
   });
 });
+
+describe("rate-limit window rollover", () => {
+  it("allows a new allowance after the sliding window passes", async () => {
+    const store = new FakeBlobStore();
+    const { SharedRateLimiter } = await import("../lib/payment-policy");
+    const limiter = new SharedRateLimiter(store, 2, 1_000);
+
+    expect(await limiter.check("rollover", 0)).toBe(true);
+    expect(await limiter.check("rollover", 100)).toBe(true);
+    expect(await limiter.check("rollover", 200)).toBe(false);
+
+    // The oldest hit leaves the window at t=1000.
+    expect(await limiter.check("rollover", 1_001)).toBe(true);
+    expect(await limiter.check("rollover", 1_002)).toBe(false);
+  });
+
+  it("fails closed when the store rejects every conditional write", async () => {
+    const conflicting = {
+      getWithMetadata: async () => ({ data: [0], etag: "stale" }),
+      setJSON: async () => ({ modified: false }),
+    };
+    const { SharedRateLimiter } = await import("../lib/payment-policy");
+    const limiter = new SharedRateLimiter(conflicting as never, 3, 1_000);
+    expect(await limiter.check("contended", 10)).toBe(false);
+  });
+});
