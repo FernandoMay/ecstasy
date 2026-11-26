@@ -66,6 +66,13 @@ jobs:
           cd contracts/ecstasy && stellar contract build
           cd ../../ && npm run generate:bindings --workspace=@ecstasy/stellar
           git diff --exit-code -- packages/stellar/src/generated/ecstasy.ts
+      - name: No uncommitted changes after generation
+        run: |
+          STATUS="$(git status --porcelain)"
+          if [[ -n "$STATUS" ]]; then
+            echo "$STATUS"
+            exit 1
+          fi
 
   docs-integrity:
     runs-on: ubuntu-latest
