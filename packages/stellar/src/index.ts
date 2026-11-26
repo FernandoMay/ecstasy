@@ -24,6 +24,8 @@ export { createEcstasyClient, createReadOnlyClient } from "./contract";
 export type { EcstasyClient, ClientOptions } from "./contract";
 
 export { EcstasyService, parseEncounterId, statusName } from "./encounter";
+export { canTransition, isTerminal, nextStates, statusNameOf } from "./state-machine";
+export type { StatusName } from "./state-machine";
 export type { CreateEncounterInput, Receipt, WriteResult } from "./encounter";
 
 export {
