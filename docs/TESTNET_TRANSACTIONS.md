@@ -108,6 +108,8 @@ Cada secuencia corresponde a: create → accept → complete ×2 → settle → 
 | `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65` · surplus 2 XLM | `2333ac89b2e536506d174a0fff690aadc636432ebeb9fd3a4a435be665559bfe` | [Ver tx](https://stellar.expert/explorer/testnet/tx/2333ac89b2e536506d174a0fff690aadc636432ebeb9fd3a4a435be665559bfe) |
 | SAC nativo · fondeo excedente al contrato | `1c8f55c56d3b89c19605c18fa5ad7d15d0aa3733f99ceef4d4ab09fe76792eb5` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1c8f55c56d3b89c19605c18fa5ad7d15d0aa3733f99ceef4d4ab09fe76792eb5) |
 
+No se capturó una transacción de `retirar` para la iteración `CBX2IKIF…`; las versiones con evidencia son `CB7IX7KX…`, `CARK3GAF…` y `CDG4L3FJ…`.
+
 El evento observado en cada `retirar` fue `EncounterEvent` con `name=funds_withdrawn`, `status=withdrawn`, `stake=20000000` junto con un `transfer` del SAC nativo por 20.000.000 stroops. Un segundo intento sin excedente fue rechazado con `Error(Contract, #6)`.
 
 ## 4. Pagos del reto (memo `SHIP-S97KF8`)
