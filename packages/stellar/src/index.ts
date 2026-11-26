@@ -17,6 +17,9 @@ export { accountUrl, contractUrl, shortAddress, transactionUrl } from "./explore
 export { FreighterWallet, assertWalletIdentity, assertWalletNetwork } from "./wallet";
 export type { WalletAdapter, WalletIdentity } from "./wallet";
 
+export { CONTRACT_ERRORS, describeContractError, parseContractErrorCode } from "./errors";
+export type { ContractErrorInfo } from "./errors";
+
 export { createEcstasyClient, createReadOnlyClient } from "./contract";
 export type { EcstasyClient, ClientOptions } from "./contract";
 

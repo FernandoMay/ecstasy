@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  describeContractError,
   parseEncounterId,
   shortAddress,
   statusName,
@@ -18,7 +19,8 @@ import { TermsHashBadge } from "./TermsHashBadge";
 import { useWallet } from "./WalletProvider";
 
 function message(cause: unknown): string {
-  return cause instanceof Error ? cause.message : String(cause);
+  const raw = cause instanceof Error ? cause.message : String(cause);
+  return describeContractError(raw)?.message ?? raw;
 }
 
 export function EncounterWorkspace({ id }: { id: string }) {
