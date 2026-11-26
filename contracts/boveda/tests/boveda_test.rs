@@ -61,6 +61,18 @@ fn boveda_releases_only_to_correct_code_once() {
         .client
         .reclamar(&s.claimer, &BytesN::from_array(&s.env, &CODE_HASH));
     assert_eq!(claimed, VAULT);
+
+    // ClaimEvent is emitted by this invocation and is public evidence of the
+    // one-shot transfer. Read it before any later invocation resets events.
+    let events = s.env.events().all();
+    assert!(
+        events
+            .events()
+            .iter()
+            .any(|event| format!("{:?}", event).contains("claimed")),
+        "expected a claimed event"
+    );
+
     assert_eq!(s.client.status(), (true, 0));
     assert_eq!(s.token.balance(&s.claimer), VAULT);
 

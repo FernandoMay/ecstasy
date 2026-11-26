@@ -8,7 +8,7 @@
 
 use soroban_sdk::{
     contract, contracterror, contractevent, contractimpl, contracttype, token::TokenClient,
-    Address, BytesN, Env, Event, MuxedAddress,
+    Address, BytesN, Env, MuxedAddress,
 };
 
 #[contracterror]
@@ -67,7 +67,7 @@ impl BovedaContract {
         let asset: Address = env.storage().instance().get(&DataKey::Asset).unwrap();
         TokenClient::new(&env, &asset).transfer(
             &caller,
-            &MuxedAddress::from(env.current_contract_address()),
+            MuxedAddress::from(env.current_contract_address()),
             &amount,
         );
         Ok(())
@@ -101,7 +101,7 @@ impl BovedaContract {
         // contract as the authorized direct invoker of the token contract.
         TokenClient::new(&env, &asset).transfer(
             &env.current_contract_address(),
-            &MuxedAddress::from(caller),
+            MuxedAddress::from(caller),
             &amount,
         );
         env.storage().instance().set(&DataKey::Claimed, &true);
