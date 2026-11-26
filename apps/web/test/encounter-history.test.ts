@@ -40,7 +40,9 @@ describe("local encounter history", () => {
       addedAt: 1,
       termsHash: "abc123",
     });
-    expect(raw).not.toMatch(/terms|summary|title|boundaries/i);
+    const stored = JSON.parse(raw) as Array<Record<string, unknown>>;
+    expect(Object.keys(stored[0] ?? {}).sort()).toEqual(["addedAt", "id", "role", "termsHash"]);
+    expect(raw).not.toMatch(/private agreement|boundaries|summary/i);
     expect(roleLabel("creator")).toBe("Creador");
   });
 });
