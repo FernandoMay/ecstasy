@@ -273,6 +273,22 @@ Local verification of the new payment classification: a slow Friendbot request r
 
 A real concurrency test against production remains inconclusive: the payment function returns 502/504 from the Friendbot timeout before returning any response headers, so the per-client header cannot be observed. The shared-store limiter is implemented and unit-tested with two simulated instances, but strict global enforcement in production is not yet demonstrated end-to-end.
 
+
+## G1 — Pago real desde la URL pública (cerrado)
+
+Tras retirar Netlify Blobs del camino crítico (commit `e6a0438`), `POST https://ecs-tasy.netlify.app/api/challenge-payment` devolvió HTTP 200 en 8,5 s con:
+
+- hash: `07a3183f03be6c6cea24e3380e84d5786217e2145a6f48d875081af7886d1064`
+- memo: `SHIP-S97KF8` (`memo_type: text`)
+- Horizon: `successful: true`
+- enlace: https://stellar.expert/explorer/testnet/tx/07a3183f03be6c6cea24e3380e84d5786217e2145a6f48d875081af7886d1064
+
+Causa raíz del 502 previo: el limitador compartido usaba `getWithMetadata` + escrituras condicionales de Netlify Blobs, que cuelgan en el runtime de Functions de Next.js; además se inicializaba a nivel de módulo. La ruta ahora usa el limitador local comprobado, idempotencia en memoria y reconciliación contra Horizon.
+
+## G2 — Concurrencia real (abierta)
+
+Ocho peticiones paralelas con la **misma** `x-idempotency-key` desde la URL pública produjeron **7 pagos aceptados y 1 `friendbot_timeout`**, con hashes distintos. La guarda de idempotencia en memoria no se comparte entre instancias de Netlify, por lo que no garantiza "exactamente uno" en producción. El test unitario sigue demostrando el comportamiento dentro de una instancia. Para cerrar G2 hace falta un estado de idempotencia compartido que no reproduzca el cuelgue de Blobs descrito arriba.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
