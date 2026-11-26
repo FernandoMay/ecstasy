@@ -737,3 +737,52 @@ fn wrong_asset_with_stake_is_rejected_before_transfer() {
     );
     assert_eq!(s.token.balance(&s.creator), FUNDS);
 }
+
+#[test]
+fn authorization_matrix_rejects_outsiders_on_every_party_action() {
+    let s = setup(STAKE);
+    let id = create(&s);
+
+    assert_eq!(
+        s.client.try_accept_encounter(&s.outsider, &id),
+        Err(Ok(EcstasyError::NotParty))
+    );
+    assert_eq!(
+        s.client.try_decline_encounter(&s.outsider, &id),
+        Err(Ok(EcstasyError::NotParty))
+    );
+    assert_eq!(
+        s.client.try_complete_encounter(&s.outsider, &id),
+        Err(Ok(EcstasyError::NotParty))
+    );
+    assert_eq!(
+        s.client.try_cancel_encounter(&s.outsider, &id),
+        Err(Ok(EcstasyError::NotParty))
+    );
+    assert_eq!(
+        s.client.try_settle_encounter(&s.outsider, &id),
+        Err(Ok(EcstasyError::NotParty))
+    );
+    assert_eq!(
+        s.client.try_retirar(&s.outsider, &id),
+        Err(Ok(EcstasyError::NotParty))
+    );
+    assert_eq!(
+        s.client.try_submit_afterglow(&s.outsider, &id, &50),
+        Err(Ok(EcstasyError::NotParty))
+    );
+    assert_eq!(s.token.balance(&s.contract_id), STAKE);
+}
+
+#[test]
+fn permissionless_expiry_refunds_creator_not_caller() {
+    let s = setup(STAKE);
+    let id = create(&s);
+    s.env.ledger().with_mut(|li| li.timestamp = EXPIRY + 1);
+
+    s.client.expire_encounter(&id);
+
+    assert_eq!(s.token.balance(&s.creator), FUNDS);
+    assert_eq!(s.token.balance(&s.outsider), 0);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+}
