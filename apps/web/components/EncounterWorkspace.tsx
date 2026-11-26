@@ -35,6 +35,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
   const [readError, setReadError] = useState<string | null>(null);
   const [stale, setStale] = useState(false);
   const [pendingConfirm, setPendingConfirm] = useState(false);
+  const [lastAction, setLastAction] = useState("transaction");
   const [scores, setScores] = useState<{ creator?: number; participant?: number }>({});
 
   const refresh = useCallback(async (): Promise<boolean> => {
@@ -102,8 +103,12 @@ export function EncounterWorkspace({ id }: { id: string }) {
     })();
   }, [encounter, service, id]);
 
-  async function run(action: () => Promise<{ receipt: Receipt }>) {
+  async function run(
+    action: () => Promise<{ receipt: Receipt }>,
+    label = "transaction",
+  ) {
     setBusy(true);
+    setLastAction(label);
     setError(null);
     try {
       const result = await action();
@@ -231,8 +236,8 @@ export function EncounterWorkspace({ id }: { id: string }) {
           <ConsentSheet
             encounter={encounter}
             disabled={busy}
-            onAccept={() => run(() => service.accept(address!, encounterId))}
-            onDecline={() => run(() => service.decline(address!, encounterId))}
+            onAccept={() => run(() => service.accept(address!, encounterId), "accept_encounter")}
+            onDecline={() => run(() => service.decline(address!, encounterId), "decline_encounter")}
           />
         )}
 
@@ -243,7 +248,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
               Share the private terms out-of-band and the invitation link. The participant must
               verify the hash and consent before completion is possible.
             </p>
-            <button className="btn btn-danger" disabled={busy} onClick={() => run(() => service.cancel(address!, encounterId))}>
+            <button className="btn btn-danger" disabled={busy} onClick={() => run(() => service.cancel(address!, encounterId), "cancel_encounter")}>
               Cancel invitation
             </button>
           </div>
@@ -257,12 +262,12 @@ export function EncounterWorkspace({ id }: { id: string }) {
               on-chain; the private event itself is not.
             </p>
             <div className="row">
-              <button className="btn btn-primary" disabled={busy} onClick={() => run(() => service.complete(address!, encounterId))}>
+              <button className="btn btn-primary" disabled={busy} onClick={() => run(() => service.complete(address!, encounterId), "complete_encounter")}>
                 {encounter.creator_completed && isCreator || encounter.participant_completed && isParticipant
                   ? "Completed ✓"
                   : "Record completion"}
               </button>
-              <button className="btn btn-danger" disabled={busy} onClick={() => run(() => service.cancel(address!, encounterId))}>
+              <button className="btn btn-danger" disabled={busy} onClick={() => run(() => service.cancel(address!, encounterId), "cancel_encounter")}>
                 Cancel
               </button>
             </div>
@@ -279,7 +284,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
               Terminal transition. Releases escrow to the participant and blocks any further state
               change. Double settlement is rejected by the contract.
             </p>
-            <button className="btn btn-primary" disabled={busy} onClick={() => run(() => service.settle(address!, encounterId))}>
+            <button className="btn btn-primary" disabled={busy} onClick={() => run(() => service.settle(address!, encounterId), "settle_encounter")}>
               Settle encounter
             </button>
           </div>
@@ -290,7 +295,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
             <AfterglowSlider
               disabled={busy}
               alreadySubmitted={!actions.includes("afterglow")}
-              onSubmit={(score) => run(() => service.afterglow(address!, encounterId, score))}
+              onSubmit={(score) => run(() => service.afterglow(address!, encounterId, score), "submit_afterglow")}
             />
             <div className="card">
               <h3>Afterglow received</h3>
@@ -311,7 +316,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
               The expiry timestamp passed before completion. Finalize the on-chain refund to the
               creator with a permissionless transaction.
             </p>
-            <button className="btn" disabled={busy} onClick={() => run(() => service.expire(encounterId))}>
+            <button className="btn" disabled={busy} onClick={() => run(() => service.expire(encounterId), "expire_encounter")}>
               Finalize expiry & refund
             </button>
           </div>
@@ -328,7 +333,12 @@ export function EncounterWorkspace({ id }: { id: string }) {
       {receipt && (
         <>
           <div className="section-title">Receipt</div>
-          <SettlementReceipt receipt={receipt} />
+          <SettlementReceipt
+            receipt={receipt}
+            encounterId={id}
+            action={lastAction}
+            contractId={config.contractId}
+          />
         </>
       )}
     </>
