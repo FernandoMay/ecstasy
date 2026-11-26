@@ -23,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <nav className="row small">
                 <Link href="/encounters">Encuentros</Link>
                 <Link href="/evidence">Evidencia</Link>
+                <Link href="/vault">Bóveda estado</Link>
                 <Link href="/boveda">Bóveda</Link>
               </nav>
               <WalletStatus />

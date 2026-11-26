@@ -8,6 +8,7 @@ import {
 } from "@ecstasy/stellar";
 import { useCallback, useEffect, useState } from "react";
 import { useWallet } from "./WalletProvider";
+import { VAULT_CLAIMS_KEY, addClaim } from "@/lib/vault-history";
 
 /** Bóveda: lock 5555 XLM on Testnet and release them to the right code. */
 export function BovedaClaim() {
@@ -71,9 +72,20 @@ export function BovedaClaim() {
       if (result.isErr()) throw new Error(result.unwrapErr().message);
       const response = sent.getTransactionResponse;
       const hash = response && "hash" in response ? String(response.hash) : "";
+      const claimStatus = response && "status" in response ? String(response.status) : "PENDING";
+      if (hash && typeof window !== "undefined") {
+        window.localStorage.setItem(
+          VAULT_CLAIMS_KEY,
+          addClaim(window.localStorage.getItem(VAULT_CLAIMS_KEY), {
+            hash,
+            at: Date.now(),
+            amountStroops: "55550000000",
+          }),
+        );
+      }
       setReceipt({
         hash,
-        status: response && "status" in response ? String(response.status) : "PENDING",
+        status: claimStatus,
         explorerUrl: hash
           ? `https://stellar.expert/explorer/testnet/tx/${hash}`
           : "",
