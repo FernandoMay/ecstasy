@@ -19,6 +19,7 @@ export function EncounterHistory() {
   const [refs, setRefs] = useState<EncounterRef[]>([]);
   const [statuses, setStatuses] = useState<Record<string, string>>({});
   const [activity, setActivity] = useState<ActivityItem[]>([]);
+  const [filter, setFilter] = useState<HistoryFilter>("all");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -111,8 +112,25 @@ export function EncounterHistory() {
           <div style={{ height: 14 }} />
         </>
       )}
+      <div className="row" style={{ marginBottom: 14 }}>
+        {(["all", "creator", "participant", "pending"] as const).map((value) => (
+          <button
+            key={value}
+            className={filter === value ? "btn btn-small btn-primary" : "btn btn-small"}
+            onClick={() => setFilter(value)}
+          >
+            {value === "all"
+              ? "Todos"
+              : value === "creator"
+                ? "Creados"
+                : value === "participant"
+                  ? "Participante"
+                  : "Pendientes"}
+          </button>
+        ))}
+      </div>
       <div className="grid">
-        {refs.map((ref) => (
+        {filterHistory(refs, statuses, filter).map((ref) => (
           <div className="card" key={ref.id} style={{ padding: 16 }}>
             <div className="row" style={{ justifyContent: "space-between" }}>
               <strong>Encounter #{ref.id}</strong>
@@ -123,6 +141,14 @@ export function EncounterHistory() {
             <p className="muted small" style={{ marginTop: 10 }}>
               Rol: {roleLabel(ref.role)} · añadido {new Date(ref.addedAt).toLocaleString()}
             </p>
+            {suggestedAction(statuses[ref.id], ref.role) && (
+              <p className="small" style={{ marginTop: 8 }}>
+                Acción pendiente:{" "}
+                <Link href={`/encounters/${ref.id}`}>
+                  {suggestedAction(statuses[ref.id], ref.role)} →
+                </Link>
+              </p>
+            )}
             <div className="row" style={{ marginTop: 10 }}>
               <Link className="btn btn-small" href={`/encounters/${ref.id}`}>
                 Abrir →

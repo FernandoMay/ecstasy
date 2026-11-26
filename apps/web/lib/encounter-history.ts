@@ -64,3 +64,32 @@ export function removeEncounterRef(raw: string | null, id: string): string {
 export function roleLabel(role: EncounterRole): string {
   return role === "creator" ? "Creador" : role === "participant" ? "Participante" : "Observador";
 }
+
+export type HistoryFilter = "all" | "creator" | "participant" | "pending";
+
+const OPEN_STATUSES = new Set(["Created", "Accepted", "Completed"]);
+
+export function filterHistory(
+  refs: readonly EncounterRef[],
+  statuses: Record<string, string>,
+  filter: HistoryFilter,
+): EncounterRef[] {
+  return refs.filter((ref) => {
+    if (filter === "creator") return ref.role === "creator";
+    if (filter === "participant") return ref.role === "participant";
+    if (filter === "pending") return OPEN_STATUSES.has(statuses[ref.id] ?? "");
+    return true;
+  });
+}
+
+export function suggestedAction(
+  status: string | undefined,
+  role: EncounterRole,
+): string | null {
+  if (!status) return null;
+  if (status === "Created" && role === "participant") return "accept_encounter";
+  if (status === "Accepted") return "complete_encounter";
+  if (status === "Completed") return "settle_encounter";
+  if (status === "Settled") return "submit_afterglow";
+  return null;
+}

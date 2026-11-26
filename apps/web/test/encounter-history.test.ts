@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   addEncounterRef,
+  filterHistory,
   parseHistory,
+  suggestedAction,
   removeEncounterRef,
   roleLabel,
 } from "../lib/encounter-history";
@@ -40,6 +42,26 @@ describe("local encounter history", () => {
     expect(parseHistory(raw)).toHaveLength(10);
     raw = removeEncounterRef(raw, "59");
     expect(parseHistory(raw).some((item) => item.id === "59")).toBe(false);
+  });
+
+  it("filters by role and pending state", () => {
+    const refs = [
+      { id: "1", role: "creator" as const, addedAt: 3 },
+      { id: "2", role: "participant" as const, addedAt: 2 },
+      { id: "3", role: "creator" as const, addedAt: 1 },
+    ];
+    const statuses = { "1": "Settled", "2": "Accepted", "3": "Created" };
+    expect(filterHistory(refs, statuses, "creator").map((r) => r.id)).toEqual(["1", "3"]);
+    expect(filterHistory(refs, statuses, "participant").map((r) => r.id)).toEqual(["2"]);
+    expect(filterHistory(refs, statuses, "pending").map((r) => r.id)).toEqual(["2", "3"]);
+  });
+
+  it("suggests the next action by state and role", () => {
+    expect(suggestedAction("Created", "participant")).toBe("accept_encounter");
+    expect(suggestedAction("Created", "creator")).toBeNull();
+    expect(suggestedAction("Accepted", "creator")).toBe("complete_encounter");
+    expect(suggestedAction("Completed", "participant")).toBe("settle_encounter");
+    expect(suggestedAction("Settled", "creator")).toBe("submit_afterglow");
   });
 
   it("never stores private terms, only the optional public commitment", () => {
