@@ -167,3 +167,18 @@ export async function createPaymentRateLimiter(): Promise<{
   }
   return { mode: "local", check: async (key: string) => local.check(key) };
 }
+
+/** Which limiter backend can be used in this runtime. */
+export function detectRateLimitMode(
+  source: Record<string, string | undefined> = process.env,
+): "shared" | "local" {
+  return Boolean(source.NETLIFY_BLOBS_CONTEXT) ? "shared" : "local";
+}
+
+/** Stable, secret-free telemetry headers on every payment response. */
+export function rateLimitHeaders(mode: "shared" | "local"): Record<string, string> {
+  return {
+    "x-ecstasy-rate-limit-mode": mode,
+    "x-ecstasy-blobs-context": mode === "shared" ? "present" : "absent",
+  };
+}

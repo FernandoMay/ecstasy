@@ -13,7 +13,9 @@ import {
   PAYMENT_AMOUNT,
   bodyTooLarge,
   createPaymentRateLimiter,
+  detectRateLimitMode,
   isPaymentRouteEnabled,
+  rateLimitHeaders,
   resolveDestination,
 } from "@/lib/payment-policy";
 import {
@@ -58,17 +60,18 @@ async function waitForAccount(address: string): Promise<{ sequence: string }> {
 }
 
 export async function POST(request: Request) {
+  const telemetry = rateLimitHeaders(detectRateLimitMode());
   if (!isPaymentRouteEnabled(process.env.NEXT_PUBLIC_STELLAR_NETWORK)) {
-    return NextResponse.json({ error: "Payment route is Testnet-only" }, { status: 403 });
+    return NextResponse.json({ error: "Payment route is Testnet-only", code: "wrong_network" }, { status: 403, headers: telemetry });
   }
   if (request.method !== "POST") {
-    return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+    return NextResponse.json({ error: "Method not allowed", code: "method_not_allowed" }, { status: 405, headers: telemetry });
   }
   if (bodyTooLarge(request.headers.get("content-length"))) {
-    return NextResponse.json({ error: "Request too large" }, { status: 413 });
+    return NextResponse.json({ error: "Request too large", code: "payload_too_large" }, { status: 413, headers: telemetry });
   }
   const activeLimiter = await limiter;
-  const limitHeaders = { "x-ecstasy-rate-limit-mode": activeLimiter.mode };
+  const limitHeaders = rateLimitHeaders(activeLimiter.mode);
   if (!(await activeLimiter.check(clientKey(request)))) {
     return NextResponse.json(
       { error: "Too many requests", code: "rate_limited" },

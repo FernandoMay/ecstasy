@@ -103,3 +103,13 @@ describe("distributed rate limiter (Sprint B)", () => {
     expect(await limiter.check("client-c", 11_000)).toBe(true);
   });
 });
+
+describe("rate limit telemetry", () => {
+  it("detects the backend from the Netlify environment", async () => {
+    const { detectRateLimitMode, rateLimitHeaders } = await import("../lib/payment-policy");
+    expect(detectRateLimitMode({})).toBe("local");
+    expect(detectRateLimitMode({ NETLIFY_BLOBS_CONTEXT: "xxx" })).toBe("shared");
+    expect(rateLimitHeaders("local")["x-ecstasy-blobs-context"]).toBe("absent");
+    expect(rateLimitHeaders("shared")["x-ecstasy-rate-limit-mode"]).toBe("shared");
+  });
+});
