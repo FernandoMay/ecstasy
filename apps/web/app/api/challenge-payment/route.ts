@@ -125,6 +125,27 @@ export async function POST(request: Request) {
     );
   }
 
+  const blobProbe = new URL(request.url).searchParams.get("blobs");
+  if (blobProbe) {
+    try {
+      const { getStore } = await import("@netlify/blobs");
+      const store = getStore("ecstasy-payment-limits");
+      const startedProbe = Date.now();
+      if (blobProbe === "set") await store.setJSON("probe-key", { at: Date.now() });
+      let value: unknown = null;
+      if (blobProbe === "get") value = await store.get("probe-key", { type: "json" });
+      if (blobProbe === "get-strong") {
+        value = await store.get("probe-key", { type: "json", consistency: "strong" });
+      }
+      return respond(
+        { status: "blobs-probe", probe: blobProbe, value: value !== null, elapsedMs: Date.now() - startedProbe },
+        { status: 200 },
+      );
+    } catch (cause) {
+      return respond({ status: "blobs-probe-failed", error: String(cause) }, { status: 502 });
+    }
+  }
+
   const activeLimiter = await getLimiter();
   const dryStage = new URL(request.url).searchParams.get("dry");
   if (dryStage === "limiter-init") {
