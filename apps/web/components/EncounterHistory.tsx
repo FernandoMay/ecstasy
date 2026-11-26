@@ -123,7 +123,7 @@ export function EncounterHistory() {
               Rol: {roleLabel(ref.role)} · añadido {new Date(ref.addedAt).toLocaleString()}
             </p>
             <div className="row" style={{ marginTop: 10 }}>
-              <Link className="btn btn-small" href={`/encounter/${ref.id}`}>
+              <Link className="btn btn-small" href={`/encounters/${ref.id}`}>
                 Abrir →
               </Link>
               <button className="btn btn-small btn-danger" onClick={() => remove(ref.id)}>
