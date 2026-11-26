@@ -61,6 +61,14 @@ Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archi
 | E2E en navegador con dos wallets Freighter | ⏳ G3 |
 | Mainnet | ❌ decisión separada |
 
+### Funciones de producto disponibles
+
+- `/encounters` — índice local de encuentros creados/abiertos, con estado leído en vivo desde el contrato. No guarda términos privados.
+- Actividad reciente — transiciones públicas de estado en la misma vista, sin contenido privado ni notificaciones push.
+- `/boveda` — bóveda de 5555 XLM con reclamo por código.
+
+Diferido a V2 (decisiones de producto): intercambio cifrado de términos, disputas, multiasset y multipartito. No están implementados y no se presentan como disponibles.
+
 Registro para revisión: `docs/FUNCTIONS_FOR_REVIEW.md` (nombre de la función + transacción en Testnet) y `docs/TESTNET_TRANSACTIONS.md` (todos los hashes).
 
 Dos pagos públicos verificados en Horizon:
@@ -83,7 +91,7 @@ cd contracts/ecstasy && cargo test # 38 tests del contrato
 cd ../.. && npm run dev            # http://localhost:3000
 ```
 
-Total: **121 tests automatizados** = 33 shared + 48 web + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 121 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
+Total: **124 tests automatizados** = 33 shared + 55 web + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 121 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
 
 Abre la app con Freighter en Testnet. Usa dos wallets/contextos para los dos roles. Los términos privados se guardan solo en el navegador si haces opt-in y se pueden borrar desde el formulario.
 
