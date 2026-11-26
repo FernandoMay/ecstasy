@@ -49,7 +49,7 @@ netlify.toml              build del monorepo en Netlify
 
 ## Estado actual — Testnet Release Candidate 1
 
-Detalle completo: `docs/RELEASES/testnet-rc-1.md` y `docs/EVIDENCE.md`.
+Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archivo único de transacciones con URLs de Testnet: `docs/TESTNET_TRANSACTIONS.md`.
 
 | Gate | Estado |
 |---|---|
