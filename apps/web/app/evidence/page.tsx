@@ -1,7 +1,7 @@
 "use client";
 
 import { shortAddress } from "@ecstasy/stellar";
-import { EVIDENCE, explorerUrl } from "@/lib/evidence";
+import { EVIDENCE, NEGATIVE_CASES, coverageMatrix, explorerUrl } from "@/lib/evidence";
 import Link from "next/link";
 
 export default function EvidencePage() {
@@ -59,6 +59,51 @@ export default function EvidencePage() {
         <Link className="btn" href="/encounters">
           Ver encuentros →
         </Link>
+      </div>
+
+      <div className="card">
+        <h2>Cobertura del protocolo</h2>
+        <p className="muted small">Verified significa que existe una transacción real con hash completo.</p>
+        <div style={{ height: 14 }} />
+        <div className="grid">
+          {coverageMatrix(EVIDENCE).map((row) => (
+            <div key={row.functionName} className="row" style={{ justifyContent: "space-between" }}>
+              <span className="mono small">{row.functionName}</span>
+              <strong className={row.verified ? "success-text" : undefined}>
+                {row.verified ? "Verified" : "Not verified"}
+              </strong>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="card">
+        <h2>Casos negativos deliberados</h2>
+        <p className="muted small">
+          El producto rechaza entradas inválidas y transiciones imposibles. La columna de
+          verificación distingue tests unitarios, simulaciones y transacciones reales.
+        </p>
+        <div style={{ height: 14 }} />
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <thead>
+              <tr className="muted small">
+                <th style={{ textAlign: "left", padding: 8 }}>Escenario</th>
+                <th style={{ textAlign: "left", padding: 8 }}>Resultado esperado</th>
+                <th style={{ textAlign: "left", padding: 8 }}>Evidencia</th>
+              </tr>
+            </thead>
+            <tbody>
+              {NEGATIVE_CASES.map((item) => (
+                <tr key={item.scenario} style={{ borderTop: "1px solid var(--border)" }}>
+                  <td style={{ padding: 8 }}>{item.scenario}</td>
+                  <td style={{ padding: 8 }} className="small">{item.expected}</td>
+                  <td style={{ padding: 8 }} className="mono small">{item.verification}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );
