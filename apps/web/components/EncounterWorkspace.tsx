@@ -4,7 +4,7 @@ import {
   describeContractError,
   parseEncounterId,
   shortAddress,
-  statusName,
+  statusNameOf,
   type Encounter,
   type Receipt,
 } from "@ecstasy/stellar";
@@ -116,7 +116,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
     );
   }
 
-  const status = statusName(encounter.status);
+  const status = statusNameOf(encounter.status);
   const isCreator = Boolean(address && address === encounter.creator);
   const isParticipant = Boolean(address && address === encounter.participant);
   const isParty = isCreator || isParticipant;
