@@ -1,4 +1,5 @@
 import { getStore } from "@netlify/blobs";
+import { PAYMENT_PARAMS, samePaymentParams } from "./payment-params.mjs";
 import {
   Account,
   Asset,
@@ -18,9 +19,9 @@ import {
 
 const HORIZON = "https://horizon-testnet.stellar.org";
 const FRIEND_BOT = "https://friendbot.stellar.org";
-const DESTINATION = "GAUZSVWQY5KOFMWZA5YJEBOECWBGSZHPSADVI6G3ZB54JULLDL6IKISJ";
-const MEMO = "SHIP-S97KF8";
-const AMOUNT = "0.0001";
+const DESTINATION = PAYMENT_PARAMS.destination;
+const MEMO = PAYMENT_PARAMS.memo;
+const AMOUNT = PAYMENT_PARAMS.amount;
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -73,7 +74,10 @@ export default async (request) => {
     const store = getStore("ecstasy-payment-idempotency");
     const record = await store.get(key, { type: "json", consistency: "strong" });
     if (!record) return json({ status: "unknown" }, 404);
-    if (record.status === "settled") return json({ status: "settled", hash: record.hash, reused: true });
+    if (record.status === "settled") {
+      if (!samePaymentParams(record.params)) return json({ code: "params_mismatch" }, 409);
+      return json({ status: "settled", hash: record.hash, reused: true });
+    }
 
     if (record.status === "pending" && record.source) {
       const response = await fetch(
@@ -120,6 +124,9 @@ export default async (request) => {
       await new Promise((resolve) => setTimeout(resolve, 400));
       existing = await store.get(key, { type: "json", consistency: "strong" });
     }
+    if (!samePaymentParams(existing?.params)) {
+      return json({ code: "params_mismatch", correlation }, 409);
+    }
     return json({ ...existing, reused: true, correlation });
   }
 
@@ -152,7 +159,7 @@ export default async (request) => {
       source,
       correlation,
       at: Date.now(),
-      params: { destination: DESTINATION, amount: AMOUNT, memo: MEMO },
+      params: PAYMENT_PARAMS,
     });
     return json({
       status: "settled",
