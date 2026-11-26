@@ -112,6 +112,21 @@ Cada secuencia corresponde a: create → accept → complete ×2 → settle → 
 
 Las tres ramas terminales devolvieron eventos `encounter_declined`, `encounter_cancelled` y `encounter_expired` respectivamente. `expire_encounter` fue llamada por una wallet que no es parte del encuentro, confirmando que es permisionless y que el reembolso va al creador. Los hashes de lectura se generaron con `--send=yes`; las mismas funciones siguen siendo de solo lectura en la app.
 
+## 2c. Re-verificación funcional (26 nov, commit `6154d2e`)
+
+Smoke completo reejecutado sobre el contrato activo `CDG4L3FJ…` y lectura on-chain de la bóveda activa `CAWOC5VH…`. Los ocho hashes fueron localizados en Horizon con `successful: true`.
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| `create_encounter` | `cb9554a1fa2568e0254cdf9a1d59932b5edb8e1e65f3782e859b3a7204ec6347` | [Ver tx](https://stellar.expert/explorer/testnet/tx/cb9554a1fa2568e0254cdf9a1d59932b5edb8e1e65f3782e859b3a7204ec6347) |
+| `accept_encounter` | `5c26b980c2cb32878caeda0e5482f58d3bdc6f8dc813e97be0429ecd6e16894f` | [Ver tx](https://stellar.expert/explorer/testnet/tx/5c26b980c2cb32878caeda0e5482f58d3bdc6f8dc813e97be0429ecd6e16894f) |
+| `complete_encounter` (creador) | `e69577c0acdd05f7282b9cf802c8e661f8d833dd37ee7fe609a9a1b4934a099c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e69577c0acdd05f7282b9cf802c8e661f8d833dd37ee7fe609a9a1b4934a099c) |
+| `complete_encounter` (participante) | `0acb3f850db6ff5433caf63d686fc04e9bcb78537ea42d4ec2f5e238953d4113` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0acb3f850db6ff5433caf63d686fc04e9bcb78537ea42d4ec2f5e238953d4113) |
+| `settle_encounter` | `e18c7ed7ddf14e3fd3ecb99d731f4d09f9d920e14425faed9ca06504fe523fc8` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e18c7ed7ddf14e3fd3ecb99d731f4d09f9d920e14425faed9ca06504fe523fc8) |
+| `submit_afterglow` (creador, 88) | `d8697cf74935c3c4f17b7d085d9338f51088d0ca8c463d1a2b248e4a3aae3290` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d8697cf74935c3c4f17b7d085d9338f51088d0ca8c463d1a2b248e4a3aae3290) |
+| `submit_afterglow` (participante, 92) | `e264b7fa210390068d2410fee0c36418ecf4221c8be604a2a13022cc9ae1f3fa` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e264b7fa210390068d2410fee0c36418ecf4221c8be604a2a13022cc9ae1f3fa) |
+| `status` bóveda activa (`--send=yes`) | `2a2eca8edab6c991e2e7d779fbd08c60fc240972330e6535e7f24c11aebfa9b9` | [Ver tx](https://stellar.expert/explorer/testnet/tx/2a2eca8edab6c991e2e7d779fbd08c60fc240972330e6535e7f24c11aebfa9b9) |
+
 ## 3. `retirar` y contabilidad de escrow
 
 | Acción | Hash | Enlace stellar.expert |

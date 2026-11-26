@@ -29,7 +29,7 @@ Cuando una función tiene varias ejecuciones, los enlaces se agrupan en la misma
 | `fund(caller, amount)` — fondeo de 5555 XLM | [fondeo](https://stellar.expert/explorer/testnet/tx/9cc9866247bdb5975f56b677645187739fecebf463cb0e9905f434476fc9ad01) |
 | `reclamar(caller, code_hash)` — **función nueva** | [demo 1 XLM](https://stellar.expert/explorer/testnet/tx/d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a) |
 | `__constructor(asset, code_hash)` | [deploy](https://stellar.expert/explorer/testnet/tx/beb1ad83b831dbc3d3c3e81b4ab2d8e0d81c710a0403c9daffc1c47aa99b98ca) |
-| `status()` | [read tx](https://stellar.expert/explorer/testnet/tx/8d83b3d72251afbd5a071e6c1be2f96822b3922dfdddbdba47d739d9e734ddb3) (ejecutada con `--send=yes`; solo lectura) |
+| `status()` (bóveda activa) | [Ver tx](https://stellar.expert/explorer/testnet/tx/2a2eca8edab6c991e2e7d779fbd08c60fc240972330e6535e7f24c11aebfa9b9) · [read tx](https://stellar.expert/explorer/testnet/tx/8d83b3d72251afbd5a071e6c1be2f96822b3922dfdddbdba47d739d9e734ddb3) (ejecutada con `--send=yes`; solo lectura) |
 
 ## C. Endpoints y funciones de aplicación
 
