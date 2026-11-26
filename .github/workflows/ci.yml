@@ -57,6 +57,8 @@ jobs:
         run: cargo install stellar-cli --version ${{ env.STELLAR_CLI_VERSION }} --locked
       - name: Verify wasm fingerprint against release docs
         run: npm run verify:wasm
+      - name: Detect dependency/version drift
+        run: npm run verify:versions
       - name: Generated bindings in sync with wasm
         run: |
           cd contracts/ecstasy && stellar contract build
