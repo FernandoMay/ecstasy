@@ -39,8 +39,19 @@ export function addEncounterRef(
   ref: EncounterRef,
   maxEntries = 50,
 ): string {
+  const existing = parseHistory(raw).find((item) => item.id === ref.id);
+  // Opening an encounter must not downgrade a known role or reset the first
+  // time it was indexed: the local index is a cache, not a source of truth.
+  const merged: EncounterRef = existing
+    ? {
+        ...ref,
+        role:
+          existing.role === "viewer" && ref.role !== "viewer" ? ref.role : existing.role,
+        addedAt: existing.addedAt,
+      }
+    : ref;
   const current = parseHistory(raw).filter((item) => item.id !== ref.id);
-  const next = [ref, ...current]
+  const next = [merged, ...current]
     .sort((a, b) => b.addedAt - a.addedAt)
     .slice(0, maxEntries);
   return JSON.stringify(next);

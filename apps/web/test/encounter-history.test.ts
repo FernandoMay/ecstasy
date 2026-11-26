@@ -23,6 +23,15 @@ describe("local encounter history", () => {
     expect(list[0]?.role).toBe("viewer");
   });
 
+  it("preserves a known role and original timestamp when re-opening an encounter", () => {
+    let raw = addEncounterRef(null, { id: "5", role: "creator", addedAt: 100 });
+    raw = addEncounterRef(raw, { id: "5", role: "viewer", addedAt: 9999 });
+    const stored = parseHistory(raw);
+    expect(stored).toHaveLength(1);
+    expect(stored[0]?.role).toBe("creator");
+    expect(stored[0]?.addedAt).toBe(100);
+  });
+
   it("bounds the index and supports removal", () => {
     let raw: string | null = null;
     for (let i = 0; i < 60; i += 1) {
