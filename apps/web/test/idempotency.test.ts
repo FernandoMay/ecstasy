@@ -50,3 +50,22 @@ describe("idempotency edge cases", () => {
     expect(attempts.filter((value) => value === "duplicate")).toHaveLength(7);
   });
 });
+
+describe("idempotency after a timeout", () => {
+  it("blocks retries when the submit outcome is unknown", () => {
+    const guard = new IdempotencyGuard(60_000);
+    guard.rememberPending("timeout-key", 0);
+    expect(guard.isDuplicate("timeout-key", 1_000)).toBe(true);
+    expect(guard.isPending("timeout-key")).toBe(true);
+    expect(guard.recordedHash("timeout-key")).toBeUndefined();
+  });
+
+  it("allows a fresh attempt after the pending window expires", () => {
+    const guard = new IdempotencyGuard(60_000);
+    guard.rememberPending("timeout-key", 0);
+    expect(guard.isDuplicate("timeout-key", 60_001)).toBe(false);
+    guard.remember("timeout-key", "confirmed-hash", 60_001);
+    expect(guard.isPending("timeout-key")).toBe(false);
+    expect(guard.recordedHash("timeout-key")).toBe("confirmed-hash");
+  });
+});

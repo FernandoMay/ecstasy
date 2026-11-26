@@ -1,8 +1,9 @@
 /** Small in-memory guard against accidental double submission of a payment. */
 
 export interface IdempotencyRecord {
-  hash: string;
+  hash?: string;
   at: number;
+  pending?: boolean;
 }
 
 export class IdempotencyGuard {
@@ -25,7 +26,16 @@ export class IdempotencyGuard {
   }
 
   remember(key: string, hash: string, now: number = Date.now()): void {
-    this.records.set(key, { hash, at: now });
+    this.records.set(key, { hash, at: now, pending: false });
+  }
+
+  /** A submit was attempted but its outcome is unknown (timeout / RPC loss). */
+  rememberPending(key: string, now: number = Date.now()): void {
+    this.records.set(key, { at: now, pending: true });
+  }
+
+  isPending(key: string): boolean {
+    return this.records.get(key)?.pending === true;
   }
 
   recordedHash(key: string): string | undefined {

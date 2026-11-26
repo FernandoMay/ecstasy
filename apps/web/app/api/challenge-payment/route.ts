@@ -87,8 +87,15 @@ export async function POST(request: Request) {
     );
   }
   if (idemKey && idempotency.isDuplicate(idemKey)) {
+    const pending = idempotency.isPending(idemKey);
     return respond(
-      { error: "Duplicate payment request", code: "duplicate_request", hash: idempotency.recordedHash(idemKey) },
+      {
+        error: pending
+          ? "A previous attempt may have submitted a payment. Check its hash before retrying."
+          : "Duplicate payment request",
+        code: pending ? "duplicate_request_pending" : "duplicate_request",
+        hash: idempotency.recordedHash(idemKey),
+      },
       { status: 409 },
     );
   }
@@ -114,6 +121,7 @@ export async function POST(request: Request) {
   // The request body is deliberately ignored: no caller-controlled input can
   // change the memo, amount, asset or destination.
 
+  let reachedSubmit = false;
   try {
     const started = Date.now();
     const source = Keypair.random();
@@ -168,6 +176,7 @@ export async function POST(request: Request) {
       .setTimeout(180)
       .build();
     transaction.sign(source);
+    reachedSubmit = true;
 
     let submitResponse: Response;
     try {
@@ -213,6 +222,9 @@ export async function POST(request: Request) {
       network: "testnet",
     }, { headers: limitHeaders });
   } catch (cause) {
+    // Once a submit was attempted the outcome may be unknown. Keep the key
+    // blocked so a retry cannot silently double-spend.
+    if (idemKey && reachedSubmit) idempotency.rememberPending(idemKey);
     const failure = classifyPaymentFailure(cause);
     console.warn(JSON.stringify({ event: "payment_failed", kind: failure.kind, correlation }));
     return respond(
