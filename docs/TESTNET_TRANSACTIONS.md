@@ -104,7 +104,6 @@ Cada secuencia corresponde a: create → accept → complete ×2 → settle → 
 | Acción | Hash | Enlace stellar.expert |
 |---|---|---|
 | `CB7IX7KXOT7EDVNRFKN5UAT5TNNBVIAGM2IFLZIHIZXPXW7WH7I35DJV` · surplus 2 XLM | `14a8a267412de480364c8f27fdb021eb47c36e8190589fe998b7db752b0ecf0e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/14a8a267412de480364c8f27fdb021eb47c36e8190589fe998b7db752b0ecf0e) |
-| `CBX2IKIF63HKHNIMA4RCJTIMNPXTBWIPJPWAPKZUW5GAKJNCOUQ4ZCN2` · surplus 2 XLM | `1f595ef796ff309c630b5d909cd7a27dd57a2c826b5d6c651139fb230b6d9ec6` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1f595ef796ff309c630b5d909cd7a27dd57a2c826b5d6c651139fb230b6d9ec6) |
 | `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` · surplus 2 XLM | `1f595ef796ff309c630b5d909cd7a27dd57a2c826b5d6c651139fb230b6d9ec6` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1f595ef796ff309c630b5d909cd7a27dd57a2c826b5d6c651139fb230b6d9ec6) |
 | `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65` · surplus 2 XLM | `2333ac89b2e536506d174a0fff690aadc636432ebeb9fd3a4a435be665559bfe` | [Ver tx](https://stellar.expert/explorer/testnet/tx/2333ac89b2e536506d174a0fff690aadc636432ebeb9fd3a4a435be665559bfe) |
 | SAC nativo · fondeo excedente al contrato | `1c8f55c56d3b89c19605c18fa5ad7d15d0aa3733f99ceef4d4ab09fe76792eb5` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1c8f55c56d3b89c19605c18fa5ad7d15d0aa3733f99ceef4d4ab09fe76792eb5) |
