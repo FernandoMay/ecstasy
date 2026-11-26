@@ -2,6 +2,7 @@
 
 import {
   assertWalletNetwork,
+  connectWallet,
   EcstasyService,
   FreighterWallet,
   getConfig,
@@ -25,7 +26,7 @@ interface WalletContextValue {
   error: string | null;
   service: EcstasyService;
   wallet: WalletAdapter;
-  connect: () => Promise<void>;
+  connect: () => Promise<string | null>;
   disconnect: () => void;
   refresh: () => Promise<void>;
   clearError: () => void;
@@ -50,15 +51,20 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     setConnecting(true);
     setError(null);
     try {
-      if (typeof window === "undefined" || !("freighter" in window)) {
-        throw new Error("Freighter is not installed. Install the extension and reload.");
+      // Modern Freighter communicates over postMessage and does not inject
+      // `window.freighter`, so ask the SDK instead of probing a global.
+      if (typeof window === "undefined" || !(await wallet.isConnected())) {
+        throw new Error("Freighter is not installed or locked. Install/unlock it and retry.");
       }
-      await assertWalletNetwork(wallet, config.networkPassphrase);
-      const found = await wallet.requestAccess();
+      // requestAccess must precede getNetwork: the wallet only reports its
+      // network after the site has been authorized.
+      const found = await connectWallet(wallet, config.networkPassphrase);
       setAddress(found);
       setNetworkMismatch(false);
+      return found;
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause));
+      return null;
     } finally {
       setConnecting(false);
     }

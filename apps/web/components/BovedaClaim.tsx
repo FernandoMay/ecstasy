@@ -11,7 +11,7 @@ import { useWallet } from "./WalletProvider";
 
 /** Bóveda: lock 5555 XLM on Testnet and release them to the right code. */
 export function BovedaClaim() {
-  const { config, address, wallet, connect } = useWallet();
+  const { config, address, wallet, connect, clearError } = useWallet();
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<{ claimed: boolean; balance: bigint } | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
@@ -38,13 +38,16 @@ export function BovedaClaim() {
   }, [readStatus]);
 
   async function claim() {
-    if (!address) {
-      await connect();
-      return;
-    }
+    if (busy || status?.claimed) return;
     setBusy(true);
     setError(null);
+    clearError();
     try {
+      if (!code.trim()) throw new Error("Escribe el código de la bóveda.");
+      // Connect and claim in one click. `connect` returns the freshly approved
+      // address so signing never uses the stale `address` from this render.
+      const actor = address ?? (await connect());
+      if (!actor) return;
       const bytes = await globalThis.crypto.subtle.digest(
         "SHA-256",
         new TextEncoder().encode(code),
@@ -53,14 +56,14 @@ export function BovedaClaim() {
         contractId: config.bovedaContractId,
         rpcUrl: config.rpcUrl,
         networkPassphrase: config.networkPassphrase,
-        publicKey: address,
+        publicKey: actor,
         signTransaction: wallet.signTransaction,
         signAuthEntry: wallet.signAuthEntry,
         errorTypes: BovedaError,
         allowHttp: config.rpcUrl.startsWith("http://"),
       });
       const tx = await client.reclamar({
-        caller: address,
+        caller: actor,
         code_hash: Buffer.from(bytes),
       });
       const sent = await tx.signAndSend();

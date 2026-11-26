@@ -19,6 +19,7 @@ export {
   assertTransactionSource,
   assertWalletIdentity,
   assertWalletNetwork,
+  connectWallet,
 } from "./wallet";
 export type { WalletAdapter, WalletIdentity } from "./wallet";
 

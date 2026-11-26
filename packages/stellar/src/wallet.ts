@@ -102,6 +102,20 @@ export class FreighterWallet implements WalletAdapter {
   }
 }
 
+/**
+ * Grant site access, then verify the wallet is on the expected network.
+ * Access must be requested first: some extensions do not report their network
+ * until the site has been authorized.
+ */
+export async function connectWallet(
+  wallet: WalletAdapter,
+  expectedPassphrase: string,
+): Promise<string> {
+  const address = await wallet.requestAccess();
+  await assertWalletNetwork(wallet, expectedPassphrase);
+  return address;
+}
+
 /** Fail early if the wallet is on a different network than the app config. */
 export async function assertWalletNetwork(
   wallet: WalletAdapter,
