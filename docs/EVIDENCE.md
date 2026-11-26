@@ -260,7 +260,9 @@ New deployment: contract `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT
 
 Additional automated invariants added after RC-1: state-transition module (6 states), outsider authorization matrix, expiry/cancel races, contract/asset ID mismatch rejection, rate-limit rollover and CAS contention, payment idempotency (collision, expiry, 8 concurrent identical requests), strict Stellar account validation, dirty-tree CI detection and correlation IDs on payment responses/logs.
 
-Counts: 35 Rust + 24 shared + 31 web = **90 automated tests** (unit/invariant level, not E2E). Typecheck, production build, Clippy `-D warnings`, wasm fingerprint, version drift and production smoke remain green.
+Counts after the follow-up commits: 36 Rust + 24 shared + 39 web = **99 automated tests** (unit/invariant level, not E2E). Typecheck, production build, Clippy `-D warnings`, wasm fingerprint, version drift and production smoke remain green.
+
+New: idempotency keys are remembered as pending when a submit outcome is unknown, so a retry returns 409 `duplicate_request_pending` instead of risking a second payment; action visibility is derived from a single policy module used by the UI.
 
 Local verification of the new payment classification: a slow Friendbot request returned HTTP 504 with code `friendbot_timeout` and header `x-correlation-id: review-run-1234`, demonstrating the timeout is now reported explicitly instead of a generic failure. Production behaviour still depends on the Netlify function runtime as documented above.
 
