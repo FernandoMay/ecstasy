@@ -52,6 +52,16 @@ describe("config fails closed", () => {
     ).toThrow(/explicit valid/);
   });
 
+  it("rejects a contract/asset ID mismatch", () => {
+    const shared = "C".padEnd(56, "A");
+    expect(() =>
+      getConfig({
+        NEXT_PUBLIC_CONTRACT_ID: shared,
+        NEXT_PUBLIC_ASSET_CONTRACT_ID: shared,
+      }),
+    ).toThrow(/must be different/);
+  });
+
   it("uses the reviewed Testnet preset by default", () => {
     const config = getConfig({});
     expect(config.network).toBe("testnet");

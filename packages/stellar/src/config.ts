@@ -73,6 +73,9 @@ export function getConfig(
   if (!/^C[A-Z2-7]{55}$/.test(contractId) || !/^C[A-Z2-7]{55}$/.test(assetContractId)) {
     throw new Error(`Network ${network} requires explicit valid contract and asset IDs`);
   }
+  if (contractId === assetContractId) {
+    throw new Error("Contract and escrow asset IDs must be different contracts");
+  }
 
   return {
     network,
