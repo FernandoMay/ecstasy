@@ -38,3 +38,43 @@ export const EVIDENCE: readonly EvidenceRecord[] = [
 export function explorerUrl(hash: string): string {
   return `https://stellar.expert/explorer/testnet/tx/${hash}`;
 }
+
+export interface CoverageRow {
+  functionName: string;
+  verified: boolean;
+  hash?: string;
+}
+
+export function coverageMatrix(records: readonly EvidenceRecord[]): CoverageRow[] {
+  const byFunction = new Map<string, string>();
+  for (const record of records) {
+    if (!byFunction.has(record.functionName)) byFunction.set(record.functionName, record.hash);
+  }
+  return Array.from(byFunction, ([functionName, hash]) => ({
+    functionName,
+    verified: /^[0-9a-f]{64}$/.test(hash),
+    hash,
+  }));
+}
+
+export interface NegativeCase {
+  scenario: string;
+  expected: string;
+  verification: "unit" | "simulation" | "transaction";
+  reference: string;
+}
+
+export const NEGATIVE_CASES: readonly NegativeCase[] = [
+  { scenario: "Passphrase incorrecta", expected: "Descifrado rechazado", verification: "unit", reference: "apps/web/test/terms-envelope.test.ts" },
+  { scenario: "Envelope manipulado", expected: "AES-GCM detecta tampering", verification: "unit", reference: "apps/web/test/terms-envelope.test.ts" },
+  { scenario: "Envelope malformado", expected: "Formato rechazado", verification: "unit", reference: "apps/web/test/terms-envelope.test.ts" },
+  { scenario: "Hash de términos distinto", expected: "Accept bloqueado", verification: "unit", reference: "apps/web/components/ConsentSheet.tsx" },
+  { scenario: "Red incorrecta", expected: "Conexión rechazada", verification: "unit", reference: "packages/stellar/test/wallet-connect.test.ts" },
+  { scenario: "Usuario no participante", expected: "NotParty (#2)", verification: "unit", reference: "contracts/ecstasy/tests/contract_test.rs" },
+  { scenario: "Doble settlement", expected: "InvalidState (#6)", verification: "simulation", reference: "docs/EVIDENCE.md · negativos sin hash" },
+  { scenario: "Afterglow duplicado", expected: "AlreadySubmitted (#9)", verification: "simulation", reference: "docs/EVIDENCE.md · negativos sin hash" },
+  { scenario: "Asset no configurado", expected: "InvalidAsset (#11)", verification: "simulation", reference: "docs/EVIDENCE.md · negativos sin hash" },
+  { scenario: "Bóveda sin saldo", expected: "Empty (#3)", verification: "unit", reference: "contracts/boveda/tests/boveda_test.rs" },
+  { scenario: "Retiro duplicado", expected: "AlreadyClaimed (#2)", verification: "unit", reference: "contracts/boveda/tests/boveda_test.rs" },
+  { scenario: "Tercer pago rápido", expected: "HTTP 429 rate_limited", verification: "simulation", reference: "docs/EVIDENCE.md · G2 production (HTTP, no tx)" },
+];

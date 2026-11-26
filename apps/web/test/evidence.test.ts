@@ -1,11 +1,25 @@
 import { describe, expect, it } from "vitest";
-import { EVIDENCE, explorerUrl } from "../lib/evidence";
+import { EVIDENCE, NEGATIVE_CASES, coverageMatrix, explorerUrl } from "../lib/evidence";
 
 describe("evidence center data", () => {
   it("contains only full 64-hex real hashes", () => {
     for (const record of EVIDENCE) {
       expect(record.hash).toMatch(/^[0-9a-f]{64}$/);
       expect(explorerUrl(record.hash)).toContain("stellar.expert/explorer/testnet/tx/");
+    }
+  });
+
+  it("marks coverage verified only when a full hash exists", () => {
+    const matrix = coverageMatrix(EVIDENCE);
+    expect(matrix.length).toBeGreaterThan(10);
+    expect(matrix.every((row) => row.verified && row.hash)).toBe(true);
+  });
+
+  it("records deliberate failures with honest verification types", () => {
+    expect(NEGATIVE_CASES.length).toBeGreaterThan(8);
+    for (const item of NEGATIVE_CASES) {
+      expect(["unit", "simulation", "transaction"]).toContain(item.verification);
+      expect(item.reference.length).toBeGreaterThan(0);
     }
   });
 
