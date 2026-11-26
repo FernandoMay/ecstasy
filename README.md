@@ -1,95 +1,114 @@
 # ECSTASY
 
-**Private encounters. Public proof.**
+**Acuerdos secretos. Pruebas públicas en Stellar.**
+*Private agreements. Public proof on Stellar.*
 
-ECSTASY is a consent-first private-agreement protocol built on Stellar. Two people can create an encounter, agree to terms, optionally lock value in escrow, complete the encounter, settle on-chain, and leave verifiable afterglow/reputation without publishing private terms.
+ECSTASY es un protocolo de acuerdos privados entre dos partes, construido sobre Stellar. Dos personas crean un encuentro, acuerdan términos en privado, bloquean valor en escrow de forma opcional, completan el encuentro, liquidan on-chain y dejan una señal de reputación verificable (`afterglow`) sin publicar los términos privados.
 
-> **Private by default. Settled on Stellar.**
+> **Privado por defecto. Liquidado en Stellar.**
+> [Video: Acuerdos secretos y pruebas públicas en Stellar](https://youtube.com/shorts/zMHbDthidtI)
 
-## Why
+## Qué es (y qué no es)
 
-ECSTASY turns the narrative of secret encounters into a neutral Web3 primitive: privacy, explicit consent, commitments, settlement, and consequences. It is **not a dating app** and does not require sexual content. An encounter can represent a date, experience, challenge, collaboration, conditional gift, or other bilateral agreement.
+Es una primitiva Web3 neutral para acuerdos bilaterales: privacidad, consentimiento explícito, compromisos criptográficos, liquidación y consecuencias. **No es una app de citas** y no requiere contenido sexual. Un "encuentro" puede ser una cita, una experiencia, un reto, una colaboración, un regalo condicional o cualquier otro acuerdo entre dos partes.
 
-## MVP
+Lo que dice la cadena no es la verdad del encuentro: es la prueba de que el contrato aceptó una transición de estado bajo sus reglas.
 
-```text
-Create → Invite → Consent → Optional Escrow → Complete → Settle → Afterglow
-```
-
-### On-chain
-- participant addresses
-- encounter status
-- stake amount + asset identifier
-- cryptographic `terms_hash`
-- timestamps / expiry
-- completion and settlement state
-- coarse afterglow score / reputation event
-
-### Off-chain
-- private terms
-- messages and personal content
-- optional encrypted metadata
-
-**Never put private terms or sensitive personal content on-chain.**
-
-## Repository
+## Flujo
 
 ```text
-apps/web/                 Next.js Testnet app (real Testnet flows)
-contracts/ecstasy/        Soroban contract (incl. retirar), tests and deploy/smoke scripts
-packages/stellar/         shared Stellar SDK, wallet adapter and typed bindings
-docs/                     product, protocol, security, evidence and demo docs
-.github/workflows/        CI (contract, web, docs)
+Crear → Invitar → Consentir → Escrow opcional → Completar → Liquidar → Afterglow
 ```
 
-## Build target
+### On-chain (público)
+- direcciones de los participantes
+- estado del encuentro
+- stake + identificador del asset
+- `terms_hash` (SHA-256 de los términos canónicos)
+- timestamps / expiración
+- completado y liquidado
+- score grueso de afterglow
 
-The Ship It: Builder Challenge target is a small, demonstrable vertical slice rather than a feature-heavy social network:
+### Off-chain (privado)
+- términos privados
+- mensajes y contenido personal
+- metadatos cifrados opcionales (fuera de este protocolo)
 
-1. deploy Soroban contract to Stellar Testnet;
-2. connect two wallets;
-3. create an encounter;
-4. accept/decline;
-5. complete and settle;
-6. show transaction evidence;
-7. submit afterglow;
-8. deploy a public web demo;
-9. only after Testnet evidence is solid, prepare Mainnet.
+**Los términos privados nunca se publican en la cadena.** Un hash es un compromiso, **no cifrado**: si el preimage se comparte o se puede adivinar, no hay confidencialidad.
 
-## Current status
+## Repositorio
 
-**Stage: Testnet Release Candidate 1** (`docs/RELEASES/testnet-rc-1.md`). Sprint C is complete; two-wallet Freighter E2E, Netlify Blobs runtime mode and the payment endpoint timeout remain open. See `docs/RUNBOOK.md` for operations. The Soroban contract, its test suite, the shared Stellar package and the Next.js demo are implemented. The contract is deployed on Testnet and the full create → consent → complete → settle → afterglow flow has been executed with two real signed transactions per party. See `docs/EVIDENCE.md`.
+```text
+apps/web/                 Next.js Testnet app (flujos reales, sin mocks)
+contracts/ecstasy/        contrato Soroban, tests y scripts deploy/smoke
+packages/stellar/         SDK compartido, adapter de wallet y bindings tipados
+docs/                     protocolo, seguridad, evidencia, runbook y release
+netlify.toml              build del monorepo en Netlify
+.github/workflows/        CI y smoke de producción
+```
+
+## Estado actual — Testnet Release Candidate 1
+
+Detalle completo: `docs/RELEASES/testnet-rc-1.md` y `docs/EVIDENCE.md`.
+
+| Gate | Estado |
+|---|---|
+| Contrato desplegado y flujo completo en Testnet (CLI/RPC) | ✅ |
+| Pago real desde la URL pública con memo `SHIP-S97KF8` | ✅ G1 |
+| Match de términos, asset único fijado en constructor, auth y expiración | ✅ |
+| Blobs disponible en producción (`shared` reportado por `/api/status`) | ✅ infra |
+| Idempotencia shared entre instancias (8 peticiones → exactamente 1 pago) | ⏳ G2 |
+| E2E en navegador con dos wallets Freighter | ⏳ G3 |
+| Mainnet | ❌ decisión separada |
+
+Dos pagos públicos verificados en Horizon:
+
+- https://stellar.expert/explorer/testnet/tx/07a3183f03be6c6cea24e3380e84d5786217e2145a6f48d875081af7886d1064
+- https://stellar.expert/explorer/testnet/tx/494d9e603cfb470ce6356027f199b6c95641839eaa237d11cdb2e739a138fc02
+
+**Contrato actual:** `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65`
+**Asset de escrow:** SAC nativo XLM `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
+**App pública:** https://ecs-tasy.netlify.app
 
 ### Quickstart
 
 ```bash
-npm install                       # installs the web + shared package workspaces
+npm install                        # workspaces: apps/web + packages/stellar
 cp .env.example apps/web/.env.local
-npm run build                     # builds the shared package, then the web app
-npm test                          # shared package unit tests
-cd contracts/ecstasy && cargo test # 19 contract state-machine tests
-npm run dev                       # http://localhost:3000
+npm run build                      # shared package, luego web
+npm test                           # 26 shared + 46 web
+cd contracts/ecstasy && cargo test # 38 tests del contrato
+cd ../.. && npm run dev            # http://localhost:3000
 ```
 
-Open the app with Freighter on Testnet. Use two wallets/contexts for the two roles. Private terms never leave the browser; the app only submits their SHA-256 commitment.
+Total: **110 tests automatizados** (unitarios y de invariantes; **no** son 110 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
 
-### Deploy / smoke test
+Abre la app con Freighter en Testnet. Usa dos wallets/contextos para los dos roles. Los términos privados se guardan solo en el navegador si haces opt-in y se pueden borrar desde el formulario.
+
+### Deploy y verificación
 
 ```bash
 SOURCE=<stellar-identity> contracts/ecstasy/scripts/deploy.sh
 CREATOR=<identity-a> PARTICIPANT=<identity-b> contracts/ecstasy/scripts/smoke.sh
+SITE_URL=https://ecs-tasy.netlify.app SKIP_PAYMENT=1 scripts/production-smoke.sh
+npm run docs:matrix && npm run verify:wasm && npm run verify:versions
 ```
 
-`deploy.sh` prints the public contract ID. `smoke.sh` runs the full flow on-chain and prints every transaction hash for the evidence pack.
+`deploy.sh` fija el asset de escrow en el constructor e imprime el contract ID. `smoke.sh` ejecuta el flujo completo y printed cada hash. El checklist del E2E pendiente está en `docs/E2E_CHECKLIST.md`.
+
+## Seguridad y límites de confianza
+
+- Nunca se piden ni se guardan seed phrases o claves privadas.
+- Nunca se ponen términos privados, chats, fotos ni PII innecesaria en la cadena.
+- Toda autorización se aplica on-chain (`require_auth` + chequeo de partes).
+- El escrow es opcional; un encounter sin stake es posible.
+- Los eventos no contienen payloads sensibles.
+- No se presenta ECSTASY como mecanismo para evadir leyes, consentimiento, moderación o requisitos de identidad.
 
 ## Stellar
 
-The implementation should use the current Stellar CLI/Soroban toolchain and current JavaScript wallet tooling at build time. Pin actual dependency versions in the implementation PR and record the versions in `docs/TECHNICAL_SPEC.md` and `docs/ADR/0001-stack.md`.
+Versiones fijadas y validadas: ver `docs/adr/0001-stack.md`. El cliente TypeScript se genera desde el WASM compilado (`npm run generate:bindings`) y CI verifica que no haya drift.
 
-## Safety and trust boundaries
+## Licencia
 
-ECSTASY must not be presented as a mechanism for evading law, consent, moderation, or identity requirements. Escrow is optional. The protocol records proof of an agreed state transition, not proof that an off-chain real-world event was objectively true.
-
-## License
-
-TBD before public production launch. Do not add a license until the project owner chooses one.
+Pendiente: no añadir licencia hasta que el dueño del proyecto elija una.
