@@ -6,6 +6,8 @@
  * module works in the Next.js browser bundle and in Node tests.
  */
 
+import { Networks } from "@stellar/stellar-sdk";
+
 export type NetworkName = "testnet" | "mainnet";
 
 export interface NetworkPreset {
@@ -21,7 +23,7 @@ export interface NetworkPreset {
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
   testnet: {
     rpcUrl: "https://soroban-testnet.stellar.org",
-    networkPassphrase: "Testnet SDF",
+    networkPassphrase: Networks.TESTNET,
     explorerBaseUrl: "https://explorer.stellar.org",
     contractId: "CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65",
     assetContractId: "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
@@ -29,7 +31,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
-    networkPassphrase: "Public Global Stellar Network ; September 2015",
+    networkPassphrase: Networks.PUBLIC,
     explorerBaseUrl: "https://explorer.stellar.org",
     contractId: "",
     assetContractId: "",

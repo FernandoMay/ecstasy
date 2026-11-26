@@ -55,6 +55,7 @@ export async function GET() {
       blobsAvailable: blobsOk,
       health,
       network: config.network,
+      networkPassphrase: config.networkPassphrase,
       contractId: config.contractId,
       assetContractId: config.assetContractId,
       assetSymbol: config.assetSymbol,

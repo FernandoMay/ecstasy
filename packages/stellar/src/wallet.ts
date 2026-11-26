@@ -134,7 +134,7 @@ export function networkFamily(passphrase: string): NetworkFamily {
 
 /**
  * Freighter may report the network name ("TESTNET") and a longer passphrase
- * than the app preset ("Testnet SDF"). Accept exact passphrase matches or a
+ * than the app preset. Accept exact passphrase matches or a
  * consistent name+family match, and reject mixed or unknown combinations.
  */
 export function networkMatches(

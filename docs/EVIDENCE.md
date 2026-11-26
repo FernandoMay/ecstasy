@@ -358,7 +358,7 @@ Two independent Testnet identities are prepared and funded (public addresses onl
 
 ## G3 defect fixed: network mismatch on Freighter (26 nov)
 
-A user-reported error — `Wallet is on "TESTNET" but this demo expects "Testnet SDF"` — exposed a real compatibility defect: `assertWalletNetwork` required an exact passphrase string, while Freighter reports the network name `TESTNET` and may return a longer passphrase. `networkMatches` now accepts exact passphrases or a consistent name+family match (Testnet/Mainnet) and rejects mixed or unknown combinations. Four regression tests cover exact match, Freighter-style longer passphrase, mixed families and Mainnet.
+A user-reported Freighter error (`Variant is set to Test Net`, transaction on `Testnet SDF`) exposed two real defects: the app preset used the non-canonical string `Testnet SDF` instead of the SDK constant `Networks.TESTNET` = `Test SDF Network ; September 2015`, and `assertWalletNetwork` required an exact passphrase string. The config now uses `Networks.TESTNET`/`Networks.PUBLIC` from `@stellar/stellar-sdk`, and `networkMatches` accepts exact passphrases or a consistent name+family match (Testnet/Mainnet) while rejecting mixed or unknown combinations. Four regression tests cover exact match, Freighter-style name/family matching, mixed families and Mainnet.
 
 After deployment, the user must retry `Connect wallet` with Freighter unlocked and Testnet selected; no signature has been captured from this fix yet.
 

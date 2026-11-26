@@ -11,7 +11,7 @@ function wallet(address: string | null | (() => Promise<string | null>)): Wallet
     requestAccess: async () => ADDRESS,
     signTransaction: async () => ({ signedTxXdr: "", signerAddress: ADDRESS }),
     signAuthEntry: async () => ({ signedAuthEntry: "", signerAddress: ADDRESS }),
-    getNetwork: async () => ({ network: "testnet", networkPassphrase: "Testnet SDF" }),
+    getNetwork: async () => ({ network: "testnet", networkPassphrase: "Test SDF Network ; September 2015" }),
     watchChanges: () => () => {},
   } as unknown as WalletAdapter;
 }

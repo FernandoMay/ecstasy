@@ -14,7 +14,7 @@ function wallet(calls: string[], overrides: Partial<WalletAdapter> = {}): Wallet
     },
     getNetwork: async () => {
       calls.push("getNetwork");
-      return { network: "TESTNET", networkPassphrase: "Testnet SDF" };
+      return { network: "TESTNET", networkPassphrase: "Test SDF Network ; September 2015" };
     },
     signTransaction: async () => ({ signedTxXdr: "", signerAddress: ADDRESS }),
     signAuthEntry: async () => ({ signedAuthEntry: "", signerAddress: ADDRESS }),
@@ -26,7 +26,7 @@ function wallet(calls: string[], overrides: Partial<WalletAdapter> = {}): Wallet
 describe("connectWallet", () => {
   it("authorizes before reading the network and returns the approved address", async () => {
     const calls: string[] = [];
-    await expect(connectWallet(wallet(calls), "Testnet SDF")).resolves.toBe(ADDRESS);
+    await expect(connectWallet(wallet(calls), "Test SDF Network ; September 2015")).resolves.toBe(ADDRESS);
     // Freighter only reports its network once the site has been authorized.
     expect(calls).toEqual(["requestAccess", "getNetwork"]);
   });
@@ -42,7 +42,7 @@ describe("connectWallet", () => {
         };
       },
     });
-    await expect(connectWallet(adapter, "Testnet SDF")).rejects.toThrow(/Wallet is on "PUBLIC"/);
+    await expect(connectWallet(adapter, "Test SDF Network ; September 2015")).rejects.toThrow(/Wallet is on "PUBLIC"/);
     expect(calls).toEqual(["requestAccess", "getNetwork"]);
   });
 
@@ -54,7 +54,7 @@ describe("connectWallet", () => {
         throw new Error("Access denied");
       },
     });
-    await expect(connectWallet(adapter, "Testnet SDF")).rejects.toThrow("Access denied");
+    await expect(connectWallet(adapter, "Test SDF Network ; September 2015")).rejects.toThrow("Access denied");
     expect(calls).toEqual(["requestAccess"]);
   });
 });
@@ -62,15 +62,15 @@ describe("connectWallet", () => {
 describe("network matching", () => {
   it("accepts the exact configured passphrase", async () => {
     const { networkMatches } = await import("../src/wallet");
-    expect(networkMatches({ network: "TESTNET", networkPassphrase: "Testnet SDF" }, "Testnet SDF")).toBe(true);
+    expect(networkMatches({ network: "TESTNET", networkPassphrase: "Test SDF Network ; September 2015" }, "Test SDF Network ; September 2015")).toBe(true);
   });
 
   it("accepts Freighter's network name with a longer Testnet passphrase", async () => {
     const { networkMatches } = await import("../src/wallet");
     expect(
       networkMatches(
-        { network: "TESTNET", networkPassphrase: "Testnet SDF ; September 2015" },
-        "Testnet SDF",
+        { network: "TESTNET", networkPassphrase: "Test SDF Network ; September 2015" },
+        "Test SDF Network ; September 2015",
       ),
     ).toBe(true);
   });
@@ -78,10 +78,10 @@ describe("network matching", () => {
   it("rejects mixed or wrong families", async () => {
     const { networkMatches } = await import("../src/wallet");
     expect(
-      networkMatches({ network: "TESTNET", networkPassphrase: "Futurenet SDF" }, "Testnet SDF"),
+      networkMatches({ network: "TESTNET", networkPassphrase: "Futurenet SDF" }, "Test SDF Network ; September 2015"),
     ).toBe(false);
     expect(
-      networkMatches({ network: "PUBLIC", networkPassphrase: "Testnet SDF" }, "Testnet SDF"),
+      networkMatches({ network: "PUBLIC", networkPassphrase: "Test SDF Network ; September 2015" }, "Test SDF Network ; September 2015"),
     ).toBe(false);
   });
 
