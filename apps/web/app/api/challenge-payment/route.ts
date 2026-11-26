@@ -96,6 +96,9 @@ export async function POST(request: Request) {
           : "Duplicate payment request",
         code: pending ? "duplicate_request_pending" : "duplicate_request",
         hash: idempotency.recordedHash(idemKey),
+        ...(pending
+          ? { reconcile: `/api/challenge-payment?key=${encodeURIComponent(idemKey)}` }
+          : {}),
       },
       { status: 409 },
     );
