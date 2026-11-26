@@ -121,6 +121,14 @@ export async function POST(request: Request) {
   }
 
   const activeLimiter = await limiter;
+  const dryStage = new URL(request.url).searchParams.get("dry");
+  if (dryStage === "limiter") {
+    const allowed = await activeLimiter.check(clientKey(request));
+    return respond(
+      { status: "limiter-checked", allowed, mode: activeLimiter.mode, elapsedMs: Date.now() - preflightStarted },
+      { status: 200 },
+    );
+  }
   const limitHeaders = rateLimitHeaders(activeLimiter.mode);
   if (!(await activeLimiter.check(clientKey(request)))) {
     return respond(
@@ -140,6 +148,25 @@ export async function POST(request: Request) {
   }
   // The request body is deliberately ignored: no caller-controlled input can
   // change the memo, amount, asset or destination.
+
+  if (dryStage === "friendbot") {
+    const probe = Keypair.random();
+    const startedProbe = Date.now();
+    try {
+      const response = await fetch(`${FRIEND_BOT}?addr=${probe.publicKey()}`, {
+        signal: AbortSignal.timeout(9_000),
+      });
+      return respond(
+        { status: "friendbot-checked", httpStatus: response.status, elapsedMs: Date.now() - startedProbe },
+        { status: 200 },
+      );
+    } catch (cause) {
+      return respond(
+        { status: "friendbot-failed", kind: classifyPaymentFailure(cause).kind, elapsedMs: Date.now() - startedProbe },
+        { status: 504 },
+      );
+    }
+  }
 
   let reachedSubmit = false;
   let sourcePublicKey: string | undefined;
