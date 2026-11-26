@@ -255,6 +255,15 @@ A boundary test exposed that the earlier "pin on first create" design let the fi
 
 New deployment: contract `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65`, wasm `4929c91d90915d4aac8e314e2fc7fc0f5f217ab37d1037db544a9d8bf773da0e`. Full smoke re-executed (first tx `42d87dbe…`); `retirar` on the final contract: https://stellar.expert/explorer/testnet/tx/2333ac89b2e536506d174a0fff690aadc636432ebeb9fd3a4a435be665559bfe
 
+
+## Atomic hardening follow-up
+
+Additional automated invariants added after RC-1: state-transition module (6 states), outsider authorization matrix, expiry/cancel races, contract/asset ID mismatch rejection, rate-limit rollover and CAS contention, payment idempotency (collision, expiry, 8 concurrent identical requests), strict Stellar account validation, dirty-tree CI detection and correlation IDs on payment responses/logs.
+
+Counts: 35 Rust + 24 shared + 31 web = **90 automated tests** (unit/invariant level, not E2E). Typecheck, production build, Clippy `-D warnings`, wasm fingerprint, version drift and production smoke remain green.
+
+Local verification of the new payment classification: a slow Friendbot request returned HTTP 504 with code `friendbot_timeout` and header `x-correlation-id: review-run-1234`, demonstrating the timeout is now reported explicitly instead of a generic failure. Production behaviour still depends on the Netlify function runtime as documented above.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
