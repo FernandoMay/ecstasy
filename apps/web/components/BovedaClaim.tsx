@@ -90,7 +90,7 @@ export function BovedaClaim() {
         5555 XLM bloqueados en un contrato Soroban. La bóveda libera el saldo completo a quien
         presente el código correcto. Solo se puede reclamar una vez.
       </p>
-      <dl className="kv">
+      <dl className="kv" aria-live="polite" aria-busy={status === null}>
         <dt>Contrato</dt>
         <dd>{shortAddress(config.bovedaContractId)}</dd>
         <dt>Estado</dt>
@@ -110,8 +110,12 @@ export function BovedaClaim() {
           disabled={status?.claimed || busy}
           onChange={(event) => setCode(event.target.value)}
           placeholder="Escribe el código"
+          aria-describedby="vault-code-help"
         />
       </div>
+      <p id="vault-code-help" className="muted small">
+        El código se comprime a SHA-256 en tu navegador; el contrato solo recibe el digest.
+      </p>
       <button
         className="btn btn-primary"
         onClick={claim}

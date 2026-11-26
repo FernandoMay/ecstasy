@@ -40,7 +40,7 @@ export function StatusPanel() {
   return (
     <div className="card">
       <h3>Testnet status</h3>
-      <dl className="kv">
+      <dl className="kv" aria-live="polite" aria-busy={status === null && !error}>
         <dt>Network</dt>
         <dd>{status?.network ?? config.network}</dd>
         <dt>RPC</dt>
