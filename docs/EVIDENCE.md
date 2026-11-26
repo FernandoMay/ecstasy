@@ -260,7 +260,7 @@ New deployment: contract `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT
 
 Additional automated invariants added after RC-1: state-transition module (6 states), outsider authorization matrix, expiry/cancel races, contract/asset ID mismatch rejection, rate-limit rollover and CAS contention, payment idempotency (collision, expiry, 8 concurrent identical requests), strict Stellar account validation, dirty-tree CI detection and correlation IDs on payment responses/logs.
 
-Counts after deep hardening: 38 Rust + 26 shared + 47 web = **111 automated tests** (unit/invariant level, not E2E). Typecheck, production build, Clippy `-D warnings`, wasm fingerprint, version drift and production smoke remain green.
+Counts recorded after deep hardening at that time: 38 Rust + 26 shared + 47 web = 111 automated tests (unit/invariant level, not E2E). Those numbers are a historical snapshot; the current checked-out tree was re-measured in "Current test inventory (reconciled 2026-11-26)" below. Typecheck, production build, wasm fingerprint and version drift pass locally on the current tree; Clippy `-D warnings` passes for `contracts/ecstasy` but fails for `contracts/boveda` (see limitations).
 
 New: idempotency keys are remembered as pending when a submit outcome is unknown, so a retry returns 409 `duplicate_request_pending` with a reconciliation URL instead of risking a second payment. `GET /api/challenge-payment?key=...` queries Horizon using the stored ephemeral source address and resolves the key to the confirmed hash when the payment landed. No secret material is stored. Action visibility is derived from a single policy module used by the UI, and a submitted transaction's source account is verified against the connected wallet after signing. Contract tests now cover escrow conservation across mixed terminal paths and zero-stake expiry.
 
@@ -317,9 +317,29 @@ Se intentó una guarda compartida con Netlify Blobs usando únicamente `get` + `
 
 Verificación pública: `GET https://ecs-tasy.netlify.app/boveda` → 200 y el navegador muestra "Fondada" y "5,555 XLM" leídos desde el contrato. El contrato principal conserva los 5555 XLM para que el jurado los reclame desde la app pública con el código del reto. La función `reclamar` se ejerció en un contrato demo separado para no vaciar la bóveda del premio. Dos tests Rust cubren código inválido, saldo vacío, claim correcto y reclamación duplicada.
 
+## Current test inventory (reconciled 2026-11-26)
+
+Measured on `33c42d7` (branch `docs/reconcile-rc1-test-evidence`) before the documentation-only change:
+
+| Command | Result | Exact count |
+|---|---|---|
+| `npm test` | 8 shared + 11 web Vitest files passed | 26 shared + 48 web |
+| `cd contracts/ecstasy && cargo test` | 1 integration test binary passed; 0 lib/unit, 0 doc-tests | 38 |
+| `cd contracts/boveda && cargo test` | 1 integration test binary passed; 0 lib/unit, 0 doc-tests | 2 |
+| `npm run typecheck && npm run build` | clean | n/a |
+| `npm run verify:wasm && npm run verify:versions` | wasm hash matches 3/3 release docs; all pinned versions match ADR | n/a |
+| `npm run generate:bindings --workspace=@ecstasy/stellar` + `git diff --exit-code -- packages/stellar/src/generated/ecstasy.ts` | no diff; Stellar CLI emitted a deprecation warning only | n/a |
+| `cargo fmt --check && cargo clippy --all-targets -- -D warnings` in `contracts/ecstasy` | clean | n/a |
+| `cargo fmt --check && cargo clippy --all-targets -- -D warnings` in `contracts/boveda` | fails locally: unused `Event` import and two `needless_borrows_for_generic_args` errors | n/a |
+
+Total automated tests: **114** = 74 unit/invariant (Vitest) + 40 contract-level (Rust). Three of the 48 web tests validate the browser-E2E harness definition; they do not execute a browser. No browser E2E was executed: `docs/E2E_CHECKLIST.md` has 9 scenarios / 32 steps, all unchecked. Live CLI/RPC smoke and `scripts/production-smoke.sh` are separate integration evidence, not part of the 114-test count; production smoke was not re-run in this reconciliation.
+
+Earlier counts in this pack (19/21, 24/12/12 and 38+26+47=111) are historical snapshots from their respective commits; use the inventory above for the current tree. The full breakdown is in `docs/RELEASES/testnet-rc-1.md`.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
+- `contracts/boveda` fails the local `cargo clippy --all-targets -- -D warnings` gate on the current checkout; follow-up needed outside this documentation-only change.
 - One asset (native XLM) and one escrow rule (creator's stake → participant on mutual completion) are implemented.
 - No dispute arbitration, identity verification or encrypted off-chain storage.
 - A hash is a commitment, not encryption: if the terms are shared openly, confidentiality is lost.

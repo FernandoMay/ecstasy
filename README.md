@@ -76,12 +76,13 @@ Dos pagos públicos verificados en Horizon:
 npm install                        # workspaces: apps/web + packages/stellar
 cp .env.example apps/web/.env.local
 npm run build                      # shared package, luego web
-npm test                           # 26 shared + 46 web
+npm test                           # 26 shared + 48 web
 cd contracts/ecstasy && cargo test # 38 tests del contrato
+cd ../boveda && cargo test         # 2 tests de la bóveda
 cd ../.. && npm run dev            # http://localhost:3000
 ```
 
-Total: **110 tests automatizados** (unitarios y de invariantes; **no** son 110 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
+Total: **114 tests automatizados** (74 unitarios/de invariantes con Vitest + 40 tests de contrato con Rust: 38 de ECSTASY y 2 de la bóveda; **no** son 114 pruebas E2E). El E2E en navegador con dos wallets Freighter sigue pendiente: `docs/E2E_CHECKLIST.md` define 9 escenarios / 32 pasos, ninguno ejecutado. Typecheck, build, verificación de WASM y detección de drift de versiones pasan localmente; Clippy `-D warnings` pasa en `contracts/ecstasy` pero falla en `contracts/boveda` (ver `docs/EVIDENCE.md`). Las cifras históricas de RC1 (24/12/12) están en `docs/RELEASES/testnet-rc-1.md`.
 
 Abre la app con Freighter en Testnet. Usa dos wallets/contextos para los dos roles. Los términos privados se guardan solo en el navegador si haces opt-in y se pueden borrar desde el formulario.
 
