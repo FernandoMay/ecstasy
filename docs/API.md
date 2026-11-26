@@ -4,6 +4,7 @@ The ABI is generated from the contract spec; `packages/stellar/src/generated/ecs
 
 | Method | Actor | Effect | Errors |
 |---|---|---|---|
+| `__constructor(asset)` | deployer | Pins the single escrow asset at deployment | — |
 | `create_encounter(creator, participant, asset, stake, terms_hash, expires_at) -> u64` | creator | Creates invitation and optional escrow; pins the single escrow asset | `SelfEncounter`, `InvalidStake`, `InvalidExpiry`, `InvalidAsset` |
 | `accept_encounter(participant, id)` | participant | Explicit consent | `NotFound`, `NotParty`, `Expired`, `InvalidState` |
 | `decline_encounter(participant, id)` | participant | Cancels and refunds creator | `NotFound`, `NotParty`, `Expired`, `InvalidState` |

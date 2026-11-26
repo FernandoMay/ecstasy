@@ -22,7 +22,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     rpcUrl: "https://soroban-testnet.stellar.org",
     networkPassphrase: "Testnet SDF",
     explorerBaseUrl: "https://explorer.stellar.org",
-    contractId: "CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY",
+    contractId: "CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65",
     assetContractId: "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
   },
   mainnet: {

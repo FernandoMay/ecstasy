@@ -70,7 +70,7 @@ Expiry refunds are committed by a **successful** permissionless transaction. A m
 
 ## 6. Escrow model
 
-One fungible Stellar Asset Contract per deployment, configured by `assetContractId` and pinned on-chain as `EscrowAsset` at the first create. Any different asset is rejected with `InvalidAsset`; `retirar` is scoped to the pinned asset so reserves cannot be consumed cross-asset. No issuer is invented: the demo uses the native XLM SAC (`CDLZFC3S…YSC`). A no-stake encounter is always possible (`stake = 0`), and no token call is made in that case.
+One fungible Stellar Asset Contract per deployment, configured by `assetContractId` and pinned on-chain as `EscrowAsset` by `__constructor` at deployment. Any different asset is rejected with `InvalidAsset`; `retirar` is scoped to the pinned asset so reserves cannot be consumed cross-asset. No issuer is invented: the demo uses the native XLM SAC (`CDLZFC3S…YSC`). A no-stake encounter is always possible (`stake = 0`), and no token call is made in that case.
 
 Escrow rules:
 

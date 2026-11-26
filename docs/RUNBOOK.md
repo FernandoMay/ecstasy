@@ -8,8 +8,8 @@ Scope: the deployed Next.js app on Netlify, the Soroban contract on Testnet and 
 |---|---|
 | Site | https://ecs-tasy.netlify.app |
 | Production branch | `main` (Netlify auto-deploy) |
-| Contract | `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` |
-| Wasm hash | `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61` |
+| Contract | `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65` |
+| Wasm hash | `4929c91d90915d4aac8e314e2fc7fc0f5f217ab37d1037db544a9d8bf773da0e` |
 | Escrow asset | native XLM SAC `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
 | RPC | `https://soroban-testnet.stellar.org` |
 | Explorer | https://explorer.stellar.org (chain=testnet) |

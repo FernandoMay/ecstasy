@@ -8,13 +8,13 @@ Everything below was produced by real signed Stellar Testnet transactions. No RP
 |---|---|
 | Network | Testnet (`Test SDF Network ; September 2015`) |
 | Source commit | `7c04816` (`feat: implement ECSTASY Testnet vertical slice`) |
-| Contract ID (current, Sprint A) | `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` |
-| Wasm SHA-256 (current) | `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61` |
+| Contract ID (current, Sprint A) | `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65` |
+| Wasm SHA-256 (current) | `4929c91d90915d4aac8e314e2fc7fc0f5f217ab37d1037db544a9d8bf773da0e` |
 | Previous contract IDs | `CB7IX7KXOT7EDVNRFKN5UAT5TNNBVIAGM2IFLZIHIZXPXW7WH7I35DJV` (`retirar`), `CBZKLJGQP6ZYYY7CV37RWAGU72U4I5HXXHAPYW657YI2VQIZDGLNBP7W` (earlier evidence below) |
 | Escrow asset | native XLM SAC `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
 | Creator identity | `arceus-deployer` → `GAUZSVWQY5KOFMWZA5YJEBOECWBGSZHPSADVI6G3ZB54JULLDL6IKISJ` |
 | Participant identity | `suite-admin` → `GBQV7XDOMA6342BHICZGIRBDOZVTMRL7A7A3MWVL4SRP7EH37NAPO5KQ` |
-| Contract explorer (current) | https://lab.stellar.org/r/testnet/contract/CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY |
+| Contract explorer (current) | https://lab.stellar.org/r/testnet/contract/CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65 |
 
 ## Deployment transactions
 
@@ -171,7 +171,7 @@ The web app no longer accepts a free-form asset: the configured SAC is read-only
 
 `apps/web/lib/payment-policy.ts` + the route now: ignore caller-controlled destination, validate the server-configured destination as a classic Stellar account (`G…`), reject non-Testnet configurations, cap request size, rate-limit per client (2 requests / 10 minutes), ignore request bodies, and emit structured logs with public hashes only. No secret material is stored, logged or returned. Five policy tests cover invalid addresses, config override, network gate, body size and rate limiting.
 
-**Production re-verification after Sprint A:** Netlify deploy `6b0669acdbff4010076d85a6` for commit `a5040462` reports "1 function deployed"; `GET /` → 200; the public JS bundle contains contract ID `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` (committed testnet preset, no UI override needed). `POST /api/challenge-payment` produced `da1d9f6018df0a93336e5b0294738c64d52b6c1d60d9d3317d10e8a327f600ed` with `successful: true` and memo `SHIP-S97KF8`; the third rapid call returned HTTP 429 `{"error":"Too many requests"}`, confirming the rate limit in production.
+**Production re-verification after Sprint A:** Netlify deploy `6b0669acdbff4010076d85a6` for commit `a5040462` reports "1 function deployed"; `GET /` → 200; the public JS bundle contains contract ID `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65` (committed testnet preset, no UI override needed). `POST /api/challenge-payment` produced `da1d9f6018df0a93336e5b0294738c64d52b6c1d60d9d3317d10e8a327f600ed` with `successful: true` and memo `SHIP-S97KF8`; the third rapid call returned HTTP 429 `{"error":"Too many requests"}`, confirming the rate limit in production.
 
 ### P0.4 — Two-wallet browser E2E
 
@@ -211,8 +211,8 @@ Every successful mutating contract call now calls `extend_ttl(5_000_000, 6_000_0
 
 | Item | Value |
 |---|---|
-| Contract ID (Sprint C) | `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY` |
-| Wasm SHA-256 | `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61` |
+| Contract ID (Sprint C) | `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65` |
+| Wasm SHA-256 | `4929c91d90915d4aac8e314e2fc7fc0f5f217ab37d1037db544a9d8bf773da0e` |
 | Full flow after redeploy | `584f839f…`, `b2739e80…`, `f0bd3830…`, `772dd8c2…`, `9692ac0b…`, `f17e588f…`, `af6bf779…` (final state `Settled`, marker `c8a8ccbc…`) |
 | `retirar` on final contract | `1f595ef796ff309c630b5d909cd7a27dd57a2c826b5d6c651139fb230b6d9ec6` (2 XLM surplus withdrawn) |
 
@@ -224,11 +224,11 @@ CI and Netlify both use Node 24; Rust 1.99.1 is pinned in `rust-toolchain.toml`;
 
 ### Production smoke after Sprint C
 
-`scripts/production-smoke.sh` against https://ecs-tasy.netlify.app (deploy of `9c1c985`) reports homepage 200, encounter route 200, and the public JS bundle contains the new contract ID `CARK3GAFTYJEGBSECO7MEDA2WVNTP7L4OJQ4PTQN7336OLJVR5ZAIZRY`. The payment step still returns HTTP 502 (Netlify function timeout with Friendbot latency), as documented above — this remains an open operational item, not a contract failure.
+`scripts/production-smoke.sh` against https://ecs-tasy.netlify.app (deploy of `9c1c985`) reports homepage 200, encounter route 200, and the public JS bundle contains the new contract ID `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65`. The payment step still returns HTTP 502 (Netlify function timeout with Friendbot latency), as documented above — this remains an open operational item, not a contract failure.
 
 ### Clean-clone verification
 
-Executed from a fresh `git clone https://github.com/FernandoMay/ecstasy.git` (commit `90b8471`): `npm ci`, `npm test` (12 shared + 12 web), `npm run typecheck` (clean), `npm run build` (compiled), `cargo clippy --all-targets -- -D warnings` (clean), `cargo test` (24 passed), `stellar contract build` (wasm hash `f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61`), `npm run generate:bindings` + `git diff --exit-code` on the generated client (no diff). Two ordering issues found during this check were fixed: the root `test`/`typecheck` scripts now build the shared package first, and clippy lints in the contract/tests were resolved.
+Executed from a fresh `git clone https://github.com/FernandoMay/ecstasy.git` (commit `90b8471`): `npm ci`, `npm test` (12 shared + 12 web), `npm run typecheck` (clean), `npm run build` (compiled), `cargo clippy --all-targets -- -D warnings` (clean), `cargo test` (24 passed), `stellar contract build` (wasm hash `4929c91d90915d4aac8e314e2fc7fc0f5f217ab37d1037db544a9d8bf773da0e`), `npm run generate:bindings` + `git diff --exit-code` on the generated client (no diff). Two ordering issues found during this check were fixed: the root `test`/`typecheck` scripts now build the shared package first, and clippy lints in the contract/tests were resolved.
 
 
 ## Sprint D — release documentation and operations
@@ -247,6 +247,13 @@ Executed from a fresh `git clone https://github.com/FernandoMay/ecstasy.git` (co
 - **Action consistency (P1.3):** afterglow submission is disabled once that wallet's score exists; duplicate clicks are blocked at component and action-controller level; terminal states are explicit; actions stay hidden from unrelated wallets; permissionless expiry remains available to any viewer; cancel wording now states that either party may cancel and the creator receives the refund.
 
 These are code-level hardening items, not a replacement for the still-pending two-wallet browser E2E.
+
+
+## Escrow asset pinned at deployment (constructor)
+
+A boundary test exposed that the earlier "pin on first create" design let the first encounter choose any asset. The contract now has `__constructor(asset)`, called during deployment, and every `create_encounter` compares against that pinned asset. Verified on Testnet: a first `create_encounter` with a different asset is rejected with `HostError: Error(Contract, #11)` (`InvalidAsset`) before any token transfer. A new 30-test boundary suite covers zero/large stake, terminal operations, expiry boundary, max score and wrong assets.
+
+New deployment: contract `CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65`, wasm `4929c91d90915d4aac8e314e2fc7fc0f5f217ab37d1037db544a9d8bf773da0e`. Full smoke re-executed (first tx `42d87dbe…`); `retirar` on the final contract: https://stellar.expert/explorer/testnet/tx/2333ac89b2e536506d174a0fff690aadc636432ebeb9fd3a4a435be665559bfe
 
 ## Known limitations
 

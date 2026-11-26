@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: contracts/ecstasy (wasm hash
-// f0dccce254ad73bd831eef5d3c9eb74462e165bb6c28004e695dbff728d0cf61)
+// 4929c91d90915d4aac8e314e2fc7fc0f5f217ab37d1037db544a9d8bf773da0e)
 // Regenerate with: npm run generate:bindings --workspace=@ecstasy/stellar
 //
 import { Buffer } from "buffer";
@@ -173,6 +173,8 @@ export interface Client {
 }
 export class Client extends ContractClient {
   static async deploy<T = Client>(
+        /** Constructor/Initialization Args for the contract's `__constructor` method */
+        {asset}: {asset: string},
     /** Options for initializing a Client as well as for calling a method, with extras specific to deploying. */
     options: MethodOptions &
       Omit<ContractClientOptions, "contractId"> & {
@@ -184,7 +186,7 @@ export class Client extends ContractClient {
         format?: "hex" | "base64";
       }
   ): Promise<AssembledTransaction<T>> {
-    return ContractClient.deploy(null, options)
+    return ContractClient.deploy({asset}, options)
   }
   constructor(public readonly options: ContractClientOptions) {
     super(
@@ -193,6 +195,7 @@ export class Client extends ContractClient {
         "AAAABQAAAHFFdmVyeSBzdGF0ZSB0cmFuc2l0aW9uIGVtaXRzIHRoaXMgdHlwZWQgZXZlbnQuClRvcGljczogYCgiZWNzdGFzeSIsIGlkLCBuYW1lKWAsIGRhdGE6IGB7IHN0YXR1cywgc3Rha2UsIGFjdG9yIH1gLgAAAAAAAAAAAAAORW5jb3VudGVyRXZlbnQAAAAAAAEAAAAHZWNzdGFzeQAAAAAFAAAAAAAAAAJpZAAAAAAABgAAAAEAAAAAAAAABG5hbWUAAAARAAAAAQAAAAAAAAAGc3RhdHVzAAAAAAARAAAAAAAAAAAAAAAFc3Rha2UAAAAAAAALAAAAAAAAAAAAAAAFYWN0b3IAAAAAAAATAAAAAAAAAAI=",
         "AAAAAgAAANpMaWZlY3ljbGUgb2YgYW4gZW5jb3VudGVyLgoKYENyZWF0ZWRgIGlzIHRoZSBwZW5kaW5nIGludml0YXRpb24uIFRoZXJlIGlzIG5vIHNlcGFyYXRlIGBJTlZJVEVEYCBvcgpgQUNUSVZFYCBzdGF0ZSBpbiB0aGUgTVZQOiBgY3JlYXRlX2VuY291bnRlcmAgZW1pdHMgdGhlIGludml0YXRpb24gYW5kCmBhY2NlcHRfZW5jb3VudGVyYCBtb3ZlcyBkaXJlY3RseSB0byBgQWNjZXB0ZWRgLgAAAAAAAAAAAA9FbmNvdW50ZXJTdGF0dXMAAAAABgAAAAAAAAAAAAAAB0NyZWF0ZWQAAAAAAAAAAAAAAAAIQWNjZXB0ZWQAAAAAAAAAAAAAAAlDb21wbGV0ZWQAAAAAAAAAAAAAAAAAAAdTZXR0bGVkAAAAAAAAAAAAAAAACUNhbmNlbGxlZAAAAAAAAAAAAAAAAAAAB0V4cGlyZWQA",
         "AAAAAAAAAURXaXRoZHJhdyBmdW5kcyBzZW50IHRvIHRoZSBjb250cmFjdCB0aGF0IGFyZSBub3QgcmVzZXJ2ZWQgYXMgZXNjcm93CmZvciBhbnkgZW5jb3VudGVyLiBPbmx5IHRoZSBjcmVhdG9yIG9mIHRoZSByZWZlcmVuY2VkIGVuY291bnRlciBtYXkKY2FsbCBpdCwgYW5kIG9ubHkgdGhlIHN1cnBsdXMgYWJvdmUgYFJlc2VydmVkU3Rha2VgIGlzIHRyYW5zZmVycmVkLgpUaGlzIGlzIGEgcmVhbCB2YWx1ZS1tb3Zpbmcgc3RhdGUgdHJhbnNpdGlvbiB3aXRoIGFuIGV2ZW50OyBpdCBjYW5ub3QKZHJhaW4gbG9ja2VkIHN0YWtlcy4gUmV0dXJucyB0aGUgYW1vdW50IHdpdGhkcmF3bi4AAAAHcmV0aXJhcgAAAAACAAAAAAAAAAZjYWxsZXIAAAAAABMAAAAAAAAADGVuY291bnRlcl9pZAAAAAYAAAABAAAD6QAAAAsAAAfQAAAADEVjc3Rhc3lFcnJvcg==",
+        "AAAAAAAAAHpUaGUgc2luZ2xlIGVzY3JvdyBhc3NldCBpcyBmaXhlZCBhdCBkZXBsb3ltZW50IHRpbWUuIE5vIGVuY291bnRlciBjYW4KdXNlIGEgZGlmZmVyZW50IGFzc2V0LCBpbmNsdWRpbmcgdGhlIHZlcnkgZmlyc3Qgb25lLgAAAAAADV9fY29uc3RydWN0b3IAAAAAAAABAAAAAAAAAAVhc3NldAAAAAAAABMAAAAA",
         "AAAAAAAAADlQdWJsaWMgcmVhZCBvZiBvbmUgcGFydGljaXBhbnQncyBhZnRlcmdsb3csIGlmIHN1Ym1pdHRlZC4AAAAAAAANZ2V0X2FmdGVyZ2xvdwAAAAAAAAIAAAAAAAAADGVuY291bnRlcl9pZAAAAAYAAAAAAAAAC3BhcnRpY2lwYW50AAAAABMAAAABAAAD6AAAAAQ=",
         "AAAAAAAAAH1QdWJsaWMgcmVhZC4gRXhwaXJ5IGlzIGRlcml2ZWQgc28gYSBzdGFsZSBzdG9yZWQgc3RhdGUgaXMgcmVwb3J0ZWQKY29ycmVjdGx5IGV2ZW4gYmVmb3JlIGEgdHJhbnNhY3Rpb24gdG91Y2hlcyB0aGUgZW5jb3VudGVyLgAAAAAAAA1nZXRfZW5jb3VudGVyAAAAAAAAAQAAAAAAAAAMZW5jb3VudGVyX2lkAAAABgAAAAEAAAPpAAAH0AAAAAlFbmNvdW50ZXIAAAAAAAfQAAAADEVjc3Rhc3lFcnJvcg==",
         "AAAAAAAAACxFeHBsaWNpdCBjb25zZW50IGJ5IHRoZSBpbnZpdGVkIHBhcnRpY2lwYW50LgAAABBhY2NlcHRfZW5jb3VudGVyAAAAAgAAAAAAAAALcGFydGljaXBhbnQAAAAAEwAAAAAAAAAMZW5jb3VudGVyX2lkAAAABgAAAAEAAAPpAAAAAgAAB9AAAAAMRWNzdGFzeUVycm9y",

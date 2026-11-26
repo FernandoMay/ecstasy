@@ -19,11 +19,14 @@ echo "==> Building contract"
 stellar contract build --manifest-path "$ROOT/contracts/ecstasy/Cargo.toml"
 
 echo "==> Deploying to $NETWORK as $SOURCE"
+# The escrow asset is fixed at deployment time via __constructor(asset).
+ESCROW_ASSET="${ESCROW_ASSET:-CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC}"
 CONTRACT_ID="$(stellar contract deploy \
   --wasm "$WASM" \
   --source-account "$SOURCE" \
   --network "$NETWORK" \
-  --alias "$ALIAS")"
+  --alias "$ALIAS" \
+  -- --asset "$ESCROW_ASSET")"
 
 echo "Contract ID: $CONTRACT_ID"
 

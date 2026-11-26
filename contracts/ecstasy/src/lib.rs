@@ -231,6 +231,13 @@ fn ensure_party(encounter: &Encounter, caller: &Address) -> Result<(), EcstasyEr
 
 #[contractimpl]
 impl EcstasyContract {
+    /// The single escrow asset is fixed at deployment time. No encounter can
+    /// use a different asset, including the very first one.
+    pub fn __constructor(env: Env, asset: Address) {
+        env.storage().instance().set(&DataKey::EscrowAsset, &asset);
+        keep_storage(&env);
+    }
+
     /// Create an invitation and optionally pull the creator's stake into
     /// escrow. Returns the monotonically increasing encounter id.
     pub fn create_encounter(
@@ -260,13 +267,10 @@ impl EcstasyContract {
             .storage()
             .instance()
             .get(&DataKey::EscrowAsset)
-            .unwrap_or_else(|| asset.clone());
+            .ok_or(EcstasyError::InvalidAsset)?;
         if asset != configured_asset {
             return Err(EcstasyError::InvalidAsset);
         }
-        env.storage()
-            .instance()
-            .set(&DataKey::EscrowAsset, &configured_asset);
 
         let previous: u64 = env.storage().instance().get(&DataKey::Counter).unwrap_or(0);
         let id = previous.checked_add(1).ok_or(EcstasyError::InvalidState)?;

@@ -39,7 +39,7 @@ fn setup(_stake: i128) -> Setup {
     let outsider = Address::generate(&env);
     issuer.mint(&creator, &FUNDS);
 
-    let contract_id = env.register(EcstasyContract, ());
+    let contract_id = env.register(EcstasyContract, (asset.clone(),));
     let client = EcstasyContractClient::new(&env, &contract_id);
     let terms_hash = BytesN::from_array(&env, &[0xAB; 32]);
 
@@ -567,38 +567,35 @@ fn escrow_asset_is_pinned_per_deployment() {
 #[test]
 fn retirar_cannot_consume_another_assets_surplus() {
     let s = setup(STAKE);
-    // Pin the *other* asset as this deployment's escrow asset.
-    let other_admin = Address::generate(&s.env);
     let other_asset = s
         .env
-        .register_stellar_asset_contract_v2(other_admin.clone())
+        .register_stellar_asset_contract_v2(Address::generate(&s.env))
         .address();
     let other_token = TokenClient::new(&s.env, &other_asset);
+    let other_issuer = StellarAssetClient::new(&s.env, &other_asset);
 
     let id = s.client.create_encounter(
         &s.creator,
         &s.participant,
-        &other_asset,
+        &s.asset,
         &0,
         &s.terms_hash,
         &EXPIRY,
     );
-    assert_eq!(s.client.get_encounter(&id).asset, other_asset);
+    assert_eq!(s.client.get_encounter(&id).asset, s.asset);
 
-    // Surplus arrives in a different asset; it must not be withdrawable
-    // through an encounter pinned to `other_asset`.
-    s.issuer.mint(&s.contract_id, &500);
-    assert_eq!(other_token.balance(&s.contract_id), 0);
-    assert_eq!(s.token.balance(&s.contract_id), 500);
+    // The only surplus is in a non-configured asset; retirar is scoped to the
+    // asset pinned at deployment and must not touch it.
+    other_issuer.mint(&s.contract_id, &999);
+    assert_eq!(other_token.balance(&s.contract_id), 999);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
 
-    // The only surplus is in a non-pinned asset, so there is nothing to
-    // withdraw from the pinned escrow asset.
     assert_eq!(
         s.client.try_retirar(&s.creator, &id),
         Err(Ok(EcstasyError::InvalidState))
     );
-    assert_eq!(other_token.balance(&s.contract_id), 0);
-    assert_eq!(s.token.balance(&s.contract_id), 500);
+    assert_eq!(other_token.balance(&s.contract_id), 999);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
 }
 
 #[test]
@@ -628,4 +625,115 @@ fn escrow_state_survives_long_ledger_advance() {
     s.client.expire_encounter(&id);
     assert_eq!(s.token.balance(&s.contract_id), 0);
     assert_eq!(s.token.balance(&s.creator), FUNDS + 321);
+}
+
+#[test]
+fn zero_stake_encounter_has_no_token_movement() {
+    let s = setup(0);
+    let id = s.client.create_encounter(
+        &s.creator,
+        &s.participant,
+        &s.asset,
+        &0,
+        &s.terms_hash,
+        &EXPIRY,
+    );
+    assert_eq!(s.token.balance(&s.creator), FUNDS);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+
+    s.client.decline_encounter(&s.participant, &id);
+    assert_eq!(
+        s.client.get_encounter(&id).status,
+        EncounterStatus::Cancelled
+    );
+    assert_eq!(s.token.balance(&s.creator), FUNDS);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+}
+
+#[test]
+fn large_stake_is_accounted_end_to_end() {
+    let s = setup(0);
+    let large = 1_000_000_000_000_000_000i128;
+    s.issuer.mint(&s.creator, &large);
+    let starting = FUNDS + large;
+
+    let id = s.client.create_encounter(
+        &s.creator,
+        &s.participant,
+        &s.asset,
+        &large,
+        &s.terms_hash,
+        &EXPIRY,
+    );
+    assert_eq!(s.token.balance(&s.contract_id), large);
+    accept_and_complete(&s, id);
+    s.client.settle_encounter(&s.creator, &id);
+
+    assert_eq!(s.token.balance(&s.participant), large);
+    assert_eq!(s.token.balance(&s.creator), starting - large);
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+}
+
+#[test]
+fn terminal_operations_are_idempotently_rejected() {
+    let s = setup(STAKE);
+    let id = create(&s);
+    s.client.decline_encounter(&s.participant, &id);
+
+    assert_eq!(
+        s.client.try_decline_encounter(&s.participant, &id),
+        Err(Ok(EcstasyError::InvalidState))
+    );
+    assert_eq!(
+        s.client.try_cancel_encounter(&s.creator, &id),
+        Err(Ok(EcstasyError::InvalidState))
+    );
+    assert_eq!(s.token.balance(&s.contract_id), 0);
+}
+
+#[test]
+fn expiry_boundary_is_strictly_greater_than() {
+    let s = setup(STAKE);
+    let id = create(&s);
+
+    s.env.ledger().with_mut(|li| li.timestamp = EXPIRY);
+    assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Created);
+
+    s.env.ledger().with_mut(|li| li.timestamp = EXPIRY + 1);
+    assert_eq!(s.client.get_encounter(&id).status, EncounterStatus::Expired);
+}
+
+#[test]
+fn afterglow_rejects_maximum_u32_score() {
+    let s = setup(STAKE);
+    let id = create(&s);
+    accept_and_complete(&s, id);
+    s.client.settle_encounter(&s.creator, &id);
+
+    assert_eq!(
+        s.client.try_submit_afterglow(&s.creator, &id, &u32::MAX),
+        Err(Ok(EcstasyError::InvalidScore))
+    );
+}
+
+#[test]
+fn wrong_asset_with_stake_is_rejected_before_transfer() {
+    let s = setup(STAKE);
+    let other = s
+        .env
+        .register_stellar_asset_contract_v2(Address::generate(&s.env))
+        .address();
+
+    assert_eq!(
+        s.client.try_create_encounter(
+            &s.creator,
+            &s.participant,
+            &other,
+            &STAKE,
+            &s.terms_hash,
+            &EXPIRY,
+        ),
+        Err(Ok(EcstasyError::InvalidAsset))
+    );
+    assert_eq!(s.token.balance(&s.creator), FUNDS);
 }
