@@ -69,7 +69,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
   }, [refresh]);
 
   useEffect(() => {
-    if (!encounter || statusName(encounter.status) !== "Settled") return;
+    if (!encounter || statusNameOf(encounter.status) !== "Settled") return;
     (async () => {
       try {
         const [creator, participant] = await Promise.all([
