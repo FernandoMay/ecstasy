@@ -18,7 +18,8 @@ import {
   rateLimitHeaders,
   resolveDestination,
 } from "@/lib/payment-policy";
-import { correlationId } from "@/lib/correlation";
+import { correlationId, sanitizeCorrelationId } from "@/lib/correlation";
+import { findChallengePayment, type HorizonTransaction } from "@/lib/payment-reconcile";
 import { IdempotencyGuard } from "@/lib/idempotency";
 import {
   PaymentRouteError,
@@ -122,9 +123,11 @@ export async function POST(request: Request) {
   // change the memo, amount, asset or destination.
 
   let reachedSubmit = false;
+  let sourcePublicKey: string | undefined;
   try {
     const started = Date.now();
     const source = Keypair.random();
+    sourcePublicKey = source.publicKey();
     const keygenMs = Date.now() - started;
     let fundResponse: Response;
     try {
@@ -211,7 +214,7 @@ export async function POST(request: Request) {
       }),
     );
 
-    if (idemKey) idempotency.remember(idemKey, submitted.hash);
+    if (idemKey) idempotency.remember(idemKey, submitted.hash, Date.now(), source.publicKey());
 
     return respond({
       hash: submitted.hash,
@@ -224,7 +227,7 @@ export async function POST(request: Request) {
   } catch (cause) {
     // Once a submit was attempted the outcome may be unknown. Keep the key
     // blocked so a retry cannot silently double-spend.
-    if (idemKey && reachedSubmit) idempotency.rememberPending(idemKey);
+    if (idemKey && reachedSubmit) idempotency.rememberPending(idemKey, Date.now(), sourcePublicKey);
     const failure = classifyPaymentFailure(cause);
     console.warn(JSON.stringify({ event: "payment_failed", kind: failure.kind, correlation }));
     return respond(
@@ -232,4 +235,43 @@ export async function POST(request: Request) {
       { status: failure.httpStatus, headers: limitHeaders },
     );
   }
+}
+
+
+/**
+ * Reconcile a pending idempotency key. The source public key was stored when
+ * the request was accepted, so Horizon can confirm whether the payment
+ * actually landed without exposing any secret material.
+ */
+export async function GET(request: Request) {
+  const key = sanitizeCorrelationId(
+    new URL(request.url).searchParams.get("key") ?? undefined,
+  );
+  if (!key) {
+    return NextResponse.json({ error: "Invalid key" }, { status: 400 });
+  }
+  const source = idempotency.sourceOf(key);
+  if (!source) {
+    return NextResponse.json({ status: "unknown" }, { status: 404 });
+  }
+  if (!idempotency.isPending(key)) {
+    return NextResponse.json({ status: "settled", hash: idempotency.recordedHash(key) });
+  }
+
+  const response = await fetch(
+    `${HORIZON_TESTNET}/accounts/${encodeURIComponent(source)}/transactions?limit=20&order=desc`,
+    { signal: AbortSignal.timeout(6_000) },
+  );
+  if (!response.ok) {
+    return NextResponse.json({ status: "unavailable" }, { status: 502 });
+  }
+  const data = (await response.json()) as {
+    _embedded?: { records?: HorizonTransaction[] };
+  };
+  const hash = findChallengePayment(data._embedded?.records ?? []);
+  if (hash) {
+    idempotency.resolve(key, hash);
+    return NextResponse.json({ status: "settled", hash });
+  }
+  return NextResponse.json({ status: "pending" });
 }

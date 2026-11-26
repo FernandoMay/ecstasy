@@ -2,6 +2,7 @@
 
 export interface IdempotencyRecord {
   hash?: string;
+  source?: string;
   at: number;
   pending?: boolean;
 }
@@ -25,17 +26,29 @@ export class IdempotencyGuard {
     return true;
   }
 
-  remember(key: string, hash: string, now: number = Date.now()): void {
-    this.records.set(key, { hash, at: now, pending: false });
+  remember(key: string, hash: string, now: number = Date.now(), source?: string): void {
+    this.records.set(key, { hash, source, at: now, pending: false });
   }
 
   /** A submit was attempted but its outcome is unknown (timeout / RPC loss). */
-  rememberPending(key: string, now: number = Date.now()): void {
-    this.records.set(key, { at: now, pending: true });
+  rememberPending(key: string, now: number = Date.now(), source?: string): void {
+    this.records.set(key, { source, at: now, pending: true });
   }
 
   isPending(key: string): boolean {
     return this.records.get(key)?.pending === true;
+  }
+
+  sourceOf(key: string): string | undefined {
+    return this.records.get(key)?.source;
+  }
+
+  /** Convert an unknown outcome into a confirmed one after reconciliation. */
+  resolve(key: string, hash: string, now: number = Date.now()): boolean {
+    const record = this.records.get(key);
+    if (!record || !record.pending) return false;
+    this.records.set(key, { ...record, hash, pending: false, at: now });
+    return true;
   }
 
   recordedHash(key: string): string | undefined {

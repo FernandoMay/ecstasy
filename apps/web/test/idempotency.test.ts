@@ -69,3 +69,16 @@ describe("idempotency after a timeout", () => {
     expect(guard.recordedHash("timeout-key")).toBe("confirmed-hash");
   });
 });
+
+describe("pending reconciliation", () => {
+  it("resolves a pending key into a confirmed payment", () => {
+    const guard = new IdempotencyGuard(60_000);
+    guard.rememberPending("reconcile-key", 0, "GSOURCE");
+    expect(guard.isPending("reconcile-key")).toBe(true);
+    expect(guard.sourceOf("reconcile-key")).toBe("GSOURCE");
+    expect(guard.resolve("reconcile-key", "confirmed-hash", 100)).toBe(true);
+    expect(guard.isPending("reconcile-key")).toBe(false);
+    expect(guard.recordedHash("reconcile-key")).toBe("confirmed-hash");
+    expect(guard.resolve("reconcile-key", "other", 200)).toBe(false);
+  });
+});
