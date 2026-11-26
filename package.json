@@ -12,7 +12,8 @@
     "test": "npm run build --workspace=@ecstasy/stellar && npm run test --workspace=@ecstasy/stellar && npm run test --workspace=@ecstasy/web",
     "typecheck": "npm run build --workspace=@ecstasy/stellar && npm run typecheck --workspace=@ecstasy/stellar && npm run typecheck --workspace=@ecstasy/web",
     "dev": "npm run dev --workspace=@ecstasy/web",
-    "docs:matrix": "node scripts/generate-release-matrix.mjs"
+    "docs:matrix": "node scripts/generate-release-matrix.mjs",
+    "verify:wasm": "node scripts/verify-wasm.mjs"
   },
   "engines": {
     "node": ">=20"
