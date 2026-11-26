@@ -91,9 +91,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   // React to account/network switches made inside Freighter while the app is open.
   useEffect(() => {
-    return wallet.watchChanges(({ address: nextAddress, networkPassphrase }) => {
+    return wallet.watchChanges(({ address: nextAddress, networkPassphrase, network }) => {
       const sameNetwork = networkMatches(
-        { network: params.network ?? "", networkPassphrase },
+        { network: network ?? "", networkPassphrase },
         config.networkPassphrase,
       );
       if (!sameNetwork) {
