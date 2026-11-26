@@ -5,7 +5,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   HISTORY_KEY,
+  filterHistory,
   parseHistory,
+  suggestedAction,
+  type HistoryFilter,
   removeEncounterRef,
   roleLabel,
   type EncounterRef,
