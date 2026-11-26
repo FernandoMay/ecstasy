@@ -19,6 +19,7 @@ import { TermsHashBadge } from "./TermsHashBadge";
 import { useWallet } from "./WalletProvider";
 import { withRetry } from "@/lib/retry";
 import { availableActions } from "@/lib/action-policy";
+import { HISTORY_KEY, addEncounterRef } from "@/lib/encounter-history";
 
 function message(cause: unknown): string {
   const raw = cause instanceof Error ? cause.message : String(cause);
@@ -67,6 +68,24 @@ export function EncounterWorkspace({ id }: { id: string }) {
   useEffect(() => {
     refresh();
   }, [refresh]);
+
+  useEffect(() => {
+    if (!encounter || typeof window === "undefined") return;
+    const role =
+      encounter.creator === address
+        ? "creator"
+        : encounter.participant === address
+          ? "participant"
+          : "viewer";
+    window.localStorage.setItem(
+      HISTORY_KEY,
+      addEncounterRef(window.localStorage.getItem(HISTORY_KEY), {
+        id: encounter.id.toString(),
+        role,
+        addedAt: Date.now(),
+      }),
+    );
+  }, [encounter, address]);
 
   useEffect(() => {
     if (!encounter || statusNameOf(encounter.status) !== "Settled") return;

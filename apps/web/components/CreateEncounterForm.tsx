@@ -4,6 +4,7 @@ import { isAssetConfigured, shortHash, type Receipt } from "@ecstasy/stellar";
 import Link from "next/link";
 import { useState } from "react";
 import { copyToClipboard, xlmToStroops } from "@/lib/format";
+import { HISTORY_KEY, addEncounterRef } from "@/lib/encounter-history";
 import {
   commitmentBytes,
   commitmentForFields,
@@ -91,6 +92,16 @@ export function CreateEncounterForm() {
       setDirty(false);
       setCreatedId(result.value.toString());
       setReceipt(result.receipt);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(
+          HISTORY_KEY,
+          addEncounterRef(window.localStorage.getItem(HISTORY_KEY), {
+            id: result.value.toString(),
+            role: "creator",
+            addedAt: Date.now(),
+          }),
+        );
+      }
       if (keepLocal && typeof window !== "undefined") {
         sessionStorage.setItem(`ecstasy:terms:${commitment.hex}`, JSON.stringify(commitment.terms));
       }
