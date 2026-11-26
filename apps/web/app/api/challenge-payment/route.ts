@@ -75,7 +75,8 @@ export async function POST(request: Request) {
       ...init,
       headers: { ...(init.headers ?? {}), "x-correlation-id": correlation },
     });
-  if (new URL(request.url).searchParams.has("dry")) {
+  const dryFlag = new URL(request.url).searchParams.get("dry");
+  if (dryFlag === "1" || dryFlag === "") {
     return respond(
       {
         status: "preflight-ok",
