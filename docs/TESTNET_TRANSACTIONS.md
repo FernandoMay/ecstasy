@@ -216,7 +216,19 @@ Ocho peticiones concurrentes con la misma `x-idempotency-key`: **1 pago, 1 hash,
 
 Todos los hashes verificados en Horizon con `successful: true`.
 
-## 6b. Chequeos negativos (sin hash de transacción)
+## 7. Timeout recovery (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Recovery proponer | `0b6437ec56f6876954f2572a549e9c277fcf5ede8316bfa7980d4becddcff4f7` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0b6437ec56f6876954f2572a549e9c277fcf5ede8316bfa7980d4becddcff4f7) |
+| Recovery aprobar | `6eb51c0a8cc1f8f22dfa020cd58eb372c487df99c3fe84f4185b0cc68a2c89d4` | [Ver tx](https://stellar.expert/explorer/testnet/tx/6eb51c0a8cc1f8f22dfa020cd58eb372c487df99c3fe84f4185b0cc68a2c89d4) |
+| Recovery ejecutar | `9894dc3cb47c3d2e9b7edc1861f4581710a173994f7615e51e99868bc1fbb09b` | [Ver tx](https://stellar.expert/explorer/testnet/tx/9894dc3cb47c3d2e9b7edc1861f4581710a173994f7615e51e99868bc1fbb09b) |
+| Recovery proponer (timeout) | `325013c149fcca63b6cfc16deb42cf5921ea398150f53447c643bd61d67a44ea` | [Ver tx](https://stellar.expert/explorer/testnet/tx/325013c149fcca63b6cfc16deb42cf5921ea398150f53447c643bd61d67a44ea) |
+| Recovery recuperar (tercero) | `ebc2f2403341c36701940ea2ab4fc3f6679e47feace69cf40f744c73ddb81579` | [Ver tx](https://stellar.expert/explorer/testnet/tx/ebc2f2403341c36701940ea2ab4fc3f6679e47feace69cf40f744c73ddb81579) |
+
+El intento de aprobación tardía fue rechazado en simulación (#3), sin hash.
+
+## 6c. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |
 |---|---|

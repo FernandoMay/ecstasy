@@ -57,3 +57,8 @@ export {
   Client as RefundsClient,
   RefundError,
 } from "./generated/refunds";
+
+export {
+  Client as RecoveryClient,
+  RecoveryError,
+} from "./generated/recovery";

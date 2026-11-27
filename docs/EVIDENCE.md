@@ -443,6 +443,15 @@ Contract `CCMLBZ3U6QATIVKZREQC4JYYWQO3EK42GFNDYYEDC2YIAJ5RHKC36CG5` (wasm `727d4
 
 Counts after this mission: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault Rust + 2 disputes Rust + 3 refunds Rust = **166 automated tests**.
 
+
+## Timeout Recovery Protocol (27 nov)
+
+Contract `CBCJFISHME7MSOQO43XH53YA3QVRCEEGO3DC6YIPU4XKMRGRY2WFOWNJ` (wasm `c5764ba1f628acc300142e1159958afe9f750567a57824d228422e17e1d944c6`) adds an on-chain deadline to a bilateral XLM deposit. Four Rust tests cover timely approval/execution, permissionless recovery after expiry, rejection of late approve/execute and rejection of early recovery.
+
+Five real transactions were executed and Horizon-confirmed: propose `0b6437ec…`, approve `6eb51c0a…`, execute `9894dc3c…`, propose with deadline `325013c1…` and third-party recovery `ebc2f240…`. The late-approval attempt was rejected in simulation with `Error(Contract, #3)` and has no hash. Public view `/recovery`; semantics in `docs/RECOVERY.md`.
+
+Counts: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault + 2 disputes + 3 refunds + 4 recovery = **170 automated tests**. Evidence Center: 39 verified transactions.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

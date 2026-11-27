@@ -20,3 +20,5 @@ contracts/boveda/test_snapshots/
 contracts/disputes/test_snapshots/
 
 contracts/refunds/test_snapshots/
+
+contracts/recovery/test_snapshots/
