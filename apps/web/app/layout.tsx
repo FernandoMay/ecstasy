@@ -3,6 +3,7 @@ import Link from "next/link";
 import "./globals.css";
 import { WalletProvider } from "@/components/WalletProvider";
 import { WalletStatus } from "@/components/WalletStatus";
+import { SiteNav } from "@/components/SiteNav";
 
 export const metadata: Metadata = {
   title: "ECSTASY — Private encounters. Public proof.",
@@ -12,40 +13,51 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body>
         <WalletProvider>
           <div className="shell">
-            <header className="topbar">
-              <Link href="/" className="wordmark">
-                ECSTASY
-              </Link>
-              <nav className="row small">
-                <Link href="/encounters">Encuentros</Link>
-                <Link href="/evidence">Evidencia</Link>
-                <Link href="/vault">Bóveda estado</Link>
-                <Link href="/analytics">Analítica</Link>
-                <Link href="/notifications">Avisos</Link>
-                <Link href="/disputes">Disputas</Link>
-                <Link href="/activity">Actividad</Link>
-                <Link href="/afterglow">Afterglow</Link>
-                <Link href="/refunds">Refunds</Link>
-                <Link href="/recovery">Recovery</Link>
-                <Link href="/arbitration">Arbitraje</Link>
-                <Link href="/milestones">Hitos</Link>
-                <Link href="/panel-arbitration">Panel</Link>
-                <Link href="/reputation">Reputación</Link>
-                <Link href="/streaming">Streaming</Link>
-                <Link href="/subscriptions">Suscripciones</Link>
-                <Link href="/boveda">Bóveda</Link>
-              </nav>
-              <WalletStatus />
+            <header className="site-header">
+              <div className="header-top">
+                <div className="brand">
+                  <Link href="/" className="wordmark">
+                    ECSTASY
+                  </Link>
+                  <span className="brand-sub">Protocolo de acuerdos privados sobre Stellar</span>
+                </div>
+                <WalletStatus />
+              </div>
+              <SiteNav />
             </header>
-            <main>{children}</main>
+            <main id="contenido">{children}</main>
             <footer className="footer">
-              Private by default. Settled on Stellar. &nbsp;·&nbsp; A hash is a commitment, not
-              encryption. &nbsp;·&nbsp; On-chain state proves an agreed transition, not that a
-              real-world event was objectively true.
+              <div className="footer-grid">
+                <div>
+                  <strong>ECSTASY</strong>
+                  <p>
+                    Acuerdos privados con liquidación verificable en Stellar Testnet. Los términos
+                    confidenciales nunca se escriben en la cadena.
+                  </p>
+                </div>
+                <div>
+                  <span className="nav-group-label">Verificación</span>
+                  <p>
+                    <Link href="/evidence">Evidencia</Link> · <Link href="/activity">Actividad</Link> ·{" "}
+                    <Link href="/reputation">Reputación</Link>
+                  </p>
+                </div>
+                <div>
+                  <span className="nav-group-label">Límites</span>
+                  <p>
+                    Un hash es un compromiso, no cifrado. El estado on-chain prueba una transición
+                    acordada, no que un evento del mundo real sea objetivamente verdadero.
+                  </p>
+                </div>
+              </div>
+              <div className="footer-bottom">
+                <span>Testnet · Sin fondos de usuarios en Mainnet</span>
+                <span>Private by default. Settled on Stellar.</span>
+              </div>
             </footer>
           </div>
         </WalletProvider>

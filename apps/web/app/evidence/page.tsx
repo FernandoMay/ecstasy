@@ -12,15 +12,18 @@ export default function EvidencePage() {
           Evidence Center<span>Testnet · verificable por cualquiera</span>
         </h1>
         <p>
-          Cada fila corresponde a una transacción real enviada a Stellar Testnet, con su hash y
-          enlace público a Stellar Expert. No hay transacciones simuladas ni datos de ejemplo.
+          Cada fila registra una transacción real enviada a Stellar Testnet, con su hash y enlace
+          público a Stellar Expert. Los hashes se comprobaron en Horizon al incorporarlos; esta
+          vista no vuelve a consultar la red en tiempo real. No hay transacciones simuladas ni
+          datos de ejemplo en la tabla.
         </p>
       </section>
       <div className="card">
         <h2>Transacciones registradas</h2>
         <p className="muted small">
-          {EVIDENCE.length} ejecuciones verificadas. El estado E2E con Freighter se mantiene aparte:
-          Wallet signing pending.
+          {EVIDENCE.length} ejecuciones registradas con hash completo. El flujo E2E con Freighter
+          (9/9) fue confirmado por el owner, sin hashes ni capturas por escenario adjuntos: no se
+          cuenta como verificación independiente.
         </p>
         <div style={{ height: 16 }} />
         <div style={{ overflowX: "auto" }}>
@@ -63,7 +66,10 @@ export default function EvidencePage() {
 
       <div className="card">
         <h2>Cobertura del protocolo</h2>
-        <p className="muted small">Verified significa que existe una transacción real con hash completo.</p>
+        <p className="muted small">
+          Verified indica que el registro incluye un hash de 64 caracteres confirmado en Horizon
+          cuando se incorporó. No es una comprobación en tiempo real.
+        </p>
         <div style={{ height: 14 }} />
         <div className="grid">
           {coverageMatrix(EVIDENCE).map((row) => (

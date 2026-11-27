@@ -7,6 +7,8 @@ ECSTASY es un protocolo de acuerdos privados entre dos partes, construido sobre 
 
 **Demo en vivo:** https://ecs-tasy.netlify.app · **Evidencia:** https://ecs-tasy.netlify.app/evidence
 
+> **Fase 14 — Consolidación, revisión y preparación Mainnet.** Inventario y revisión adversarial interna de los 12 contratos desplegados: `docs/SECURITY_REVIEW_14_1.md`. Resultado actual: **NO-GO para Mainnet** (4 hallazgos High abiertos). Es una revisión **interna**, no una auditoría independiente de terceros. No se despliegan contratos nuevos durante esta fase.
+
 > **Privado por defecto. Liquidado en Stellar.**
 > [Video: Acuerdos secretos y pruebas públicas en Stellar](https://youtube.com/shorts/zMHbDthidtI)
 
@@ -105,7 +107,7 @@ Dos pagos públicos verificados en Horizon:
 npm install                        # workspaces: apps/web + packages/stellar
 cp .env.example apps/web/.env.local
 npm run build                      # shared package, luego web
-npm test                           # 33 shared + 55 web
+npm test                           # 36 shared + 90 web
 cd contracts/ecstasy && cargo test # 38 tests del contrato
 cd ../.. && npm run dev            # http://localhost:3000
 ```
