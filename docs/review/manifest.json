@@ -1,0 +1,113 @@
+{
+  "phase": "15.1",
+  "purpose": "Handoff package for an independent technical review. The review has NOT been performed.",
+  "repository": "https://github.com/FernandoMay/ecstasy",
+  "baseline": {
+    "commit": "8a2835545c1c5a6bfd0c905d55f718ff0827601b",
+    "release_tag": "v1.0.0",
+    "release_commit": "86c2fa7ff38583dd66b86032b58cf52d483089a6",
+    "phase_commits": {
+      "mission_13": "4d64bb7",
+      "14_1": "95b0ba2",
+      "14_2": "32086e4",
+      "14_3": "56e28ff",
+      "14_4": "8a28355"
+    }
+  },
+  "toolchain": {
+    "rust": "1.99.1",
+    "soroban_sdk": "29.0.0",
+    "stellar_cli": "30.0.1",
+    "wasm_target": "wasm32v1-none",
+    "node": "24"
+  },
+  "network": {
+    "name": "testnet",
+    "rpc": "https://soroban-testnet.stellar.org",
+    "horizon": "https://horizon-testnet.stellar.org",
+    "passphrase": "Test SDF Network ; September 2015"
+  },
+  "asset": {
+    "symbol": "XLM",
+    "type": "native_sac",
+    "id": "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
+  },
+  "contracts": [
+    { "name": "ecstasy", "id": "CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65", "wasm": "4929c91d90915d4aac8e314e2fc7fc0f5f217ab37d1037db544a9d8bf773da0e", "source": "contracts/ecstasy", "deploy_tx": null },
+    { "name": "boveda", "id": "CAWOC5VH7QFM55YT7ICEACGTEOS5BF747IREQWK2DHTYKG25UTISAVZC", "wasm": "7d19a5e979def3bb33cbfdabb91dea167e837abe8e9186d0542d97d3a5a30d5a", "source": "contracts/boveda", "deploy_tx": "beb1ad83b831dbc3d3c3e81b4ab2d8e0d81c710a0403c9daffc1c47aa99b98ca", "deploy_tx_disputed": true },
+    { "name": "disputes", "id": "CCEZO3DVXQXWDM2OURVODDJ72JRQCLQPIO5E27FLXKW2THQUJOZKS4R6", "wasm": "828497de62aa5c115e46985ff3b0b39dc3d251b55796ab50e7e7d126cc5e1079", "source": "contracts/disputes", "deploy_tx": null },
+    { "name": "refunds", "id": "CCMLBZ3U6QATIVKZREQC4JYYWQO3EK42GFNDYYEDC2YIAJ5RHKC36CG5", "wasm": "727d4eb0007e1fed1983ea3651628c71ee26b5cd6d29ad95b3c4beefdd892550", "source": "contracts/refunds", "deploy_tx": null },
+    { "name": "recovery", "id": "CBCJFISHME7MSOQO43XH53YA3QVRCEEGO3DC6YIPU4XKMRGRY2WFOWNJ", "wasm": "c5764ba1f628acc300142e1159958afe9f750567a57824d228422e17e1d944c6", "source": "contracts/recovery", "deploy_tx": null },
+    { "name": "arbitration", "id": "CBPZKX3I5OR5WLDQGH2FSLOXPQOMQKPEZ2ENQQGASRF3HWP7GNTVJIDN", "wasm": "836f13fdb386ea02f82bcb7e90c3d56231f9a0d77c47dd4814aafe53e8957185", "source": "contracts/arbitration", "deploy_tx": null },
+    { "name": "milestones", "id": "CCNJVQLIXREAGJTLEZDI7T3C2PEXSB3FXCKI2HCQ2EBDVGF6MDYNOJJ7", "wasm": "83a6735d32b4d175305f07c5817fc9239edfc236231ae2ba756eec1393e86b30", "source": "contracts/milestones", "deploy_tx": null },
+    { "name": "panel", "id": "CCFRBPLVJPQWKIDGFDJY7BQEJQRZZ554G2Y5JZQBFJ62IQIXXGHJWNQ3", "wasm": "8bca4467d7a50cb0eefdd8ce6753d2962ab4bbf4bbc3913d10cd7c8901f04d3a", "source": "contracts/panel", "deploy_tx": null },
+    { "name": "streaming", "id": "CA7T6F6CJTDURIHZRPWGJYKURGLH3PTMAFVBQGN7CXZ5BJ7GIWJJPJF2", "wasm": "5d8c6db73d32c463b099cfb0213c2f3ead7b16071da9715a9ee839ee34631331", "source": "contracts/streaming", "deploy_tx": null },
+    { "name": "subscription", "id": "CBOHLODIJJZ7ABFVBQSFDJ3DFVWMA4GZEDBYVVSHBCQIEWWCMAWVABRZ", "wasm": "80ca7661fe12329a69179ea098618de6bbd405ab415f1ee71ce47327f4b225e2", "source": "contracts/subscription", "deploy_tx": null },
+    { "name": "reputation", "id": "CDSKVD2HNSYAF7VZ44UQ3B4MG5RZTO33MJSCY3PKDJW37JM7OM5JYR7P", "wasm": "f19122fc720979b94e1249e9085f11e2da453a99842897d1fb77fbc515536bae", "source": "contracts/reputation", "deploy_tx": null },
+    { "name": "traceability", "id": "CA4CVK4XCLOTRKJ7XTU556WKN7T4DTI7HHRWVSQ4U35Q6KUKQULLFOTC", "wasm": "043c3ae299c63a816c2e830cf534088482f3a4e098c4a69967c4ca1b08040099", "source": "contracts/traceability", "deploy_tx": null }
+  ],
+  "WASM_upgrade_authority": "none: no upgrade or set_code function exists in any of the 12 contracts",
+  "authorities_verified_on_chain": {
+    "suite-admin": "GBQV7XDOMA6342BHICZGIRBDOZVTMRL7A7A3MWVL4SRP7EH37NAPO5KQ",
+    "roles": ["disputes resolver", "arbitration resolver", "milestones resolver", "subscription resolver", "reputation authority", "traceability authority"],
+    "reputation_authorized_sources": [
+      "CCFRBPLVJPQWKIDGFDJY7BQEJQRZZ554G2Y5JZQBFJ62IQIXXGHJWNQ3",
+      "CBOHLODIJJZ7ABFVBQSFDJ3DFVWMA4GZEDBYVVSHBCQIEWWCMAWVABRZ"
+    ],
+    "traceability_authorized_writers": [],
+    "panel_arbitrators_case_1": [
+      "GBR5G5CEYM5NXYYYEMT7BFWIFWKC4H25FONQ4K4KYZSZS7TCKU4U6ERV",
+      "GBNV3K7K7524XYPMDM2YHP3ORQVDCZ6SFUCKKLPFPKEFCHVCN6RGI2FR",
+      "GACEAMIFYOXSQKHNAVTJIBFBTD2LWUURLAXHH4NXMI7O5BLUNRIEWXUU"
+    ]
+  },
+  "funds_in_custody": {
+    "boveda_stroops": 55550000000,
+    "ecstasy_stroops": 10000000,
+    "others": 0,
+    "total_xlm": 5556
+  },
+  "findings": {
+    "total": 36,
+    "from_14_1": 33,
+    "from_14_3": 3,
+    "status": "all_open",
+    "reproduced": 18,
+    "inconclusive": 2,
+    "not_tested": 13,
+    "docs": [
+      "docs/SECURITY_REVIEW_14_1.md",
+      "docs/ADVERSARIAL_TESTING_14_2.md",
+      "docs/MAINNET_READINESS_14_3.md",
+      "docs/REMEDIATION_PLAN_14_4.md"
+    ]
+  },
+  "harness": {
+    "path": "tests/adversarial",
+    "files": ["tests/p0_high.rs", "tests/p1_medium.rs", "tests/p1_more.rs"],
+    "tests": 18,
+    "interpretation": "a passing adversarial test means the insecure path executed; it never closes a finding"
+  },
+  "regression": { "previous_tests": 204, "result": "204/204 passing" },
+  "commands": {
+    "js_tests": "npm test",
+    "js_typecheck": "npm run typecheck",
+    "js_build": "npm run build",
+    "contract_tests": "for c in contracts/*/; do (cd \"$c\" && cargo test); done",
+    "adversarial": "cd tests/adversarial && cargo test"
+  },
+  "evidence_classes": {
+    "local_tests": "204 previous + 18 adversarial, mock_all_auths",
+    "testnet": "82 Evidence Center hashes, Horizon successful:true, --send=no authority probes",
+    "owner_confirmed": "Freighter E2E 9/9, no per-scenario hashes or captures",
+    "internal_review": "14.1-14.4, NOT an independent third-party audit"
+  },
+  "constraints": {
+    "v1_preserved": true,
+    "no_new_deployments": true,
+    "no_fund_migration": true,
+    "no_third_party_private_keys": true,
+    "software_rollback_is_not_economic_reversal": true,
+    "mainnet_decision": "NO-GO"
+  }
+}
