@@ -28,3 +28,7 @@ contracts/arbitration/test_snapshots/
 contracts/milestones/test_snapshots/
 
 contracts/panel/test_snapshots/
+
+contracts/reputation/test_snapshots/
+
+contracts/traceability/test_snapshots/

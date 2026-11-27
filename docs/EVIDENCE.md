@@ -479,6 +479,15 @@ Eight Horizon-confirmed transactions: create `98263acb…`, commits `171f1028…
 
 Counts: 33 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel = **180 automated tests**.
 
+
+## Reputation & Arbitration Registry + traceability (27 nov)
+
+Contracts `CDSKVD2HNSYAF7VZ44UQ3B4MG5RZTO33MJSCY3PKDJW37JM7OM5JYR7P` (reputation) and `CA4CVK4XCLOTRKJ7XTU556WKN7T4DTI7HHRWVSQ4U35Q6KUKQULLFOTC` (traceability). The registry stores profile digests, case outcomes, vote participation and temporary suspensions — never a score, and never a claim that a majority vote proves truth. The traceability contract defines the common chain `agreement_id → escrow_id → case_id → arbitration_id → settlement_tx`, with the real panel settlement hash `c011a3d3…` stored as a 32-byte value.
+
+Seven Horizon-confirmed reputation transactions (authorize source, two registers, one case outcome, two vote records, one suspension) and one confirmed link transaction are in the Evidence Center. Four reputation Rust tests, three traceability Rust tests and three shared lifecycle-schema tests cover authorization, integrity, duplicates and the reference chain. Public view `/reputation`; semantics in `docs/REPUTATION.md` and `docs/TRACEABILITY.md`.
+
+Counts: 36 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability = **192 automated tests**. Evidence Center: 61 verified transactions.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

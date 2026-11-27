@@ -267,6 +267,21 @@ El intento de doble resolución fue rechazado en simulación (#3), sin hash.
 | Panel reveal 3 | `13a99ea2534ba9c75569d6aec3b155e57d17dc5cd189698420242b0095c9e151` | [Ver tx](https://stellar.expert/explorer/testnet/tx/13a99ea2534ba9c75569d6aec3b155e57d17dc5cd189698420242b0095c9e151) |
 | Panel resolver quórum | `c011a3d30b320181bd67eca3ede85e63ecdc4d4598f5bb48db2416a1024cd460` | [Ver tx](https://stellar.expert/explorer/testnet/tx/c011a3d30b320181bd67eca3ede85e63ecdc4d4598f5bb48db2416a1024cd460) |
 
+## 11. Reputación y trazabilidad (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Registro autorizar fuente | `07e715e8f71922cdec105d8494027ff1f4c5b63cc29c580694e2b70b3e644da0` | [Ver tx](https://stellar.expert/explorer/testnet/tx/07e715e8f71922cdec105d8494027ff1f4c5b63cc29c580694e2b70b3e644da0) |
+| Registro perfil árbitro 1 | `4530b6247ae15b6f668638903dcce054b2b6f7a913cb7e003127c71f9d75a764` | [Ver tx](https://stellar.expert/explorer/testnet/tx/4530b6247ae15b6f668638903dcce054b2b6f7a913cb7e003127c71f9d75a764) |
+| Registro perfil árbitro 2 | `84974f588d5533ffb3e8d200541de8d9d942e76ab180bef7285186c84fdf6310` | [Ver tx](https://stellar.expert/explorer/testnet/tx/84974f588d5533ffb3e8d200541de8d9d942e76ab180bef7285186c84fdf6310) |
+| Registro caso finalizado | `c9ec7ae231791af261e705f1c213128b1496bad6903ab9e8e7404f85368e443d` | [Ver tx](https://stellar.expert/explorer/testnet/tx/c9ec7ae231791af261e705f1c213128b1496bad6903ab9e8e7404f85368e443d) |
+| Registro participación 1 | `b517c1ed4e0aa966b5f15bc3a0cd3f603f94a1c8744af309639760500f216ca7` | [Ver tx](https://stellar.expert/explorer/testnet/tx/b517c1ed4e0aa966b5f15bc3a0cd3f603f94a1c8744af309639760500f216ca7) |
+| Registro participación 2 | `50c4f635e3f3f42bd1eac643211c4bd996275b6a808a4abd384edc76470a95b9` | [Ver tx](https://stellar.expert/explorer/testnet/tx/50c4f635e3f3f42bd1eac643211c4bd996275b6a808a4abd384edc76470a95b9) |
+| Registro suspensión | `2b304c53ae7a39b85744ba52cf6eca9c80dfacda9571bd142c04caa8689b6859` | [Ver tx](https://stellar.expert/explorer/testnet/tx/2b304c53ae7a39b85744ba52cf6eca9c80dfacda9571bd142c04caa8689b6859) |
+| Trazabilidad enlace ciclo | `f6401f41e3d5300f467876b13077ac4c833ee43eccd1522f6c993c2feae5dbef` | [Ver tx](https://stellar.expert/explorer/testnet/tx/f6401f41e3d5300f467876b13077ac4c833ee43eccd1522f6c993c2feae5dbef) |
+
+El hash de liquidación enlazado es `c011a3d30b320181bd67eca3ede85e63ecdc4d4598f5bb48db2416a1024cd460`, la transacción real de resolución del panel.
+
 ## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |

@@ -28,17 +28,20 @@ cd contracts/ecstasy && stellar contract build
 |---|---|
 | Contract tests — `contracts/ecstasy` | 38 passed, including auth, replay, expiry, bounds, multi-asset, TTL and `retirar` |
 | Contract tests — `contracts/boveda` | 2 passed (vault code/claim invariants) |
-| Shared package tests | 33 passed |
-| Web tests | 88 passed |
+| Shared package tests | 36 passed |
+| Web tests | 90 passed |
+| Dispute contract tests | 2 passed |
 | Refund contract tests | 3 passed |
 | Recovery contract tests | 4 passed |
 | Arbitration contract tests | 3 passed |
 | Milestones contract tests | 4 passed |
 | Panel contract tests | 3 passed |
+| Reputation contract tests | 4 passed |
+| Traceability contract tests | 3 passed |
 | Typecheck / production build | clean |
 | Clippy `-D warnings` / cargo fmt | clean |
 | Generated bindings vs final wasm | no diff |
-| Automated total | **156** = 38 + 2 + 2 + 33 + 83 |
+| Automated total | **192** = 38 + 2 + 36 + 90 + 2 + 3 + 4 + 3 + 4 + 3 + 4 + 3 |
 | Clean clone | `npm ci`, tests, typecheck, build, wasm, clippy, bindings sync all pass |
 | Production smoke | homepage 200, encounter route 200, new contract ID in public bundle; `GET /api/status` reports `rpc: healthy` |
 

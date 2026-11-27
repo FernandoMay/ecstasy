@@ -77,3 +77,14 @@ export {
   Client as PanelClient,
   PanelError,
 } from "./generated/panel";
+
+export {
+  Client as ReputationClient,
+  ReputationError,
+} from "./generated/reputation";
+export {
+  Client as TraceabilityClient,
+  TraceError,
+} from "./generated/traceability";
+
+export * from "./lifecycle";

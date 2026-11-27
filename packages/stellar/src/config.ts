@@ -24,6 +24,8 @@ export interface NetworkPreset {
   arbitrationContractId: string;
   milestonesContractId: string;
   panelContractId: string;
+  reputationContractId: string;
+  traceabilityContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -40,6 +42,8 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     arbitrationContractId: "CBPZKX3I5OR5WLDQGH2FSLOXPQOMQKPEZ2ENQQGASRF3HWP7GNTVJIDN",
     milestonesContractId: "CCNJVQLIXREAGJTLEZDI7T3C2PEXSB3FXCKI2HCQ2EBDVGF6MDYNOJJ7",
     panelContractId: "CCFRBPLVJPQWKIDGFDJY7BQEJQRZZ554G2Y5JZQBFJ62IQIXXGHJWNQ3",
+    reputationContractId: "CDSKVD2HNSYAF7VZ44UQ3B4MG5RZTO33MJSCY3PKDJW37JM7OM5JYR7P",
+    traceabilityContractId: "CA4CVK4XCLOTRKJ7XTU556WKN7T4DTI7HHRWVSQ4U35Q6KUKQULLFOTC",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -54,6 +58,8 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     arbitrationContractId: "",
     milestonesContractId: "",
     panelContractId: "",
+    reputationContractId: "",
+    traceabilityContractId: "",
   },
 };
 
@@ -79,6 +85,10 @@ export interface AppConfig extends NetworkPreset {
   milestonesContractId: string;
   /** Multi-party panel contract ID. */
   panelContractId: string;
+  /** Reputation & arbitration registry contract ID. */
+  reputationContractId: string;
+  /** Lifecycle reference-chain contract ID. */
+  traceabilityContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -128,6 +138,8 @@ export function getConfig(
     arbitrationContractId: env("NEXT_PUBLIC_ARBITRATION_CONTRACT_ID", source) ?? preset.arbitrationContractId,
     milestonesContractId: env("NEXT_PUBLIC_MILESTONES_CONTRACT_ID", source) ?? preset.milestonesContractId,
     panelContractId: env("NEXT_PUBLIC_PANEL_CONTRACT_ID", source) ?? preset.panelContractId,
+    reputationContractId: env("NEXT_PUBLIC_REPUTATION_CONTRACT_ID", source) ?? preset.reputationContractId,
+    traceabilityContractId: env("NEXT_PUBLIC_TRACEABILITY_CONTRACT_ID", source) ?? preset.traceabilityContractId,
   };
 }
 
