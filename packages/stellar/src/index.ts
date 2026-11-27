@@ -72,3 +72,8 @@ export {
   Client as MilestonesClient,
   MilestoneError,
 } from "./generated/milestones";
+
+export {
+  Client as PanelClient,
+  PanelError,
+} from "./generated/panel";

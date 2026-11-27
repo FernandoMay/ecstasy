@@ -23,6 +23,7 @@ export interface NetworkPreset {
   recoveryContractId: string;
   arbitrationContractId: string;
   milestonesContractId: string;
+  panelContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -38,6 +39,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     recoveryContractId: "CBCJFISHME7MSOQO43XH53YA3QVRCEEGO3DC6YIPU4XKMRGRY2WFOWNJ",
     arbitrationContractId: "CBPZKX3I5OR5WLDQGH2FSLOXPQOMQKPEZ2ENQQGASRF3HWP7GNTVJIDN",
     milestonesContractId: "CCNJVQLIXREAGJTLEZDI7T3C2PEXSB3FXCKI2HCQ2EBDVGF6MDYNOJJ7",
+    panelContractId: "CCFRBPLVJPQWKIDGFDJY7BQEJQRZZ554G2Y5JZQBFJ62IQIXXGHJWNQ3",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -51,6 +53,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     recoveryContractId: "",
     arbitrationContractId: "",
     milestonesContractId: "",
+    panelContractId: "",
   },
 };
 
@@ -74,6 +77,8 @@ export interface AppConfig extends NetworkPreset {
   arbitrationContractId: string;
   /** Milestone escrow contract ID. */
   milestonesContractId: string;
+  /** Multi-party panel contract ID. */
+  panelContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -122,6 +127,7 @@ export function getConfig(
     recoveryContractId: env("NEXT_PUBLIC_RECOVERY_CONTRACT_ID", source) ?? preset.recoveryContractId,
     arbitrationContractId: env("NEXT_PUBLIC_ARBITRATION_CONTRACT_ID", source) ?? preset.arbitrationContractId,
     milestonesContractId: env("NEXT_PUBLIC_MILESTONES_CONTRACT_ID", source) ?? preset.milestonesContractId,
+    panelContractId: env("NEXT_PUBLIC_PANEL_CONTRACT_ID", source) ?? preset.panelContractId,
   };
 }
 

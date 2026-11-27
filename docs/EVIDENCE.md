@@ -450,7 +450,7 @@ Contract `CBCJFISHME7MSOQO43XH53YA3QVRCEEGO3DC6YIPU4XKMRGRY2WFOWNJ` (wasm `c5764
 
 Five real transactions were executed and Horizon-confirmed: propose `0b6437ec…`, approve `6eb51c0a…`, execute `9894dc3c…`, propose with deadline `325013c1…` and third-party recovery `ebc2f240…`. The late-approval attempt was rejected in simulation with `Error(Contract, #3)` and has no hash. Public view `/recovery`; semantics in `docs/RECOVERY.md`.
 
-Counts: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones = **170 automated tests**. Evidence Center: 39 verified transactions.
+Counts: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel = **170 automated tests**. Evidence Center: 39 verified transactions.
 
 
 ## Escrow Arbitration Protocol (27 nov)
@@ -459,7 +459,7 @@ Contract `CBPZKX3I5OR5WLDQGH2FSLOXPQOMQKPEZ2ENQQGASRF3HWP7GNTVJIDN` (wasm `836f1
 
 Seven real Horizon-confirmed transactions: deposit `6eb11aa8…`, argue `7f4b26b3…`, release `7dde0fbf…`, deposit `ae2f2b24…`, refund `2cd356ba…`, deposit `e282a4e3…`, split `d5ba24a8…`. A second resolve attempt was rejected in simulation (#3) with no fabricated hash. Public view `/arbitration`; semantics in `docs/ARBITRATION.md`.
 
-Counts: 33 shared + 88 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones = **173 automated tests**.
+Counts: 33 shared + 88 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel = **173 automated tests**.
 
 
 ## Milestone Escrow Protocol (27 nov)
@@ -468,7 +468,16 @@ Contract `CCNJVQLIXREAGJTLEZDI7T3C2PEXSB3FXCKI2HCQ2EBDVGF6MDYNOJJ7` (wasm `83a67
 
 Seven Horizon-confirmed transactions: create `18a68127…`, submit `0cfcbde2…`, approve `c17a91fa…`, submit `68f715f9…`, dispute `4e38f6a2…`, resolve `37a2e117…`, recover `479ddc98…`. Public view `/milestones`; semantics in `docs/MILESTONES.md`.
 
-Counts: 33 shared + 88 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones = **177 automated tests**.
+Counts: 33 shared + 88 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel = **177 automated tests**.
+
+
+## Multi-Party Arbitration Protocol (27 nov)
+
+Contract `CCFRBPLVJPQWKIDGFDJY7BQEJQRZZ554G2Y5JZQBFJ62IQIXXGHJWNQ3` (wasm `8bca4467d7a50cb0eefdd8ce6753d2962ab4bbf4bbc3913d10cd7c8901f04d3a`) implements three arbitrators, commit-reveal voting and a 2-of-3 quorum. Three Rust tests cover quorum release, no-quorum refund and invalid/late reveals.
+
+Eight Horizon-confirmed transactions: create `98263acb…`, commits `171f1028…`, `9e8cfe8b…`, `47d39715…`, reveals `05e6da52…`, `f877de9a…`, `13a99ea2…`, and quorum resolution `c011a3d3…` (status `Resolved`, outcome `Release`, real XLM to recipient). Public view `/panel-arbitration`; semantics in `docs/PANEL_ARBITRATION.md`.
+
+Counts: 33 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel = **180 automated tests**.
 
 ## Known limitations
 

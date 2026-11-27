@@ -64,6 +64,9 @@ export const EVIDENCE: readonly EvidenceRecord[] = [
   { feature: "Hitos · disputar", functionName: "dispute", hash: "4e38f6a27c5eca04fe090bfcbf0f2a4a8e9ddada8a2974e38465fda8b3bd93e0", contract: "CCNJVQLIXREAGJTLEZDI7T3C2PEXSB3FXCKI2HCQ2EBDVGF6MDYNOJJ7", expected: "Milestone 1 isolated", observed: "Success · disputed" },
   { feature: "Hitos · resolver", functionName: "resolve", hash: "37a2e1176eb0b2e260aa2176fdc06a9a2769231e6647088f4910505f12bd4af8", contract: "CCNJVQLIXREAGJTLEZDI7T3C2PEXSB3FXCKI2HCQ2EBDVGF6MDYNOJJ7", expected: "Milestone 1 released", observed: "Success · resolved" },
   { feature: "Hitos · recuperar", functionName: "recover", hash: "479ddc98ee23ebf67c12bcaca4d2aedcd9f9229b3534eb2b68080b937e0c05ff", contract: "CCNJVQLIXREAGJTLEZDI7T3C2PEXSB3FXCKI2HCQ2EBDVGF6MDYNOJJ7", expected: "Milestone 2 to proposer", observed: "Success · recovered" },
+  { feature: "Panel · crear caso", functionName: "create", hash: "98263acb250b3e82bd2d38f0a13adf6bdf83f525b3d0f22ee7059275e825a602", contract: "CCFRBPLVJPQWKIDGFDJY7BQEJQRZZ554G2Y5JZQBFJ62IQIXXGHJWNQ3", expected: "3 arbitrators + XLM locked", observed: "Success · created" },
+  { feature: "Panel · commitments", functionName: "commit", hash: "171f1028138ea691fba69ac80252b281b1551b6595672e05cd621d38a296bef2", contract: "CCFRBPLVJPQWKIDGFDJY7BQEJQRZZ554G2Y5JZQBFJ62IQIXXGHJWNQ3", expected: "Commitment digest", observed: "Success · committed" },
+  { feature: "Panel · quorum 2/3", functionName: "resolve", hash: "c011a3d30b320181bd67eca3ede85e63ecdc4d4598f5bb48db2416a1024cd460", contract: "CCFRBPLVJPQWKIDGFDJY7BQEJQRZZ554G2Y5JZQBFJ62IQIXXGHJWNQ3", expected: "Release to recipient", observed: "Success · resolved" },
   { feature: "Idempotencia atómica G2", functionName: "payment-coordinator", hash: "d4cc0b48cf1e8295cfb46164156c62430b4452a147622e646f4771457a63361e", contract: PAYMENT, expected: "8 requests → 1 payment", observed: "Success · 7 reused" },
 ];
 

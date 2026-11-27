@@ -254,7 +254,20 @@ El intento de doble resolución fue rechazado en simulación (#3), sin hash.
 | Hitos resolve 1 | `37a2e1176eb0b2e260aa2176fdc06a9a2769231e6647088f4910505f12bd4af8` | [Ver tx](https://stellar.expert/explorer/testnet/tx/37a2e1176eb0b2e260aa2176fdc06a9a2769231e6647088f4910505f12bd4af8) |
 | Hitos recover 2 | `479ddc98ee23ebf67c12bcaca4d2aedcd9f9229b3534eb2b68080b937e0c05ff` | [Ver tx](https://stellar.expert/explorer/testnet/tx/479ddc98ee23ebf67c12bcaca4d2aedcd9f9229b3534eb2b68080b937e0c05ff) |
 
-## 6e. Chequeos negativos (sin hash de transacción)
+## 10. Panel arbitration (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Panel crear | `98263acb250b3e82bd2d38f0a13adf6bdf83f525b3d0f22ee7059275e825a602` | [Ver tx](https://stellar.expert/explorer/testnet/tx/98263acb250b3e82bd2d38f0a13adf6bdf83f525b3d0f22ee7059275e825a602) |
+| Panel commit 1 | `171f1028138ea691fba69ac80252b281b1551b6595672e05cd621d38a296bef2` | [Ver tx](https://stellar.expert/explorer/testnet/tx/171f1028138ea691fba69ac80252b281b1551b6595672e05cd621d38a296bef2) |
+| Panel commit 2 | `9e8cfe8b27e3746547f2c25ed12e28f7b4b69e51e3f0a3978ee905cf694e5bdb` | [Ver tx](https://stellar.expert/explorer/testnet/tx/9e8cfe8b27e3746547f2c25ed12e28f7b4b69e51e3f0a3978ee905cf694e5bdb) |
+| Panel commit 3 | `47d39715471bfc0b390063128d8bd7ec767b1c50b6bcb6ba2690c4fa7b68958e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/47d39715471bfc0b390063128d8bd7ec767b1c50b6bcb6ba2690c4fa7b68958e) |
+| Panel reveal 1 | `05e6da527366c5f166fa1d042c5a0ce8eeb7b370a4b030d93d1d9e8769088936` | [Ver tx](https://stellar.expert/explorer/testnet/tx/05e6da527366c5f166fa1d042c5a0ce8eeb7b370a4b030d93d1d9e8769088936) |
+| Panel reveal 2 | `f877de9a6455d759f5741b36ee885fa7b82d4fa853dd7f9b71014562b86c97a0` | [Ver tx](https://stellar.expert/explorer/testnet/tx/f877de9a6455d759f5741b36ee885fa7b82d4fa853dd7f9b71014562b86c97a0) |
+| Panel reveal 3 | `13a99ea2534ba9c75569d6aec3b155e57d17dc5cd189698420242b0095c9e151` | [Ver tx](https://stellar.expert/explorer/testnet/tx/13a99ea2534ba9c75569d6aec3b155e57d17dc5cd189698420242b0095c9e151) |
+| Panel resolver quórum | `c011a3d30b320181bd67eca3ede85e63ecdc4d4598f5bb48db2416a1024cd460` | [Ver tx](https://stellar.expert/explorer/testnet/tx/c011a3d30b320181bd67eca3ede85e63ecdc4d4598f5bb48db2416a1024cd460) |
+
+## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |
 |---|---|

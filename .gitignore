@@ -26,3 +26,5 @@ contracts/recovery/test_snapshots/
 contracts/arbitration/test_snapshots/
 
 contracts/milestones/test_snapshots/
+
+contracts/panel/test_snapshots/
