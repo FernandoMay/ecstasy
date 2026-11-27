@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { FEEDBACK_KEY, FEEDBACK_TAGS, addFeedback } from "@/lib/afterglow-feedback";
 
 export function AfterglowSlider({
+  encounterId,
   disabled,
   alreadySubmitted,
   onSubmit,
 }: {
+  encounterId: string;
   disabled?: boolean;
   alreadySubmitted?: boolean;
   onSubmit: (score: number) => Promise<void>;
 }) {
   const [score, setScore] = useState(50);
   const [busy, setBusy] = useState(false);
+  const [tags, setTags] = useState<string[]>([]);
 
   return (
     <div className="card">
@@ -26,6 +30,22 @@ export function AfterglowSlider({
         One bounded score (0–100) per participant, available after settlement. This is participant
         feedback — not a safety, identity, or truth verification.
       </p>
+      <div className="row" style={{ marginBottom: 12, flexWrap: "wrap" }}>
+        {FEEDBACK_TAGS.map((tag) => (
+          <button
+            key={tag}
+            className={tags.includes(tag) ? "btn btn-small btn-primary" : "btn btn-small"}
+            disabled={disabled || busy || alreadySubmitted}
+            onClick={() =>
+              setTags((current) =>
+                current.includes(tag) ? current.filter((item) => item !== tag) : [...current, tag],
+              )
+            }
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
       <div className="row">
         <input
           type="range"
@@ -46,6 +66,17 @@ export function AfterglowSlider({
           setBusy(true);
           try {
             await onSubmit(score);
+            if (typeof window !== "undefined") {
+              window.localStorage.setItem(
+                FEEDBACK_KEY,
+                addFeedback(window.localStorage.getItem(FEEDBACK_KEY), {
+                  encounterId,
+                  score,
+                  tags,
+                  submittedAt: Date.now(),
+                }),
+              );
+            }
           } finally {
             setBusy(false);
           }

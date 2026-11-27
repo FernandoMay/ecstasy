@@ -330,6 +330,7 @@ export function EncounterWorkspace({ id }: { id: string }) {
         {status === "Settled" && isParty && (
           <>
             <AfterglowSlider
+              encounterId={id}
               disabled={busy}
               alreadySubmitted={!actions.includes("afterglow")}
               onSubmit={(score) => run(() => service.afterglow(address!, encounterId, score), "submit_afterglow")}
