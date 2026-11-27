@@ -429,17 +429,17 @@ A second complete encounter lifecycle was executed on the active contract, addin
 
 Contract `contracts/disputes` (`CCEZO3DVXQXWDM2OURVODDJ72JRQCLQPIO5E27FLXKW2THQUJOZKS4R6`, wasm `828497de62aa5c115e46985ff3b0b39dc3d251b55796ab50e7e7d126cc5e1079`) records a dispute for an encounter with reason/response/outcome digests only. It does not move escrow or decide real-world facts. Two Rust tests cover the full lifecycle and unauthorized/duplicate rejection.
 
-Real Testnet lifecycle executed: open `53f923f85814…`, respond A `e696eb855916…`, respond B `8f738afe3413…`, resolve `33124458b1f2…` — all `successful: true` in Horizon and linked in the Evidence Center (now 29 transactions).
+Real Testnet lifecycle executed: open `53f923f85814…`, respond A `e696eb855916…`, respond B `8f738afe3413…`, resolve `33124458b1f2…` — all `successful: true` in Horizon and linked in the Evidence Center (now 34 transactions).
 
 
 ## Activity and afterglow surfaces (27 nov)
 
-`/activity` merges local state transitions with the 29 verified Testnet transactions into one filterable timeline, with links to Stellar Expert. `/afterglow` computes score averages, tag breakdowns and history only from feedback stored in this browser; the contract still stores only the bounded 0–100 score per participant. Both have unit tests. Counts: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault Rust + 2 disputes Rust = **163 automated tests**.
+`/activity` merges local state transitions with the 34 verified Testnet transactions into one filterable timeline, with links to Stellar Expert. `/afterglow` computes score averages, tag breakdowns and history only from feedback stored in this browser; the contract still stores only the bounded 0–100 score per participant. Both have unit tests. Counts: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault Rust + 2 disputes Rust = **163 automated tests**.
 
 
 ## Mutual Refund Protocol (27 nov)
 
-Contract `CCMLBZ3U6QATIVKZREQC4JYYWQO3EK42GFNDYYEDC2YIAJ5RHKC36CG5` (wasm `727d4eb0007e1fed1983ea3651628c71ee26b5cd6d29ad95b3c4beefdd892550`) holds real Testnet XLM via its SAC. Three Rust tests cover mutual approval with matching intent, rejection/revocation refunds and duplicate execution rejection. Seven real transactions were executed and Horizon-confirmed: propose `bb1381e3…`, approve `f994e2eb…`, execute `31b708a2…`, reject proposal `c9809f1f…`, reject `50263a74…`, revoke proposal `2c1fb704…`, revoke `50e0a196…`. Full links in `docs/TESTNET_TRANSACTIONS.md` and the Evidence Center. The public view is `/refunds`; semantics and limits in `docs/REFUNDS.md`.
+Contract `CCMLBZ3U6QATIVKZREQC4JYYWQO3EK42GFNDYYEDC2YIAJ5RHKC36CG5` (wasm `727d4eb0007e1fed1983ea3651628c71ee26b5cd6d29ad95b3c4beefdd892550`) holds real Testnet XLM via its SAC. Three Rust tests cover mutual approval with matching intent, rejection/revocation refunds and duplicate execution rejection. Seven real transactions were executed and Horizon-confirmed: propose `bb1381e3…`, approve `f994e2eb…`, execute `31b708a2…`, reject proposal `c9809f1f…`, reject `50263a74…`, revoke proposal `2c1fb704…`, revoke `50e0a196…`. Full links in `docs/TESTNET_TRANSACTIONS.md`; five of them are also in the Evidence Center, which now has 34 verified transactions in total. The public view is `/refunds`; semantics and limits in `docs/REFUNDS.md`.
 
 Counts after this mission: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault Rust + 2 disputes Rust + 3 refunds Rust = **166 automated tests**.
 
