@@ -31,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/afterglow">Afterglow</Link>
                 <Link href="/refunds">Refunds</Link>
                 <Link href="/recovery">Recovery</Link>
+                <Link href="/arbitration">Arbitraje</Link>
                 <Link href="/boveda">Bóveda</Link>
               </nav>
               <WalletStatus />

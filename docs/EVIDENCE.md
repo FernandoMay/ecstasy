@@ -450,7 +450,16 @@ Contract `CBCJFISHME7MSOQO43XH53YA3QVRCEEGO3DC6YIPU4XKMRGRY2WFOWNJ` (wasm `c5764
 
 Five real transactions were executed and Horizon-confirmed: propose `0b6437ec…`, approve `6eb51c0a…`, execute `9894dc3c…`, propose with deadline `325013c1…` and third-party recovery `ebc2f240…`. The late-approval attempt was rejected in simulation with `Error(Contract, #3)` and has no hash. Public view `/recovery`; semantics in `docs/RECOVERY.md`.
 
-Counts: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault + 2 disputes + 3 refunds + 4 recovery = **170 automated tests**. Evidence Center: 39 verified transactions.
+Counts: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration = **170 automated tests**. Evidence Center: 39 verified transactions.
+
+
+## Escrow Arbitration Protocol (27 nov)
+
+Contract `CBPZKX3I5OR5WLDQGH2FSLOXPQOMQKPEZ2ENQQGASRF3HWP7GNTVJIDN` (wasm `836f13fdb386ea02f82bcb7e90c3d56231f9a0d77c47dd4814aafe53e8957185`) custodies real XLM and lets a pinned resolver execute `Release`, `Refund` or `Split`. Three Rust tests cover all economic outcomes, resolver authorization and double-resolution rejection.
+
+Seven real Horizon-confirmed transactions: deposit `6eb11aa8…`, argue `7f4b26b3…`, release `7dde0fbf…`, deposit `ae2f2b24…`, refund `2cd356ba…`, deposit `e282a4e3…`, split `d5ba24a8…`. A second resolve attempt was rejected in simulation (#3) with no fabricated hash. Public view `/arbitration`; semantics in `docs/ARBITRATION.md`.
+
+Counts: 33 shared + 88 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration = **173 automated tests**.
 
 ## Known limitations
 

@@ -62,3 +62,8 @@ export {
   Client as RecoveryClient,
   RecoveryError,
 } from "./generated/recovery";
+
+export {
+  Client as ArbitrationClient,
+  ArbitrationError,
+} from "./generated/arbitration";

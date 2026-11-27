@@ -21,6 +21,7 @@ export interface NetworkPreset {
   disputesContractId: string;
   refundsContractId: string;
   recoveryContractId: string;
+  arbitrationContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -34,6 +35,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     disputesContractId: "CCEZO3DVXQXWDM2OURVODDJ72JRQCLQPIO5E27FLXKW2THQUJOZKS4R6",
     refundsContractId: "CCMLBZ3U6QATIVKZREQC4JYYWQO3EK42GFNDYYEDC2YIAJ5RHKC36CG5",
     recoveryContractId: "CBCJFISHME7MSOQO43XH53YA3QVRCEEGO3DC6YIPU4XKMRGRY2WFOWNJ",
+    arbitrationContractId: "CBPZKX3I5OR5WLDQGH2FSLOXPQOMQKPEZ2ENQQGASRF3HWP7GNTVJIDN",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -45,6 +47,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     disputesContractId: "",
     refundsContractId: "",
     recoveryContractId: "",
+    arbitrationContractId: "",
   },
 };
 
@@ -64,6 +67,8 @@ export interface AppConfig extends NetworkPreset {
   refundsContractId: string;
   /** Timeout recovery contract ID. */
   recoveryContractId: string;
+  /** Escrow arbitration contract ID. */
+  arbitrationContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -110,6 +115,7 @@ export function getConfig(
     disputesContractId: env("NEXT_PUBLIC_DISPUTES_CONTRACT_ID", source) ?? preset.disputesContractId,
     refundsContractId: env("NEXT_PUBLIC_REFUNDS_CONTRACT_ID", source) ?? preset.refundsContractId,
     recoveryContractId: env("NEXT_PUBLIC_RECOVERY_CONTRACT_ID", source) ?? preset.recoveryContractId,
+    arbitrationContractId: env("NEXT_PUBLIC_ARBITRATION_CONTRACT_ID", source) ?? preset.arbitrationContractId,
   };
 }
 

@@ -32,6 +32,7 @@ cd contracts/ecstasy && stellar contract build
 | Web tests | 88 passed |
 | Refund contract tests | 3 passed |
 | Recovery contract tests | 4 passed |
+| Arbitration contract tests | 3 passed |
 | Typecheck / production build | clean |
 | Clippy `-D warnings` / cargo fmt | clean |
 | Generated bindings vs final wasm | no diff |

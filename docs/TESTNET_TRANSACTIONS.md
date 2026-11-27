@@ -228,7 +228,21 @@ Todos los hashes verificados en Horizon con `successful: true`.
 
 El intento de aprobación tardía fue rechazado en simulación (#3), sin hash.
 
-## 6c. Chequeos negativos (sin hash de transacción)
+## 8. Escrow arbitration (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Arbitraje depositar | `6eb11aa8a67d1a76364df514e5a355170a15f4044b5ca7143de1dcce40295554` | [Ver tx](https://stellar.expert/explorer/testnet/tx/6eb11aa8a67d1a76364df514e5a355170a15f4044b5ca7143de1dcce40295554) |
+| Arbitraje argumento | `7f4b26b3d0e4b212ab58557fcb5d6dda58f53060a37610ca0c0e15d1ae701f0f` | [Ver tx](https://stellar.expert/explorer/testnet/tx/7f4b26b3d0e4b212ab58557fcb5d6dda58f53060a37610ca0c0e15d1ae701f0f) |
+| Arbitraje Release | `7dde0fbf8bbabad2a10100e71792f759f6d6b35e9f306a4f79cc0394dd74854a` | [Ver tx](https://stellar.expert/explorer/testnet/tx/7dde0fbf8bbabad2a10100e71792f759f6d6b35e9f306a4f79cc0394dd74854a) |
+| Arbitraje depositar (refund) | `ae2f2b24f7516ae9d1c2bfa8b33699ef3bc85bf21f0f880e096187bcfe43b7b2` | [Ver tx](https://stellar.expert/explorer/testnet/tx/ae2f2b24f7516ae9d1c2bfa8b33699ef3bc85bf21f0f880e096187bcfe43b7b2) |
+| Arbitraje Refund | `2cd356bae3452a922ed57fb134dd77de19ae5d01a45f358cef828f739354de1d` | [Ver tx](https://stellar.expert/explorer/testnet/tx/2cd356bae3452a922ed57fb134dd77de19ae5d01a45f358cef828f739354de1d) |
+| Arbitraje depositar (split) | `e282a4e3750e0778abcdb158684e220408d05ddb4f55a062cdcba146a46089fd` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e282a4e3750e0778abcdb158684e220408d05ddb4f55a062cdcba146a46089fd) |
+| Arbitraje Split | `d5ba24a810434e443c25fc201ff27d3a537dbc3fff258086b3765c09e2ed9e13` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d5ba24a810434e443c25fc201ff27d3a537dbc3fff258086b3765c09e2ed9e13) |
+
+El intento de doble resolución fue rechazado en simulación (#3), sin hash.
+
+## 6d. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |
 |---|---|
