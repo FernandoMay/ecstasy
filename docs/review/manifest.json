@@ -1,7 +1,31 @@
 {
   "phase": "15.1",
   "purpose": "Handoff package for an independent technical review. The review has NOT been performed.",
-  "external_reviewer": { "status": "PENDING", "assigned": null, "engagement_spec": "docs/REVIEWER_ENGAGEMENT.md", "report_received": false },
+  "external_reviewer": {
+    "status": "PENDING",
+    "assigned": null,
+    "professional_identity": null,
+    "conflicts_declared": null,
+    "declared_no_participation_in_ecstasy": null,
+    "scope_accepted": null,
+    "acceptance_date": null,
+    "commit_reviewed": null,
+    "package_version": null,
+    "signed_acceptance_reference": null,
+    "engagement_spec": "docs/REVIEWER_ENGAGEMENT.md",
+    "report_received": false
+  },
+  "review_process": {
+    "source_of_truth": "docs/review/manifest.json",
+    "pre_contact_controls": [
+      "verifiable_public_soroban_work_or_report",
+      "written_conflict_declaration_plus_no_participation_confirmation",
+      "written_report_conditions_preserving_original_findings_and_disagreements"
+    ],
+    "verbal_conclusions_acceptance": false,
+    "original_findings_preserved": true,
+    "review_target_commit": "8a2835545c1c5a6bfd0c905d55f718ff0827601b"
+  },
   "repository": "https://github.com/FernandoMay/ecstasy",
   "baseline": {
     "commit": "8a2835545c1c5a6bfd0c905d55f718ff0827601b",

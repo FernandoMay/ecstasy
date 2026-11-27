@@ -22,6 +22,16 @@ El revisor debe acreditar experiencia **demostrable** en las cuatro áreas sigui
 - Se le entrega **acceso de solo lectura** a repositorio, documentación y red Testnet. **No se entregan claves privadas propias ni de terceros.**
 - Puede cuestionar libremente los hallazgos, sus severidades, las reproducciones y las siete invariantes propuestas. Puede reportar hallazgos nuevos o declarar inconclusivos los casos que no pueda verificar.
 
+## 2b. Controles previos a contactar candidatos
+
+Antes de enviar el encargo a cualquier candidato deben satisfacerse tres controles:
+
+1. **Verificación de experiencia.** Exigir al menos **un informe público o trabajo técnico verificable en Soroban**, preferiblemente con referencias a contratos Rust y a problemas concretos de autorización o migración. Un CV sin artefacto comprobable no cumple el control.
+2. **Prueba de independencia.** Declaración escrita de conflictos de interés **y** confirmación explícita de que el candidato **no participó en el desarrollo de ECSTASY**, sus contratos, el harness ni el diseño de remediación.
+3. **Condiciones del informe.** El informe debe **conservar los hallazgos originales y las discrepancias** del revisor frente a ellos. Una conclusión verbal, una reunión o un mensaje informal **no sustituye** el informe escrito con evidencia reproducible.
+
+Estos controles se registran en `docs/review/manifest.json`, que es la **fuente de verdad del proceso**. Cuando exista candidato se anotarán identidad profesional, conflictos declarados, alcance aceptado, fecha y **el commit exacto que se revisó**, de modo que pueda demostrarse no solo que hubo una revisión, sino qué se revisó.
+
 ## 3. Alcance del encargo
 
 1. **Reproducción independiente de los cuatro High** (SEC-01 a SEC-04), con sus propios comandos y evidencia.
@@ -53,6 +63,8 @@ Material de entrada: commits `8a28355`, `56e28ff`, `32086e4`, `95b0ba2`, tag `v1
 - No se aceptan afirmaciones sin hash, comando o referencia a documento.
 - El informe declara explícitamente si las siete invariantes son falsables y si alguna es incorrecta.
 - El informe no sustituye la decisión del owner sobre Mainnet ni autoriza la migración de fondos.
+- El informe conserva íntegros los 36 hallazgos originales y registra por separado cada discrepancia del revisor; no se reescribe el historial para mostrar acuerdo.
+- Ninguna conclusión verbal sustituye al informe escrito con evidencia reproducible.
 - Hasta recibirlo, ECSTASY **no se presenta como auditado**.
 
 ## 6. Registro de aceptación del revisor — PENDIENTE
@@ -61,14 +73,18 @@ Completar este bloque solo cuando exista un candidato aceptado. **Estado actual:
 
 | Campo | Valor |
 |---|---|
-| Nombre / organización | `PENDIENTE` |
+| Identidad profesional / organización | `PENDIENTE` |
 | Contacto | `PENDIENTE` |
-| Evidencia Soroban (enlaces) | `PENDIENTE` |
-| Evidencia Rust / contratos (enlaces) | `PENDIENTE` |
-| Evidencia migración de activos (enlaces) | `PENDIENTE` |
-| Declaración de conflictos | `PENDIENTE` |
+| Informe público o trabajo verificable en Soroban (control 1) | `PENDIENTE` |
+| Evidencia Rust / contratos / autorización (control 1) | `PENDIENTE` |
+| Evidencia migración de activos (control 1) | `PENDIENTE` |
+| Declaración de conflictos (control 2) | `PENDIENTE` |
+| Confirmación de no participación en ECSTASY (control 2) | `PENDIENTE` |
+| Aceptación de condiciones del informe (control 3) | `PENDIENTE` |
 | Alcance aceptado (sección 3) | `PENDIENTE` |
-| Fecha de inicio / entrega prevista | `PENDIENTE` |
+| Commit exacto revisado | `PENDIENTE` |
+| Versión del paquete de entrega | `PENDIENTE` |
+| Fecha de aceptación / inicio / entrega prevista | `PENDIENTE` |
 | Referencia de aceptación firmada | `PENDIENTE` |
 | Estado | **PENDIENTE — sin revisor asignado** |
 
