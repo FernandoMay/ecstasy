@@ -417,7 +417,7 @@ This distinction is deliberate: the 18 transactions in the Evidence Center and t
 
 ## Post-G3 product extensions
 
-After the owner reported the Freighter flow closed, three more product surfaces were added without changing deployed contracts: role/state filters and pending-action suggestions in `/encounters`, a vault dashboard (`/vault`) with on-chain state plus local claim history, and an analytics page (`/analytics`) derived only from observed encounters and the 18 verified transactions. Counts: 33 shared + 80 web + 38 ECSTASY Rust + 2 vault Rust = **153 automated tests**. The G3 browser evidence itself remains owner-reported and is not duplicated here.
+After the owner reported the Freighter flow closed, three more product surfaces were added without changing deployed contracts: role/state filters and pending-action suggestions in `/encounters`, a vault dashboard (`/vault`) with on-chain state plus local claim history, and an analytics page (`/analytics`) derived only from observed encounters and the 18 verified transactions. Counts: 33 shared + 83 web + 38 ECSTASY Rust + 2 vault Rust = **153 automated tests**. The G3 browser evidence itself remains owner-reported and is not duplicated here.
 
 
 ## Additional lifecycle coverage (27 nov)
