@@ -410,9 +410,9 @@ G3 (Freighter signing) remains a separate gate; it is not inferred from these ch
 
 ## G3 — owner-reported closure (26 nov)
 
-The project owner reported that the nine Freighter browser scenarios were executed successfully and that the wallet flow worked after the canonical passphrase fix. No transaction hashes, wallet addresses, screenshots or per-scenario results from those browser sessions were provided to this working session, so they are recorded here as **owner-reported**, not as independently verified evidence.
+The project owner confirmed on 27 Nov 2026 that all nine Freighter browser scenarios were executed successfully after the canonical passphrase fix. They are recorded as **completed by owner confirmation (9/9)**. Per-scenario transaction hashes, wallet addresses and screenshots were not attached to this working session, so no hashes are fabricated here; the underlying CLI/RPC evidence remains the independently captured set.
 
-This distinction is deliberate: the 18 transactions in the Evidence Center and the Horizon lookups documented here were captured by this session; the browser signatures were not. When the owner attaches the per-scenario hashes/captures, `docs/E2E_CHECKLIST.md` can be updated from "owner-reported" to "verified".
+This distinction is deliberate: the 18 transactions in the Evidence Center and the Horizon lookups documented here were captured by this session; the browser signatures were confirmed by the owner. `docs/E2E_CHECKLIST.md` is generated from `scenarios.mjs` and now marks the 32 steps as complete with the owner-confirmed source.
 
 
 ## Post-G3 product extensions

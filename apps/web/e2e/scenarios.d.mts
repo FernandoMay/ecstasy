@@ -11,6 +11,12 @@ export interface E2eScenario {
   name: string;
   steps: E2eStep[];
 }
+export declare const E2E_STATUS: Readonly<{
+  state: string;
+  source: string;
+  confirmedAt: string;
+  note: string;
+}>;
 export declare const TEST_WALLETS: {
   A: { label: string; role: string; version: string };
   B: { label: string; role: string; version: string };

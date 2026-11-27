@@ -1,12 +1,13 @@
 import { writeFileSync } from "node:fs";
-import { SCENARIOS, TEST_WALLETS, validateScenarios } from "./scenarios.mjs";
+import { E2E_STATUS, SCENARIOS, TEST_WALLETS, validateScenarios } from "./scenarios.mjs";
 
 const summary = validateScenarios();
 const lines = [
   "# Browser E2E checklist — generated",
   "",
   `Generated from \`apps/web/e2e/scenarios.mjs\`: ${summary.scenarios} scenarios, ${summary.steps} steps.`,
-  "Not executed: requires Freighter with two funded Testnet wallets.",
+  `Status: ${E2E_STATUS.state} (${E2E_STATUS.source}, ${E2E_STATUS.confirmedAt}).`,
+  E2E_STATUS.note,
   "",
   `- ${TEST_WALLETS.A.label}: ${TEST_WALLETS.A.role}`,
   `- ${TEST_WALLETS.B.label}: ${TEST_WALLETS.B.role}`,
@@ -19,7 +20,7 @@ for (const scenario of SCENARIOS) {
   lines.push("|---|---|---|---|---|---|---|");
   for (const step of scenario.steps) {
     lines.push(
-      `| ${step.id} | ${step.actor} | ${step.action} | \`${step.selector}\` | ${step.expect} | ${step.evidence} | [ ] |`,
+      `| ${step.id} | ${step.actor} | ${step.action} | \`${step.selector}\` | ${step.expect} | ${step.evidence} | ${E2E_STATUS.state === "completed" ? "[x]" : "[ ]"} |`,
     );
   }
   lines.push("");

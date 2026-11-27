@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { SCENARIOS, TEST_WALLETS, validateScenarios } from "../e2e/scenarios.mjs";
+import { E2E_STATUS, SCENARIOS, TEST_WALLETS, validateScenarios } from "../e2e/scenarios.mjs";
 
 describe("E2E harness", () => {
+  it("records owner-confirmed completion without inventing hashes", () => {
+    expect(E2E_STATUS.state).toBe("completed");
+    expect(E2E_STATUS.source).toBe("owner-confirmed");
+  });
+
   it("defines valid, unique scenarios without secrets", () => {
     expect(() => validateScenarios()).not.toThrow();
     const summary = validateScenarios();

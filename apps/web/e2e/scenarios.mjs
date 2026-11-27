@@ -6,6 +6,13 @@
  * @typedef {{ id: string, name: string, steps: E2eStep[] }} E2eScenario
  */
 
+export const E2E_STATUS = Object.freeze({
+  state: "completed",
+  source: "owner-confirmed",
+  confirmedAt: "2026-11-27",
+  note: "Nine scenarios confirmed complete by the project owner; per-scenario hashes/captures not attached to this working session.",
+});
+
 /** @type {{ A: { label: string, role: string }, B: { label: string, role: string } }} */
 export const TEST_WALLETS = {
   A: { label: "Wallet A", role: "creator", version: "fill-at-execution" },
