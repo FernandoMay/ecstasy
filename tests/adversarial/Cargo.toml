@@ -1,0 +1,23 @@
+[package]
+name = "adversarial"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["rlib"]
+
+[dependencies]
+soroban-sdk = { version = "29.0.0", features = ["testutils"] }
+
+ecstasy = { path = "../../contracts/ecstasy" }
+boveda = { path = "../../contracts/boveda" }
+arbitration = { path = "../../contracts/arbitration" }
+milestones = { path = "../../contracts/milestones" }
+panel = { path = "../../contracts/panel" }
+reputation = { path = "../../contracts/reputation" }
+traceability = { path = "../../contracts/traceability" }
+subscription = { path = "../../contracts/subscription" }
+disputes = { path = "../../contracts/disputes" }
+refunds = { path = "../../contracts/refunds" }
+recovery = { path = "../../contracts/recovery" }
