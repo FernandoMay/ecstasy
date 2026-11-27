@@ -5,6 +5,8 @@
 
 ECSTASY es un protocolo de acuerdos privados entre dos partes, construido sobre Stellar. Dos personas crean un encuentro, acuerdan términos en privado, bloquean valor en escrow de forma opcional, completan el encuentro, liquidan on-chain y dejan una señal de reputación verificable (`afterglow`) sin publicar los términos privados.
 
+**Demo en vivo:** https://ecs-tasy.netlify.app · **Evidencia:** https://ecs-tasy.netlify.app/evidence
+
 > **Privado por defecto. Liquidado en Stellar.**
 > [Video: Acuerdos secretos y pruebas públicas en Stellar](https://youtube.com/shorts/zMHbDthidtI)
 
