@@ -358,6 +358,22 @@ El intento de `recover` sobre el hito disputado del acuerdo 2 fue rechazado en s
 
 Los intentos de `resolve` fuera de ventana (#8 y #5) fueron rechazados en simulación, sin hash. Saldo final del contrato: 0.
 
+## 16. Panel V2 independiente (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| V2 panel crear caso | `0e401b1ed88dc3398040117c3e0f2ff69381e83bc0de9391557dfbeb7ce584cf` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0e401b1ed88dc3398040117c3e0f2ff69381e83bc0de9391557dfbeb7ce584cf) |
+| V2 panel seleccionar | `637f1b67a3263ca97d8df967aea6cc5b0c2db17ef84aeeae372b1f1ecd8721ff` | [Ver tx](https://stellar.expert/explorer/testnet/tx/637f1b67a3263ca97d8df967aea6cc5b0c2db17ef84aeeae372b1f1ecd8721ff) |
+| V2 panel commit 1 | `bb86aa100fc1cac49da74d14b66a2141d848debc02c0facf14b54adb7ec7e739` | [Ver tx](https://stellar.expert/explorer/testnet/tx/bb86aa100fc1cac49da74d14b66a2141d848debc02c0facf14b54adb7ec7e739) |
+| V2 panel commit 2 | `02802a9233dc26494450cb05e9b36a8ddbfa303ddedc1ec4f7b1b6fb3be597e3` | [Ver tx](https://stellar.expert/explorer/testnet/tx/02802a9233dc26494450cb05e9b36a8ddbfa303ddedc1ec4f7b1b6fb3be597e3) |
+| V2 panel commit 3 | `5e4ac700e8e92f49df832f692ea678fb1e2cfddd0e74ea209d26e72ad2ee69e6` | [Ver tx](https://stellar.expert/explorer/testnet/tx/5e4ac700e8e92f49df832f692ea678fb1e2cfddd0e74ea209d26e72ad2ee69e6) |
+| V2 panel reveal 1 | `b974d44e23d6b581434793564dc97af458deb2e028c72604ef14e8de22e41b3c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/b974d44e23d6b581434793564dc97af458deb2e028c72604ef14e8de22e41b3c) |
+| V2 panel reveal 2 | `48c4b5e47ef1e8d8ce3604d38259b25bed9222795dbbf658f3d2c622bb6583a0` | [Ver tx](https://stellar.expert/explorer/testnet/tx/48c4b5e47ef1e8d8ce3604d38259b25bed9222795dbbf658f3d2c622bb6583a0) |
+| V2 panel reveal 3 | `71fd4fabfdb1ae41efdf898ddaa86374dcb1d1dea97c246ca73d4fe69c25b81e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/71fd4fabfdb1ae41efdf898ddaa86374dcb1d1dea97c246ca73d4fe69c25b81e) |
+| V2 panel settlement | `bdcd36785ec716fa9c0d343813d3976ef5274fb50ddfc68c2bc570360872199c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/bdcd36785ec716fa9c0d343813d3976ef5274fb50ddfc68c2bc570360872199c) |
+
+El intento de atestar un controlador duplicado fue rechazado en simulación (#4), sin hash. Saldo final del contrato: 0.
+
 ## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |

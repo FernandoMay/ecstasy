@@ -355,6 +355,52 @@ jobs:
       - name: Build wasm
         run: stellar contract build
 
+  arbitrators-registry:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts/arbitrators-registry
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.99.1"
+          targets: wasm32v1-none
+          components: rustfmt, clippy
+      - name: Format
+        run: cargo fmt --check
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Test arbitrators-registry
+        run: cargo test
+      - name: Install Stellar CLI
+        run: cargo install stellar-cli --version ${ env.STELLAR_CLI_VERSION } --locked
+      - name: Build wasm
+        run: stellar contract build
+
+  panel-v2:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts/panel-v2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.99.1"
+          targets: wasm32v1-none
+          components: rustfmt, clippy
+      - name: Format
+        run: cargo fmt --check
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Test panel-v2
+        run: cargo test
+      - name: Install Stellar CLI
+        run: cargo install stellar-cli --version ${ env.STELLAR_CLI_VERSION } --locked
+      - name: Build wasm
+        run: stellar contract build
+
   web:
     runs-on: ubuntu-latest
     steps:

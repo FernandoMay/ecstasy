@@ -42,3 +42,7 @@ tests/adversarial/test_snapshots/
 contracts/milestones-v2/test_snapshots/
 
 contracts/arbitration-v2/test_snapshots/
+
+contracts/arbitrators-registry/test_snapshots/
+
+contracts/panel-v2/test_snapshots/

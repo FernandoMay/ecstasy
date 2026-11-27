@@ -524,6 +524,15 @@ Eighteen Horizon-confirmed transactions across five cases: four cases demonstrat
 
 Counts: 36 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 + 11 arbitration-v2 = **223 automated tests**. Evidence Center: 109 verified transactions.
 
+
+## Panel V2 and Arbitrators Registry (27 nov)
+
+Contracts `CDLK3J5UYFRT3TWOVWSR6BOIKICJ5B6SOSCHMWQB44JXHPXKZPSAGEE3` (panel, wasm `c5a7ec91…`) and `CDUYDNPWLXQLC3D2JFEVEJN2BISWNY52WCQLOTBQVCG2GZVOWKPCDBTJ` (registry, wasm `ebd88ef9…`). `create` has no arbitrator parameter: the payer deposits but cannot name the panel. Arbitrators come from a registry of registrar-attested eligible identities with unique controller hashes; selection is deterministic from a snapshot frozen at creation. Commit-reveal uses a `ECSTASY-PANEL-V2` domain tag and a web helper verified against an on-chain vector. Fifteen Rust tests plus two web tests cover independent selection, duplicate controllers, snapshot freezing, domain separation, all three quorum outcomes, no-quorum refund and terminal settlement.
+
+Nine Horizon-confirmed transactions: create `0e401b1e…`, select `637f1b67…`, commits `bb86aa10…`/`02802a92…`/`5e4ac700…`, reveals `b974d44e…`/`48c4b5e4…`/`71fd4fab…`, settlement `bdcd3678…` (2-of-3 Release, 1 XLM to recipient, contract balance 0). A duplicate-controller attestation was rejected in simulation (#4) with no hash. Public view `/panel-v2`; policy and semantics in `docs/PANEL_V2_POLICY.md` and `docs/PANEL_V2.md`.
+
+Counts: 36 shared + 92 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 + 11 arbitration-v2 + 4 arbitrators-registry + 11 panel-v2 = **240 automated tests**. Evidence Center: 118 verified transactions.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

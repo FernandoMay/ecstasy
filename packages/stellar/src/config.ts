@@ -30,6 +30,8 @@ export interface NetworkPreset {
   subscriptionContractId: string;
   milestonesV2ContractId: string;
   arbitrationV2ContractId: string;
+  panelV2ContractId: string;
+  arbitratorsRegistryContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -52,6 +54,8 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     subscriptionContractId: "CBOHLODIJJZ7ABFVBQSFDJ3DFVWMA4GZEDBYVVSHBCQIEWWCMAWVABRZ",
     milestonesV2ContractId: "CARHRH5SX7BWKYWUWW347URD5NQTYNKX5MHWIVQARDSU2ZHZXR6VRDPO",
     arbitrationV2ContractId: "CADVNOHMY2CLHMTP2JGI6LEWJVK4SCVA4TDLQIGZB6X7F2PBGG46ZMHY",
+    panelV2ContractId: "CDLK3J5UYFRT3TWOVWSR6BOIKICJ5B6SOSCHMWQB44JXHPXKZPSAGEE3",
+    arbitratorsRegistryContractId: "CDUYDNPWLXQLC3D2JFEVEJN2BISWNY52WCQLOTBQVCG2GZVOWKPCDBTJ",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -72,6 +76,8 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     subscriptionContractId: "",
     milestonesV2ContractId: "",
     arbitrationV2ContractId: "",
+    panelV2ContractId: "",
+    arbitratorsRegistryContractId: "",
   },
 };
 
@@ -109,6 +115,10 @@ export interface AppConfig extends NetworkPreset {
   milestonesV2ContractId: string;
   /** Arbitration V2 contract ID (isolated from V1). */
   arbitrationV2ContractId: string;
+  /** Independent panel V2 contract ID. */
+  panelV2ContractId: string;
+  /** Arbitrators registry contract ID. */
+  arbitratorsRegistryContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -164,6 +174,8 @@ export function getConfig(
     subscriptionContractId: env("NEXT_PUBLIC_SUBSCRIPTION_CONTRACT_ID", source) ?? preset.subscriptionContractId,
     milestonesV2ContractId: env("NEXT_PUBLIC_MILESTONES_V2_CONTRACT_ID", source) ?? preset.milestonesV2ContractId,
     arbitrationV2ContractId: env("NEXT_PUBLIC_ARBITRATION_V2_CONTRACT_ID", source) ?? preset.arbitrationV2ContractId,
+    panelV2ContractId: env("NEXT_PUBLIC_PANEL_V2_CONTRACT_ID", source) ?? preset.panelV2ContractId,
+    arbitratorsRegistryContractId: env("NEXT_PUBLIC_ARBITRATORS_REGISTRY_CONTRACT_ID", source) ?? preset.arbitratorsRegistryContractId,
   };
 }
 

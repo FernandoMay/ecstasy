@@ -108,3 +108,12 @@ export {
   Client as ArbitrationV2Client,
   ArbitrationV2Error,
 } from "./generated/arbitration-v2";
+
+export {
+  Client as PanelV2Client,
+  PanelV2Error,
+} from "./generated/panel-v2";
+export {
+  Client as ArbitratorsRegistryClient,
+  RegistryError,
+} from "./generated/arbitrators-registry";
