@@ -417,7 +417,7 @@ This distinction is deliberate: the 18 transactions in the Evidence Center and t
 
 ## Post-G3 product extensions
 
-After the owner reported the Freighter flow closed, three more product surfaces were added without changing deployed contracts: role/state filters and pending-action suggestions in `/encounters`, a vault dashboard (`/vault`) with on-chain state plus local claim history, and an analytics page (`/analytics`) derived only from observed encounters and the 18 verified transactions. Counts: 33 shared + 83 web + 38 ECSTASY Rust + 2 vault Rust = **153 automated tests**. The G3 browser evidence itself remains owner-reported and is not duplicated here.
+After the owner reported the Freighter flow closed, three more product surfaces were added without changing deployed contracts: role/state filters and pending-action suggestions in `/encounters`, a vault dashboard (`/vault`) with on-chain state plus local claim history, and an analytics page (`/analytics`) derived only from observed encounters and the 18 verified transactions. Counts: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault Rust = **153 automated tests**. The G3 browser evidence itself remains owner-reported and is not duplicated here.
 
 
 ## Additional lifecycle coverage (27 nov)
@@ -430,6 +430,11 @@ A second complete encounter lifecycle was executed on the active contract, addin
 Contract `contracts/disputes` (`CCEZO3DVXQXWDM2OURVODDJ72JRQCLQPIO5E27FLXKW2THQUJOZKS4R6`, wasm `828497de62aa5c115e46985ff3b0b39dc3d251b55796ab50e7e7d126cc5e1079`) records a dispute for an encounter with reason/response/outcome digests only. It does not move escrow or decide real-world facts. Two Rust tests cover the full lifecycle and unauthorized/duplicate rejection.
 
 Real Testnet lifecycle executed: open `53f923f85814…`, respond A `e696eb855916…`, respond B `8f738afe3413…`, resolve `33124458b1f2…` — all `successful: true` in Horizon and linked in the Evidence Center (now 29 transactions).
+
+
+## Activity and afterglow surfaces (27 nov)
+
+`/activity` merges local state transitions with the 29 verified Testnet transactions into one filterable timeline, with links to Stellar Expert. `/afterglow` computes score averages, tag breakdowns and history only from feedback stored in this browser; the contract still stores only the bounded 0–100 score per participant. Both have unit tests. Counts: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault Rust + 2 disputes Rust = **163 automated tests**.
 
 ## Known limitations
 

@@ -29,7 +29,7 @@ cd contracts/ecstasy && stellar contract build
 | Contract tests — `contracts/ecstasy` | 38 passed, including auth, replay, expiry, bounds, multi-asset, TTL and `retirar` |
 | Contract tests — `contracts/boveda` | 2 passed (vault code/claim invariants) |
 | Shared package tests | 33 passed |
-| Web tests | 83 passed |
+| Web tests | 88 passed |
 | Typecheck / production build | clean |
 | Clippy `-D warnings` / cargo fmt | clean |
 | Generated bindings vs final wasm | no diff |
