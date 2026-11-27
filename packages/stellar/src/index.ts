@@ -88,3 +88,8 @@ export {
 } from "./generated/traceability";
 
 export * from "./lifecycle";
+
+export {
+  Client as StreamingClient,
+  StreamError,
+} from "./generated/streaming";

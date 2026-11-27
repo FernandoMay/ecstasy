@@ -282,6 +282,23 @@ El intento de doble resolución fue rechazado en simulación (#3), sin hash.
 
 El hash de liquidación enlazado es `c011a3d30b320181bd67eca3ede85e63ecdc4d4598f5bb48db2416a1024cd460`, la transacción real de resolución del panel.
 
+## 12. Streaming payments (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Streaming crear flujo 1 | `6af36f4df534ea3fccb98dd5dbca89f862d5868dc913579b76f09f207cfc7e93` | [Ver tx](https://stellar.expert/explorer/testnet/tx/6af36f4df534ea3fccb98dd5dbca89f862d5868dc913579b76f09f207cfc7e93) |
+| Streaming claim 1 | `618bfa9c6a5fc0d5984890aa6edce755bef00b346b205723a8bbf3ec203852b5` | [Ver tx](https://stellar.expert/explorer/testnet/tx/618bfa9c6a5fc0d5984890aa6edce755bef00b346b205723a8bbf3ec203852b5) |
+| Streaming pausar | `7dabf9fbb5bbe219d747a6876f42d8c7f262591e77b351e9f37ac6727d5d8148` | [Ver tx](https://stellar.expert/explorer/testnet/tx/7dabf9fbb5bbe219d747a6876f42d8c7f262591e77b351e9f37ac6727d5d8148) |
+| Streaming claim en pausa | `cbed6d41df81d7394199195a66f3439b6ca3d0718abe9596d14522725d4de54b` | [Ver tx](https://stellar.expert/explorer/testnet/tx/cbed6d41df81d7394199195a66f3439b6ca3d0718abe9596d14522725d4de54b) |
+| Streaming reanudar | `440d7633a3a486b551b6fdd7e90c7a7fe2cade307d18d38f518f2423dc8a11da` | [Ver tx](https://stellar.expert/explorer/testnet/tx/440d7633a3a486b551b6fdd7e90c7a7fe2cade307d18d38f518f2423dc8a11da) |
+| Streaming claim 2 | `029ff8940899f05d1b27e7e45231c6a0259f2a387799b5ad5274f95e5ffa472e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/029ff8940899f05d1b27e7e45231c6a0259f2a387799b5ad5274f95e5ffa472e) |
+| Streaming cancelar | `1cf7f41bf5293819edd311478a41b93fa408a3af2246c43b96b1f76ae7dcd74e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1cf7f41bf5293819edd311478a41b93fa408a3af2246c43b96b1f76ae7dcd74e) |
+| Streaming crear flujo 2 | `3c6191bfa06d90341fb9d92bc4ed6279561a090ac0986f0e913673e8f823866d` | [Ver tx](https://stellar.expert/explorer/testnet/tx/3c6191bfa06d90341fb9d92bc4ed6279561a090ac0986f0e913673e8f823866d) |
+| Streaming claim total | `ca8b8965b7f6c873354178e67b3dc232e0915c3a484989c00be7876efa60c614` | [Ver tx](https://stellar.expert/explorer/testnet/tx/ca8b8965b7f6c873354178e67b3dc232e0915c3a484989c00be7876efa60c614) |
+| Streaming cerrar | `a9c58b7545ee6d4a64a0a83a600990a660ae2b700a1b68a7877a7ab569c71ab5` | [Ver tx](https://stellar.expert/explorer/testnet/tx/a9c58b7545ee6d4a64a0a83a600990a660ae2b700a1b68a7877a7ab569c71ab5) |
+
+Reconciliación flujo 1: 6,000,000 = 900,000 (claims) + 200,000 (cancel) + 4,900,000 (remanente). Flujo 2: 3,000,000 = 3,000,000 (claim total) → `Closed`. Comisiones de red excluidas.
+
 ## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |

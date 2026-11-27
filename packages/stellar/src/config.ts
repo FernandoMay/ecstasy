@@ -26,6 +26,7 @@ export interface NetworkPreset {
   panelContractId: string;
   reputationContractId: string;
   traceabilityContractId: string;
+  streamingContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -44,6 +45,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     panelContractId: "CCFRBPLVJPQWKIDGFDJY7BQEJQRZZ554G2Y5JZQBFJ62IQIXXGHJWNQ3",
     reputationContractId: "CDSKVD2HNSYAF7VZ44UQ3B4MG5RZTO33MJSCY3PKDJW37JM7OM5JYR7P",
     traceabilityContractId: "CA4CVK4XCLOTRKJ7XTU556WKN7T4DTI7HHRWVSQ4U35Q6KUKQULLFOTC",
+    streamingContractId: "CA7T6F6CJTDURIHZRPWGJYKURGLH3PTMAFVBQGN7CXZ5BJ7GIWJJPJF2",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -60,6 +62,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     panelContractId: "",
     reputationContractId: "",
     traceabilityContractId: "",
+    streamingContractId: "",
   },
 };
 
@@ -89,6 +92,8 @@ export interface AppConfig extends NetworkPreset {
   reputationContractId: string;
   /** Lifecycle reference-chain contract ID. */
   traceabilityContractId: string;
+  /** Streaming payments contract ID. */
+  streamingContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -140,6 +145,7 @@ export function getConfig(
     panelContractId: env("NEXT_PUBLIC_PANEL_CONTRACT_ID", source) ?? preset.panelContractId,
     reputationContractId: env("NEXT_PUBLIC_REPUTATION_CONTRACT_ID", source) ?? preset.reputationContractId,
     traceabilityContractId: env("NEXT_PUBLIC_TRACEABILITY_CONTRACT_ID", source) ?? preset.traceabilityContractId,
+    streamingContractId: env("NEXT_PUBLIC_STREAMING_CONTRACT_ID", source) ?? preset.streamingContractId,
   };
 }
 

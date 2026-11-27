@@ -35,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/milestones">Hitos</Link>
                 <Link href="/panel-arbitration">Panel</Link>
                 <Link href="/reputation">Reputación</Link>
+                <Link href="/streaming">Streaming</Link>
                 <Link href="/boveda">Bóveda</Link>
               </nav>
               <WalletStatus />

@@ -488,6 +488,15 @@ Seven Horizon-confirmed reputation transactions (authorize source, two registers
 
 Counts: 36 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability = **192 automated tests**. Evidence Center: 61 verified transactions.
 
+
+## Streaming Payments Protocol (27 nov)
+
+Contract `CA7T6F6CJTDURIHZRPWGJYKURGLH3PTMAFVBQGN7CXZ5BJ7GIWJJPJF2` (wasm `5d8c6db73d32c463b099cfb0213c2f3ead7b16071da9715a9ee839ee34631331`) streams real XLM in integer stroops using ledger time. `deposit == rate × duration` is enforced, so the only exits are claims, a cancellation settlement and a final close. Six Rust tests cover accrual, duplicate claims, pause/resume accounting, cancellation, terminal close and authorization.
+
+Ten Horizon-confirmed transactions across two streams: `6af36f4d…` create, `618bfa9c…` claim, `7dabf9fb…` pause, `cbed6d41…` claim during pause, `440d7633…` resume, `029ff894…` claim, `1cf7f41b…` cancel, `3c6191bf…` create, `ca8b8965…` full claim, `a9c58b75…` close. Stream 1 reconciles exactly: 6,000,000 deposit = 900,000 claims + 200,000 cancellation settlement + 4,900,000 refund, final contract balance 0. Stream 2: 3,000,000 = 3,000,000 claimed, status `Closed`. Network fees are separate and excluded. Public view `/streaming`; semantics in `docs/STREAMING.md`.
+
+Counts: 36 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming = **198 automated tests**. Evidence Center: 71 verified transactions.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

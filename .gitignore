@@ -32,3 +32,5 @@ contracts/panel/test_snapshots/
 contracts/reputation/test_snapshots/
 
 contracts/traceability/test_snapshots/
+
+contracts/streaming/test_snapshots/
