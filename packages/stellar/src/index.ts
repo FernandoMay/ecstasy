@@ -98,3 +98,8 @@ export {
   Client as SubscriptionClient,
   SubscriptionError,
 } from "./generated/subscription";
+
+export {
+  Client as MilestonesV2Client,
+  MilestoneV2Error,
+} from "./generated/milestones-v2";

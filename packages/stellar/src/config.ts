@@ -28,6 +28,7 @@ export interface NetworkPreset {
   traceabilityContractId: string;
   streamingContractId: string;
   subscriptionContractId: string;
+  milestonesV2ContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -48,6 +49,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     traceabilityContractId: "CA4CVK4XCLOTRKJ7XTU556WKN7T4DTI7HHRWVSQ4U35Q6KUKQULLFOTC",
     streamingContractId: "CA7T6F6CJTDURIHZRPWGJYKURGLH3PTMAFVBQGN7CXZ5BJ7GIWJJPJF2",
     subscriptionContractId: "CBOHLODIJJZ7ABFVBQSFDJ3DFVWMA4GZEDBYVVSHBCQIEWWCMAWVABRZ",
+    milestonesV2ContractId: "CARHRH5SX7BWKYWUWW347URD5NQTYNKX5MHWIVQARDSU2ZHZXR6VRDPO",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -66,6 +68,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     traceabilityContractId: "",
     streamingContractId: "",
     subscriptionContractId: "",
+    milestonesV2ContractId: "",
   },
 };
 
@@ -99,6 +102,8 @@ export interface AppConfig extends NetworkPreset {
   streamingContractId: string;
   /** Subscription & recurring escrow contract ID. */
   subscriptionContractId: string;
+  /** Milestone escrow V2 contract ID (isolated from V1). */
+  milestonesV2ContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -152,6 +157,7 @@ export function getConfig(
     traceabilityContractId: env("NEXT_PUBLIC_TRACEABILITY_CONTRACT_ID", source) ?? preset.traceabilityContractId,
     streamingContractId: env("NEXT_PUBLIC_STREAMING_CONTRACT_ID", source) ?? preset.streamingContractId,
     subscriptionContractId: env("NEXT_PUBLIC_SUBSCRIPTION_CONTRACT_ID", source) ?? preset.subscriptionContractId,
+    milestonesV2ContractId: env("NEXT_PUBLIC_MILESTONES_V2_CONTRACT_ID", source) ?? preset.milestonesV2ContractId,
   };
 }
 

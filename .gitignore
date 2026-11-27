@@ -38,3 +38,5 @@ contracts/streaming/test_snapshots/
 contracts/subscription/test_snapshots/
 
 tests/adversarial/test_snapshots/
+
+contracts/milestones-v2/test_snapshots/

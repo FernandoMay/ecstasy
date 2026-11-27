@@ -506,6 +506,15 @@ Eleven Horizon-confirmed transactions: create `94f22917…`, fund `70cf87b7…`,
 
 Counts: 36 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription = **204 automated tests**. Evidence Center: 82 verified transactions.
 
+
+## Milestones V2 / SEC-02 remediado (27 nov)
+
+New isolated contract `CARHRH5SX7BWKYWUWW347URD5NQTYNKX5MHWIVQARDSU2ZHZXR6VRDPO` (wasm `c261509bd2070ab4f0773722125d6ac18af3753c6c71d8d16cc938c2e6a04e06`). `recover` only accepts `Pending`; `Disputed` is frozen and `Submitted` uses `settle_after_deadline`, so the SEC-02 exploit is rejected with `DisputeActive` (#10). Eight Rust tests cover the rejected exploit, legitimate exits and exact stroop reconciliation.
+
+Nine Horizon-confirmed transactions: `72fa8f00…`, `b802aa3f…`, `5355cee3…`, `701e199e…`, `aaee99d5…`, `da60f72c…`, `4ed1c4c0…`, `041d4cc3…`, `0b7d101d…`. The exploit attempt on the disputed milestone of agreement 2 was rejected in simulation (#10) with no hash. Public view `/milestones-v2`; semantics in `docs/MILESTONES_V2.md`.
+
+Counts: 36 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 = **212 automated tests**. Evidence Center: 91 verified transactions.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

@@ -317,6 +317,22 @@ Reconciliación flujo 1: 6,000,000 = 900,000 (claims) + 200,000 (cancel) + 4,900
 
 Reconciliación: 2,000,000 = 1,000,000 (periodo 1 aprobado) + 1,000,000 (periodo 2 devuelto); saldo 0. El intento de financiar el periodo 3 tras cancelar fue rechazado en simulación (#7), sin hash.
 
+## 14. Milestones V2 (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| V2 hitos crear 1 | `72fa8f001214b6625cd01b9f5677467419b27b561a8a79f3ff059e2f6ebb8ff3` | [Ver tx](https://stellar.expert/explorer/testnet/tx/72fa8f001214b6625cd01b9f5677467419b27b561a8a79f3ff059e2f6ebb8ff3) |
+| V2 hitos entrega m0 | `b802aa3fb3b0cb905e2f5facfa69ae43ae4ab289c5c91cc5904405dd8c98a69e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/b802aa3fb3b0cb905e2f5facfa69ae43ae4ab289c5c91cc5904405dd8c98a69e) |
+| V2 hitos aprobar m0 | `5355cee396e57013bbf7eeda916009bd826efee1a4757c73665284f1f3b7542a` | [Ver tx](https://stellar.expert/explorer/testnet/tx/5355cee396e57013bbf7eeda916009bd826efee1a4757c73665284f1f3b7542a) |
+| V2 hitos entrega m1 | `701e199ec350ae38549cea36ae0ea79a0c96707b8970d7e52d52d44a0349a61e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/701e199ec350ae38549cea36ae0ea79a0c96707b8970d7e52d52d44a0349a61e) |
+| V2 hitos disputar m1 | `aaee99d52515838c3c6ad5a1c185ecd0a623cf5c841df043bc485d3fa2c4c729` | [Ver tx](https://stellar.expert/explorer/testnet/tx/aaee99d52515838c3c6ad5a1c185ecd0a623cf5c841df043bc485d3fa2c4c729) |
+| V2 hitos resolver m1 | `da60f72cdef229c3136a9eb3eaf771464a04367e625e2633a78abeec4aeba9c0` | [Ver tx](https://stellar.expert/explorer/testnet/tx/da60f72cdef229c3136a9eb3eaf771464a04367e625e2633a78abeec4aeba9c0) |
+| V2 hitos recuperar m2 | `4ed1c4c0915dc1ee7c5b65dcea4f028611a4e4951ac98d3838d05433eb6bc352` | [Ver tx](https://stellar.expert/explorer/testnet/tx/4ed1c4c0915dc1ee7c5b65dcea4f028611a4e4951ac98d3838d05433eb6bc352) |
+| V2 hitos crear 2 | `041d4cc35bcdcbf5ef1762986118d13ddcf3e131f16cfa3b0b7d037c5ba3b510` | [Ver tx](https://stellar.expert/explorer/testnet/tx/041d4cc35bcdcbf5ef1762986118d13ddcf3e131f16cfa3b0b7d037c5ba3b510) |
+| V2 hitos disputar 2 | `0b7d101de3061e628b6a95ddfdb8fdae48755039cc4c62b44d4dcc29a80532cd` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0b7d101de3061e628b6a95ddfdb8fdae48755039cc4c62b44d4dcc29a80532cd) |
+
+El intento de `recover` sobre el hito disputado del acuerdo 2 fue rechazado en simulación (#10), sin hash.
+
 ## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |
