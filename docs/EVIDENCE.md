@@ -497,6 +497,15 @@ Ten Horizon-confirmed transactions across two streams: `6af36f4d…` create, `61
 
 Counts: 36 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming = **198 automated tests**. Evidence Center: 71 verified transactions.
 
+
+## Subscription & Recurring Escrow Protocol (27 nov)
+
+Contract `CBOHLODIJJZ7ABFVBQSFDJ3DFVWMA4GZEDBYVVSHBCQIEWWCMAWVABRZ` (wasm `80ca7661fe12329a69179ea098618de6bbd405ab415f1ee71ce47327f4b225e2`). A plan defines terms only: no funds move and no debt is created until the payer signs an explicit `fund_period` deposit. Each period has its own status and history; a dispute settles only that period. Cancelling the plan blocks new periods without erasing funded ones. Six Rust tests cover isolated settlement, cancellation, resolver authority, no-deposit obligations and complete history.
+
+Eleven Horizon-confirmed transactions: create `94f22917…`, fund `70cf87b7…`, delivery `44cd999f…`, approve `fd9fe84c…`, fund `a60b62d6…`, dispute `f333e06f…`, refund resolution `678190db…`, cancel `28acb88e…`, plus registry integration `5bcebdd7…` (authorize source), `acc5b2c3…` (record case) and `bff926f1…` (lifecycle link using the real resolution hash). Reconciliation: 2,000,000 deposited = 1,000,000 approved + 1,000,000 refunded, contract balance 0. A post-cancellation funding attempt was rejected in simulation (#7) with no hash. Public view `/subscriptions`; semantics in `docs/SUBSCRIPTIONS.md`.
+
+Counts: 36 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription = **204 automated tests**. Evidence Center: 82 verified transactions.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

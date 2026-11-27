@@ -36,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/panel-arbitration">Panel</Link>
                 <Link href="/reputation">Reputación</Link>
                 <Link href="/streaming">Streaming</Link>
+                <Link href="/subscriptions">Suscripciones</Link>
                 <Link href="/boveda">Bóveda</Link>
               </nav>
               <WalletStatus />

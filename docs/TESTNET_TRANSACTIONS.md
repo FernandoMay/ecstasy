@@ -299,6 +299,24 @@ El hash de liquidación enlazado es `c011a3d30b320181bd67eca3ede85e63ecdc4d4598f
 
 Reconciliación flujo 1: 6,000,000 = 900,000 (claims) + 200,000 (cancel) + 4,900,000 (remanente). Flujo 2: 3,000,000 = 3,000,000 (claim total) → `Closed`. Comisiones de red excluidas.
 
+## 13. Subscription escrow (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Suscripción crear plan | `94f22917e9d7b17fc6f848e8acba8c8120e62e11270c1041ef69c5cdbcd81082` | [Ver tx](https://stellar.expert/explorer/testnet/tx/94f22917e9d7b17fc6f848e8acba8c8120e62e11270c1041ef69c5cdbcd81082) |
+| Suscripción financiar 1 | `70cf87b78649e6214888bb621c5259ac4827f9454e56f7f640cad62e81f5f20f` | [Ver tx](https://stellar.expert/explorer/testnet/tx/70cf87b78649e6214888bb621c5259ac4827f9454e56f7f640cad62e81f5f20f) |
+| Suscripción entrega 1 | `44cd999f197e3bc102ba8a7ff4c6e078a13ecf6e3d4b9efc00e4889223fba918` | [Ver tx](https://stellar.expert/explorer/testnet/tx/44cd999f197e3bc102ba8a7ff4c6e078a13ecf6e3d4b9efc00e4889223fba918) |
+| Suscripción aprobar 1 | `fd9fe84cfd918b423d168b6b83f0fab2726bd98e398cffd048c03856f3ac88c2` | [Ver tx](https://stellar.expert/explorer/testnet/tx/fd9fe84cfd918b423d168b6b83f0fab2726bd98e398cffd048c03856f3ac88c2) |
+| Suscripción financiar 2 | `a60b62d610aa3b740d3210c8246da351d120c26629a0b8488be1315eaed33f67` | [Ver tx](https://stellar.expert/explorer/testnet/tx/a60b62d610aa3b740d3210c8246da351d120c26629a0b8488be1315eaed33f67) |
+| Suscripción disputar 2 | `f333e06feb5b972965aed2ceeaac7c7f068e6eee4077b60b54505bce98e34f8d` | [Ver tx](https://stellar.expert/explorer/testnet/tx/f333e06feb5b972965aed2ceeaac7c7f068e6eee4077b60b54505bce98e34f8d) |
+| Suscripción resolver 2 | `678190dbb08075ff7e17372188a0f04f6f94cf8745318154505927955edf488c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/678190dbb08075ff7e17372188a0f04f6f94cf8745318154505927955edf488c) |
+| Suscripción cancelar plan | `28acb88e04bd1e1cb96cadef528de1f4a225a407bbe87d23993884ca5c940b60` | [Ver tx](https://stellar.expert/explorer/testnet/tx/28acb88e04bd1e1cb96cadef528de1f4a225a407bbe87d23993884ca5c940b60) |
+| Suscripción autorizar fuente | `5bcebdd72450be46e0257077b054cbfd6b50cc2a13e3f59caab1b9e0aa46bab3` | [Ver tx](https://stellar.expert/explorer/testnet/tx/5bcebdd72450be46e0257077b054cbfd6b50cc2a13e3f59caab1b9e0aa46bab3) |
+| Suscripción registrar resultado | `acc5b2c3d8ea0e737c27316832e250619bcae8b7c520d9bc8ad0fa5e06cab646` | [Ver tx](https://stellar.expert/explorer/testnet/tx/acc5b2c3d8ea0e737c27316832e250619bcae8b7c520d9bc8ad0fa5e06cab646) |
+| Suscripción enlazar ciclo | `bff926f11809348dab317956a216409f6a1016a1dba3a359b58c55b2692c1066` | [Ver tx](https://stellar.expert/explorer/testnet/tx/bff926f11809348dab317956a216409f6a1016a1dba3a359b58c55b2692c1066) |
+
+Reconciliación: 2,000,000 = 1,000,000 (periodo 1 aprobado) + 1,000,000 (periodo 2 devuelto); saldo 0. El intento de financiar el periodo 3 tras cancelar fue rechazado en simulación (#7), sin hash.
+
 ## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |

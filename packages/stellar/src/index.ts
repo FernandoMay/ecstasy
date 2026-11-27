@@ -93,3 +93,8 @@ export {
   Client as StreamingClient,
   StreamError,
 } from "./generated/streaming";
+
+export {
+  Client as SubscriptionClient,
+  SubscriptionError,
+} from "./generated/subscription";
