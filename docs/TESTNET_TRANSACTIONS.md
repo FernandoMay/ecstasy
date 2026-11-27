@@ -333,6 +333,31 @@ Reconciliación: 2,000,000 = 1,000,000 (periodo 1 aprobado) + 1,000,000 (periodo
 
 El intento de `recover` sobre el hito disputado del acuerdo 2 fue rechazado en simulación (#10), sin hash.
 
+## 15. Arbitration V2 (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| V2 arbitraje crear 1 | `3a6bdc8c6ef6fb6979871745dd23744b098406422b1e244bbe045f8be774b7d7` | [Ver tx](https://stellar.expert/explorer/testnet/tx/3a6bdc8c6ef6fb6979871745dd23744b098406422b1e244bbe045f8be774b7d7) |
+| V2 arbitraje crear 2 | `7915c21f1392e92b4e5039ba4aa2ed145a215b0cb36ced6ddff25aa07fdbc229` | [Ver tx](https://stellar.expert/explorer/testnet/tx/7915c21f1392e92b4e5039ba4aa2ed145a215b0cb36ced6ddff25aa07fdbc229) |
+| V2 arbitraje crear 3 | `e6a4b351504aef70cec00c6251477e717870e68088c48b3729827dd7a75096f4` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e6a4b351504aef70cec00c6251477e717870e68088c48b3729827dd7a75096f4) |
+| V2 arbitraje crear 4 | `93a3065fbd3604c584598b4a4e0d196c2f3aefb18f9c29d1f8553a7a75f5e0e1` | [Ver tx](https://stellar.expert/explorer/testnet/tx/93a3065fbd3604c584598b4a4e0d196c2f3aefb18f9c29d1f8553a7a75f5e0e1) |
+| V2 arbitraje evidencia 1a | `8f05740f288c96433891973ed6d10b0d9848d4496c258c52159e04dbe7983fb1` | [Ver tx](https://stellar.expert/explorer/testnet/tx/8f05740f288c96433891973ed6d10b0d9848d4496c258c52159e04dbe7983fb1) |
+| V2 arbitraje evidencia 1b | `178099db4055ce82d79248fb42ab26ddaadc3d717639154a91a87760e81a03ac` | [Ver tx](https://stellar.expert/explorer/testnet/tx/178099db4055ce82d79248fb42ab26ddaadc3d717639154a91a87760e81a03ac) |
+| V2 arbitraje evidencia 2 | `f51856869469ae4bca7ffa593fe98d46fb4a114df4a4e96fe33bb753e0923bb4` | [Ver tx](https://stellar.expert/explorer/testnet/tx/f51856869469ae4bca7ffa593fe98d46fb4a114df4a4e96fe33bb753e0923bb4) |
+| V2 arbitraje evidencia 3 | `1c024f0e664a54343066d065157062580ea9b0fb52f1a1018899ecf5eb268add` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1c024f0e664a54343066d065157062580ea9b0fb52f1a1018899ecf5eb268add) |
+| V2 arbitraje evidencia 4a | `f47bcbca9ad6733afd94e012bc1cc4b4f4d5c93a7eae31a22ed47aa505b0c349` | [Ver tx](https://stellar.expert/explorer/testnet/tx/f47bcbca9ad6733afd94e012bc1cc4b4f4d5c93a7eae31a22ed47aa505b0c349) |
+| V2 arbitraje evidencia 4b | `6948f94d4ad93a1a83e23c02ae5ee7c4693eabdb27cc8c6acb5ffe644a603779` | [Ver tx](https://stellar.expert/explorer/testnet/tx/6948f94d4ad93a1a83e23c02ae5ee7c4693eabdb27cc8c6acb5ffe644a603779) |
+| V2 arbitraje timeout split 1 | `a311cb341b3becf94af443b87f73ff3b439fc9fa91f968ce80f4d7b2c1759bb0` | [Ver tx](https://stellar.expert/explorer/testnet/tx/a311cb341b3becf94af443b87f73ff3b439fc9fa91f968ce80f4d7b2c1759bb0) |
+| V2 arbitraje timeout refund 2 | `48e55a518f9e6d1221ba9404b3f562a8f2ab6e3f516e698dc3a27c4d7c9a0f76` | [Ver tx](https://stellar.expert/explorer/testnet/tx/48e55a518f9e6d1221ba9404b3f562a8f2ab6e3f516e698dc3a27c4d7c9a0f76) |
+| V2 arbitraje timeout release 3 | `eb7f8e21415eb0d6c54f29462e130be6b52f769e362e7a70f6d59ec532006cb2` | [Ver tx](https://stellar.expert/explorer/testnet/tx/eb7f8e21415eb0d6c54f29462e130be6b52f769e362e7a70f6d59ec532006cb2) |
+| V2 arbitraje timeout split 4 | `e4a2657dda1f2d0f9a6787e5e4450ed9451a223d9851319deb80d2c6a94c0401` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e4a2657dda1f2d0f9a6787e5e4450ed9451a223d9851319deb80d2c6a94c0401) |
+| V2 arbitraje crear 5 | `bd3b96ec477fc8e23c92564a93e9717b75c0faf6e10f785ea14a6391d485d8e3` | [Ver tx](https://stellar.expert/explorer/testnet/tx/bd3b96ec477fc8e23c92564a93e9717b75c0faf6e10f785ea14a6391d485d8e3) |
+| V2 arbitraje evidencia 5a | `2ea216397a7fde46eb5ff38b74dad0c6bfc02865dc38ebbe893a8a9546728566` | [Ver tx](https://stellar.expert/explorer/testnet/tx/2ea216397a7fde46eb5ff38b74dad0c6bfc02865dc38ebbe893a8a9546728566) |
+| V2 arbitraje evidencia 5b | `1e774c98230862122ccbb03458199a664d4c267503afb55d171d94f79333a301` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1e774c98230862122ccbb03458199a664d4c267503afb55d171d94f79333a301) |
+| V2 arbitraje resolver Release 5 | `82b53d3aaddd0a0c215fa938ccf0eb5c6fb7bbea712c5b903a6e266bcfc52ba1` | [Ver tx](https://stellar.expert/explorer/testnet/tx/82b53d3aaddd0a0c215fa938ccf0eb5c6fb7bbea712c5b903a6e266bcfc52ba1) |
+
+Los intentos de `resolve` fuera de ventana (#8 y #5) fueron rechazados en simulación, sin hash. Saldo final del contrato: 0.
+
 ## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |

@@ -515,6 +515,15 @@ Nine Horizon-confirmed transactions: `72fa8f00…`, `b802aa3f…`, `5355cee3…`
 
 Counts: 36 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 = **212 automated tests**. Evidence Center: 91 verified transactions.
 
+
+## Arbitration V2 — bounded resolver + deterministic timeout (27 nov)
+
+Contract `CADVNOHMY2CLHMTP2JGI6LEWJVK4SCVA4TDLQIGZB6X7F2PBGG46ZMHY` (wasm `0af9ce4515be3eb7009d3ebd788999bf7bb6c2ab4ae3f68050ae3ee5e1bf7671`). Policy defined before implementation in `docs/ARBITRATION_V2_POLICY.md`: `resolve` only in `(respond_by, resolve_by]`; permissionless `timeout` afterwards with outcome derived only from recorded evidence (both → Split, proposer only → Refund, recipient only → Release, none → Refund). Eleven Rust tests cover absent and compromised resolver, all four timeout policies, deadline precedence and exact reconciliation.
+
+Eighteen Horizon-confirmed transactions across five cases: four cases demonstrate the timeout policies (`TimedOut` with outcomes 3, 2, 1, 3), one case demonstrates resolver `Release` (`Resolved`). Final contract balance 0: 5 XLM deposited = 5 XLM paid out. Two out-of-window resolve attempts were rejected in simulation (#8 and #5) with no hash. Public view `/arbitration-v2`.
+
+Counts: 36 shared + 90 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 + 11 arbitration-v2 = **223 automated tests**. Evidence Center: 109 verified transactions.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

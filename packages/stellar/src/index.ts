@@ -103,3 +103,8 @@ export {
   Client as MilestonesV2Client,
   MilestoneV2Error,
 } from "./generated/milestones-v2";
+
+export {
+  Client as ArbitrationV2Client,
+  ArbitrationV2Error,
+} from "./generated/arbitration-v2";

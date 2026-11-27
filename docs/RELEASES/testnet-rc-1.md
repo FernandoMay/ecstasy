@@ -41,10 +41,11 @@ cd contracts/ecstasy && stellar contract build
 | Streaming contract tests | 6 passed |
 | Subscription contract tests | 6 passed |
 | Milestones V2 contract tests | 8 passed |
+| Arbitration V2 contract tests | 11 passed |
 | Typecheck / production build | clean |
 | Clippy `-D warnings` / cargo fmt | clean |
 | Generated bindings vs final wasm | no diff |
-| Automated total | **212** = 38 + 2 + 36 + 90 + 2 + 3 + 4 + 3 + 4 + 3 + 4 + 3 + 6 + 6 + 8 |
+| Automated total | **223** = 38 + 2 + 36 + 90 + 2 + 3 + 4 + 3 + 4 + 3 + 4 + 3 + 6 + 6 + 8 + 11 |
 | Clean clone | `npm ci`, tests, typecheck, build, wasm, clippy, bindings sync all pass |
 | Production smoke | homepage 200, encounter route 200, new contract ID in public bundle; `GET /api/status` reports `rpc: healthy` |
 

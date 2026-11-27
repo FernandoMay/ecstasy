@@ -26,6 +26,7 @@ const GROUPS: NavGroup[] = [
       { href: "/refunds", label: "Reembolsos" },
       { href: "/recovery", label: "Recuperación" },
       { href: "/arbitration", label: "Arbitraje" },
+      { href: "/arbitration-v2", label: "Arbitraje V2" },
       { href: "/milestones", label: "Hitos" },
       { href: "/milestones-v2", label: "Hitos V2" },
       { href: "/panel-arbitration", label: "Panel 2/3" },

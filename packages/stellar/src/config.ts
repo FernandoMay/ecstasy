@@ -29,6 +29,7 @@ export interface NetworkPreset {
   streamingContractId: string;
   subscriptionContractId: string;
   milestonesV2ContractId: string;
+  arbitrationV2ContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -50,6 +51,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     streamingContractId: "CA7T6F6CJTDURIHZRPWGJYKURGLH3PTMAFVBQGN7CXZ5BJ7GIWJJPJF2",
     subscriptionContractId: "CBOHLODIJJZ7ABFVBQSFDJ3DFVWMA4GZEDBYVVSHBCQIEWWCMAWVABRZ",
     milestonesV2ContractId: "CARHRH5SX7BWKYWUWW347URD5NQTYNKX5MHWIVQARDSU2ZHZXR6VRDPO",
+    arbitrationV2ContractId: "CADVNOHMY2CLHMTP2JGI6LEWJVK4SCVA4TDLQIGZB6X7F2PBGG46ZMHY",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -69,6 +71,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     streamingContractId: "",
     subscriptionContractId: "",
     milestonesV2ContractId: "",
+    arbitrationV2ContractId: "",
   },
 };
 
@@ -104,6 +107,8 @@ export interface AppConfig extends NetworkPreset {
   subscriptionContractId: string;
   /** Milestone escrow V2 contract ID (isolated from V1). */
   milestonesV2ContractId: string;
+  /** Arbitration V2 contract ID (isolated from V1). */
+  arbitrationV2ContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -158,6 +163,7 @@ export function getConfig(
     streamingContractId: env("NEXT_PUBLIC_STREAMING_CONTRACT_ID", source) ?? preset.streamingContractId,
     subscriptionContractId: env("NEXT_PUBLIC_SUBSCRIPTION_CONTRACT_ID", source) ?? preset.subscriptionContractId,
     milestonesV2ContractId: env("NEXT_PUBLIC_MILESTONES_V2_CONTRACT_ID", source) ?? preset.milestonesV2ContractId,
+    arbitrationV2ContractId: env("NEXT_PUBLIC_ARBITRATION_V2_CONTRACT_ID", source) ?? preset.arbitrationV2ContractId,
   };
 }
 
