@@ -127,6 +127,20 @@ Smoke completo reejecutado sobre el contrato activo `CDG4L3FJ…` y lectura on-c
 | `submit_afterglow` (participante, 92) | `e264b7fa210390068d2410fee0c36418ecf4221c8be604a2a13022cc9ae1f3fa` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e264b7fa210390068d2410fee0c36418ecf4221c8be604a2a13022cc9ae1f3fa) |
 | `status` bóveda activa (`--send=yes`) | `2a2eca8edab6c991e2e7d779fbd08c60fc240972330e6535e7f24c11aebfa9b9` | [Ver tx](https://stellar.expert/explorer/testnet/tx/2a2eca8edab6c991e2e7d779fbd08c60fc240972330e6535e7f24c11aebfa9b9) |
 
+## 2d. Segundo ciclo completo (cobertura adicional)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Crear encuentro (ciclo 2) | `f2af900947d8c1dfb65b2543695d60cf6f6451156e858f52f8f59dd1b3a90d34` | [Ver tx](https://stellar.expert/explorer/testnet/tx/f2af900947d8c1dfb65b2543695d60cf6f6451156e858f52f8f59dd1b3a90d34) |
+| Consentir (ciclo 2) | `7f904589fc8381f1b752eb3ad0d239698c77db8fc0ff7509ce0add4810e55c95` | [Ver tx](https://stellar.expert/explorer/testnet/tx/7f904589fc8381f1b752eb3ad0d239698c77db8fc0ff7509ce0add4810e55c95) |
+| Completar creador (ciclo 2) | `b236551fea6578a644b3c1f942d38d8204c1ddf37bdccf80673414ba530fb937` | [Ver tx](https://stellar.expert/explorer/testnet/tx/b236551fea6578a644b3c1f942d38d8204c1ddf37bdccf80673414ba530fb937) |
+| Completar participante (ciclo 2) | `dfd73405a38b1b54dc84704384014646c7386d4e6b5029cfce9d86b94142c95d` | [Ver tx](https://stellar.expert/explorer/testnet/tx/dfd73405a38b1b54dc84704384014646c7386d4e6b5029cfce9d86b94142c95d) |
+| Liquidar (ciclo 2) | `6c99b92570d56f747d70526a7eef5ad6d14eb61b41ca50467fb5421b734564b5` | [Ver tx](https://stellar.expert/explorer/testnet/tx/6c99b92570d56f747d70526a7eef5ad6d14eb61b41ca50467fb5421b734564b5) |
+| Afterglow creador (ciclo 2) | `e51596792ae482e4ead5db7ff062f06ba04d0674cdee7cf6a0308303e48e4d40` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e51596792ae482e4ead5db7ff062f06ba04d0674cdee7cf6a0308303e48e4d40) |
+| Afterglow participante (ciclo 2) | `5648fb106608c278dc0a133e0718a9fb30d0e6379423a5bb8bb5e401d869b90c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/5648fb106608c278dc0a133e0718a9fb30d0e6379423a5bb8bb5e401d869b90c) |
+
+Todos los hashes localizados en Horizon con `successful: true`.
+
 ## 3. `retirar` y contabilidad de escrow
 
 | Acción | Hash | Enlace stellar.expert |

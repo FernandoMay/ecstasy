@@ -32,6 +32,13 @@ export const EVIDENCE: readonly EvidenceRecord[] = [
   { feature: "Bóveda · reclamar", functionName: "reclamar", hash: "d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a", contract: VAULT_DEMO, expected: "Claim code matched", observed: "Success · ClaimEvent" },
   { feature: "Bóveda · fondeo 5555 XLM", functionName: "fund", hash: "d31078891788f47453833ccc71794d92973a00fcda9bb60d814df5b191868f9a", contract: VAULT, expected: "5555 XLM locked", observed: "Success · transfer" },
   { feature: "Pago público G1", functionName: "POST /api/challenge-payment", hash: "07a3183f03be6c6cea24e3380e84d5786217e2145a6f48d875081af7886d1064", contract: PAYMENT, expected: "Memo SHIP-S97KF8", observed: "Success · Horizon confirmed" },
+  { feature: "Crear encuentro (ciclo 2)", functionName: "create_encounter", hash: "f2af900947d8c1dfb65b2543695d60cf6f6451156e858f52f8f59dd1b3a90d34", contract: ESCROW, expected: "Created + escrow lock", observed: "Success · encounter_created" },
+  { feature: "Consentir (ciclo 2)", functionName: "accept_encounter", hash: "7f904589fc8381f1b752eb3ad0d239698c77db8fc0ff7509ce0add4810e55c95", contract: ESCROW, expected: "Accepted", observed: "Success · encounter_accepted" },
+  { feature: "Completar creador (ciclo 2)", functionName: "complete_encounter", hash: "b236551fea6578a644b3c1f942d38d8204c1ddf37bdccf80673414ba530fb937", contract: ESCROW, expected: "creator_completed", observed: "Success · encounter_completion" },
+  { feature: "Completar participante (ciclo 2)", functionName: "complete_encounter", hash: "dfd73405a38b1b54dc84704384014646c7386d4e6b5029cfce9d86b94142c95d", contract: ESCROW, expected: "Completed", observed: "Success · encounter_completed" },
+  { feature: "Liquidar (ciclo 2)", functionName: "settle_encounter", hash: "6c99b92570d56f747d70526a7eef5ad6d14eb61b41ca50467fb5421b734564b5", contract: ESCROW, expected: "Settled + escrow release", observed: "Success · encounter_settled" },
+  { feature: "Afterglow creador (ciclo 2)", functionName: "submit_afterglow", hash: "e51596792ae482e4ead5db7ff062f06ba04d0674cdee7cf6a0308303e48e4d40", contract: ESCROW, expected: "Score 88", observed: "Success · afterglow_submitted" },
+  { feature: "Afterglow participante (ciclo 2)", functionName: "submit_afterglow", hash: "5648fb106608c278dc0a133e0718a9fb30d0e6379423a5bb8bb5e401d869b90c", contract: ESCROW, expected: "Score 92", observed: "Success · afterglow_submitted" },
   { feature: "Idempotencia atómica G2", functionName: "payment-coordinator", hash: "d4cc0b48cf1e8295cfb46164156c62430b4452a147622e646f4771457a63361e", contract: PAYMENT, expected: "8 requests → 1 payment", observed: "Success · 7 reused" },
 ];
 

@@ -391,7 +391,7 @@ Properties and limits: authenticated encryption detects tampering and wrong pass
 
 ## Product surfaces added for the contest sprint
 
-- `/evidence` — public Evidence Center with 18 curated real Testnet transactions (state machine, vault, payments, idempotency), each with a stellar.expert link and expected/observed result.
+- `/evidence` — public Evidence Center with 25 curated real Testnet transactions (state machine, vault, payments, idempotency), each with a stellar.expert link and expected/observed result.
 - `/encounters/:id` — detail view with a five-step on-chain timeline (CREATED → ACCEPTED → CREATOR COMPLETED → PARTICIPANT COMPLETED → SETTLED) and copyable verification block per action.
 - Consent now displays canonicalization validity and hash match as separate signals; Accept stays disabled until both are satisfied.
 - Activity events link to the encounter detail route.
@@ -418,6 +418,11 @@ This distinction is deliberate: the 18 transactions in the Evidence Center and t
 ## Post-G3 product extensions
 
 After the owner reported the Freighter flow closed, three more product surfaces were added without changing deployed contracts: role/state filters and pending-action suggestions in `/encounters`, a vault dashboard (`/vault`) with on-chain state plus local claim history, and an analytics page (`/analytics`) derived only from observed encounters and the 18 verified transactions. Counts: 33 shared + 80 web + 38 ECSTASY Rust + 2 vault Rust = **153 automated tests**. The G3 browser evidence itself remains owner-reported and is not duplicated here.
+
+
+## Additional lifecycle coverage (27 nov)
+
+A second complete encounter lifecycle was executed on the active contract, adding seven more real Testnet transactions (create, accept, complete×2, settle, afterglow×2). All hashes were found on Horizon with `successful: true` and are listed in `docs/TESTNET_TRANSACTIONS.md` section 2d and in the Evidence Center (now 25 transactions).
 
 ## Known limitations
 
