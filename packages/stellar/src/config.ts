@@ -18,6 +18,7 @@ export interface NetworkPreset {
   contractId: string;
   assetContractId: string;
   bovedaContractId: string;
+  disputesContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -28,6 +29,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     contractId: "CDG4L3FJRQRGL3AX53RM35ZKJNVSH4IT3JHMFZ73S2GO3ESWMFCFTT65",
     assetContractId: "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
     bovedaContractId: "CAWOC5VH7QFM55YT7ICEACGTEOS5BF747IREQWK2DHTYKG25UTISAVZC",
+    disputesContractId: "CCEZO3DVXQXWDM2OURVODDJ72JRQCLQPIO5E27FLXKW2THQUJOZKS4R6",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -36,6 +38,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     contractId: "",
     assetContractId: "",
     bovedaContractId: "",
+    disputesContractId: "",
   },
 };
 
@@ -49,6 +52,8 @@ export interface AppConfig extends NetworkPreset {
   assetSymbol: string;
   /** Bóveda vault contract ID. */
   bovedaContractId: string;
+  /** Dispute registry contract ID. */
+  disputesContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -92,6 +97,7 @@ export function getConfig(
     assetContractId,
     assetSymbol: env("NEXT_PUBLIC_ASSET_SYMBOL", source) ?? "XLM",
     bovedaContractId: env("NEXT_PUBLIC_BOVEDA_CONTRACT_ID", source) ?? preset.bovedaContractId,
+    disputesContractId: env("NEXT_PUBLIC_DISPUTES_CONTRACT_ID", source) ?? preset.disputesContractId,
   };
 }
 

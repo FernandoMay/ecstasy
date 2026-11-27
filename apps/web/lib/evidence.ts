@@ -39,6 +39,10 @@ export const EVIDENCE: readonly EvidenceRecord[] = [
   { feature: "Liquidar (ciclo 2)", functionName: "settle_encounter", hash: "6c99b92570d56f747d70526a7eef5ad6d14eb61b41ca50467fb5421b734564b5", contract: ESCROW, expected: "Settled + escrow release", observed: "Success · encounter_settled" },
   { feature: "Afterglow creador (ciclo 2)", functionName: "submit_afterglow", hash: "e51596792ae482e4ead5db7ff062f06ba04d0674cdee7cf6a0308303e48e4d40", contract: ESCROW, expected: "Score 88", observed: "Success · afterglow_submitted" },
   { feature: "Afterglow participante (ciclo 2)", functionName: "submit_afterglow", hash: "5648fb106608c278dc0a133e0718a9fb30d0e6379423a5bb8bb5e401d869b90c", contract: ESCROW, expected: "Score 92", observed: "Success · afterglow_submitted" },
+  { feature: "Disputa · abrir", functionName: "open", hash: "53f923f858146249e0189f4325579aef9c552a15f4450738ef1345f27d259966", contract: "CCEZO3DVXQXWDM2OURVODDJ72JRQCLQPIO5E27FLXKW2THQUJOZKS4R6", expected: "Open + reason digest", observed: "Success · opened" },
+  { feature: "Disputa · respuesta A", functionName: "respond", hash: "e696eb85591644ab3142406aa6a95518a95a8d9dd257f3369318960ad9084aa8", contract: "CCEZO3DVXQXWDM2OURVODDJ72JRQCLQPIO5E27FLXKW2THQUJOZKS4R6", expected: "opener response", observed: "Success · responded" },
+  { feature: "Disputa · respuesta B", functionName: "respond", hash: "8f738afe3413735b16b5a9f12b7f67ae5d6b28b3ae20924064c32052793eb7fa", contract: "CCEZO3DVXQXWDM2OURVODDJ72JRQCLQPIO5E27FLXKW2THQUJOZKS4R6", expected: "counterparty response", observed: "Success · responded" },
+  { feature: "Disputa · resolver", functionName: "resolve", hash: "33124458b1f233fdb688ecd99719a2dbcc1f6166c1bcd0b0d2ed0cf36ffeffea", contract: "CCEZO3DVXQXWDM2OURVODDJ72JRQCLQPIO5E27FLXKW2THQUJOZKS4R6", expected: "Resolved + outcome digest", observed: "Success · resolved" },
   { feature: "Idempotencia atómica G2", functionName: "payment-coordinator", hash: "d4cc0b48cf1e8295cfb46164156c62430b4452a147622e646f4771457a63361e", contract: PAYMENT, expected: "8 requests → 1 payment", observed: "Success · 7 reused" },
 ];
 

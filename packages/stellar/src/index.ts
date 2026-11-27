@@ -47,3 +47,8 @@ export {
   Client as BovedaClient,
   BovedaError,
 } from "./generated/boveda";
+
+export {
+  Client as DisputesClient,
+  DisputeError,
+} from "./generated/disputes";
