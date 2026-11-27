@@ -15,6 +15,18 @@
     "engagement_spec": "docs/REVIEWER_ENGAGEMENT.md",
     "report_received": false
   },
+  "frozen_package": {
+    "tag": "review-package-v1.0",
+    "frozen_at": "2026-11-27",
+    "checksums_file": "docs/review/CHECKSUMS.sha256",
+    "review_target_commit": "8a2835545c1c5a6bfd0c905d55f718ff0827601b",
+    "note": "The tag freezes the review dossier. Commits after 8a28355 are supplementary process material only; no contract source changed."
+  },
+  "discrepancy_log": {
+    "path": "docs/review/DISCREPANCY_LOG.md",
+    "policy": "original findings are immutable; severity changes and new findings are appended with justification and evidence",
+    "entries": []
+  },
   "review_process": {
     "source_of_truth": "docs/review/manifest.json",
     "pre_contact_controls": [
