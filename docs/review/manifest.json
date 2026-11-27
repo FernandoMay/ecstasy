@@ -1,6 +1,7 @@
 {
   "phase": "15.1",
   "purpose": "Handoff package for an independent technical review. The review has NOT been performed.",
+  "external_reviewer": { "status": "PENDING", "assigned": null, "engagement_spec": "docs/REVIEWER_ENGAGEMENT.md", "report_received": false },
   "repository": "https://github.com/FernandoMay/ecstasy",
   "baseline": {
     "commit": "8a2835545c1c5a6bfd0c905d55f718ff0827601b",
