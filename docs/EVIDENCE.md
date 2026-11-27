@@ -424,6 +424,13 @@ After the owner reported the Freighter flow closed, three more product surfaces 
 
 A second complete encounter lifecycle was executed on the active contract, adding seven more real Testnet transactions (create, accept, complete×2, settle, afterglow×2). All hashes were found on Horizon with `successful: true` and are listed in `docs/TESTNET_TRANSACTIONS.md` section 2d and in the Evidence Center (now 25 transactions).
 
+
+## Disputes registry (new protocol flow, 27 nov)
+
+Contract `contracts/disputes` (`CCEZO3DVXQXWDM2OURVODDJ72JRQCLQPIO5E27FLXKW2THQUJOZKS4R6`, wasm `828497de62aa5c115e46985ff3b0b39dc3d251b55796ab50e7e7d126cc5e1079`) records a dispute for an encounter with reason/response/outcome digests only. It does not move escrow or decide real-world facts. Two Rust tests cover the full lifecycle and unauthorized/duplicate rejection.
+
+Real Testnet lifecycle executed: open `53f923f85814…`, respond A `e696eb855916…`, respond B `8f738afe3413…`, resolve `33124458b1f2…` — all `successful: true` in Horizon and linked in the Evidence Center (now 29 transactions).
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

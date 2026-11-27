@@ -69,7 +69,7 @@ Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archi
 - Actividad reciente — transiciones públicas de estado en la misma vista, sin contenido privado ni notificaciones push.
 - Intercambio cifrado de términos — el creador genera un sobre AES-GCM con clave PBKDF2 y el participante lo descifra en la app; la frase secreta se comparte fuera de la app. No hay claves persistentes, pero no hay secreto perfecto hacia adelante ni recuperación sin la frase.
 - `/boveda` — bóveda de 5555 XLM con reclamo por código.
-- `/evidence` — 25 transacciones Testnet reales con enlace a Stellar Expert.
+- `/evidence` — 29 transacciones Testnet reales con enlace a Stellar Expert.
 - `/encounters/:id` — detalle con timeline de hitos, reconciliación y recibo copiable.
 - `/vault` — dashboard de la bóveda (estado on-chain e historial local de reclamos).
 - `/analytics` — contadores derivados de encuentros observados y evidencia real.
@@ -98,7 +98,7 @@ cd contracts/ecstasy && cargo test # 38 tests del contrato
 cd ../.. && npm run dev            # http://localhost:3000
 ```
 
-Total: **156 tests automatizados** = 33 shared + 83 web + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 124 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
+Total: **158 tests automatizados** = 33 shared + 83 web + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 124 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
 
 Abre la app con Freighter en Testnet. Usa dos wallets/contextos para los dos roles. Los términos privados se guardan solo en el navegador si haces opt-in y se pueden borrar desde el formulario.
 

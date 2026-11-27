@@ -33,7 +33,7 @@ cd contracts/ecstasy && stellar contract build
 | Typecheck / production build | clean |
 | Clippy `-D warnings` / cargo fmt | clean |
 | Generated bindings vs final wasm | no diff |
-| Automated total | **156** = 38 + 2 + 33 + 83 |
+| Automated total | **156** = 38 + 2 + 2 + 33 + 83 |
 | Clean clone | `npm ci`, tests, typecheck, build, wasm, clippy, bindings sync all pass |
 | Production smoke | homepage 200, encounter route 200, new contract ID in public bundle; `GET /api/status` reports `rpc: healthy` |
 
