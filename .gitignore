@@ -18,3 +18,5 @@ contracts/ecstasy/test_snapshots/
 contracts/boveda/test_snapshots/
 
 contracts/disputes/test_snapshots/
+
+contracts/refunds/test_snapshots/

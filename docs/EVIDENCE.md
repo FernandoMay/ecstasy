@@ -436,6 +436,13 @@ Real Testnet lifecycle executed: open `53f923f85814…`, respond A `e696eb855916
 
 `/activity` merges local state transitions with the 29 verified Testnet transactions into one filterable timeline, with links to Stellar Expert. `/afterglow` computes score averages, tag breakdowns and history only from feedback stored in this browser; the contract still stores only the bounded 0–100 score per participant. Both have unit tests. Counts: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault Rust + 2 disputes Rust = **163 automated tests**.
 
+
+## Mutual Refund Protocol (27 nov)
+
+Contract `CCMLBZ3U6QATIVKZREQC4JYYWQO3EK42GFNDYYEDC2YIAJ5RHKC36CG5` (wasm `727d4eb0007e1fed1983ea3651628c71ee26b5cd6d29ad95b3c4beefdd892550`) holds real Testnet XLM via its SAC. Three Rust tests cover mutual approval with matching intent, rejection/revocation refunds and duplicate execution rejection. Seven real transactions were executed and Horizon-confirmed: propose `bb1381e3…`, approve `f994e2eb…`, execute `31b708a2…`, reject proposal `c9809f1f…`, reject `50263a74…`, revoke proposal `2c1fb704…`, revoke `50e0a196…`. Full links in `docs/TESTNET_TRANSACTIONS.md` and the Evidence Center. The public view is `/refunds`; semantics and limits in `docs/REFUNDS.md`.
+
+Counts after this mission: 33 shared + 88 web + 38 ECSTASY Rust + 2 vault Rust + 2 disputes Rust + 3 refunds Rust = **166 automated tests**.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

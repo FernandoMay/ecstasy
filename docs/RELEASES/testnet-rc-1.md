@@ -30,6 +30,7 @@ cd contracts/ecstasy && stellar contract build
 | Contract tests — `contracts/boveda` | 2 passed (vault code/claim invariants) |
 | Shared package tests | 33 passed |
 | Web tests | 88 passed |
+| Refund contract tests | 3 passed |
 | Typecheck / production build | clean |
 | Clippy `-D warnings` / cargo fmt | clean |
 | Generated bindings vs final wasm | no diff |

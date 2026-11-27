@@ -202,7 +202,21 @@ Ocho peticiones concurrentes con la misma `x-idempotency-key`: **1 pago, 1 hash,
 | `reclamar` en bóveda demo | `d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d1fb977f341adac241d11b645daa839a4899de785f89f8488a0908d94f2eb71a) |
 | **Nuevo fondeo 5555 XLM** (bóveda activa `CAWOC5VH…`) | `d31078891788f47453833ccc71794d92973a00fcda9bb60d814df5b191868f9a` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d31078891788f47453833ccc71794d92973a00fcda9bb60d814df5b191868f9a) |
 
-## 6. Chequeos negativos (sin hash de transacción)
+## 6. Refund mutuo (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Refund proponer | `bb1381e3faea18dde11620832b1d68f60b750485bd7eaadcfbde6e826ff2de19` | [Ver tx](https://stellar.expert/explorer/testnet/tx/bb1381e3faea18dde11620832b1d68f60b750485bd7eaadcfbde6e826ff2de19) |
+| Refund aprobar | `f994e2eb2b8f8d9bbbf8ecdbe133587cd125bbc56d9b4426b0b0e945c47cbd01` | [Ver tx](https://stellar.expert/explorer/testnet/tx/f994e2eb2b8f8d9bbbf8ecdbe133587cd125bbc56d9b4426b0b0e945c47cbd01) |
+| Refund ejecutar | `31b708a2a94b1b712a0cb1b0f7d7050afbb7e7677f401a07941bb9eba2c462e2` | [Ver tx](https://stellar.expert/explorer/testnet/tx/31b708a2a94b1b712a0cb1b0f7d7050afbb7e7677f401a07941bb9eba2c462e2) |
+| Refund proponer (rechazo) | `c9809f1fe9af7518c666e3dfb97b1e628da06ddf0946990f02a5b7b2ba6b1d5e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/c9809f1fe9af7518c666e3dfb97b1e628da06ddf0946990f02a5b7b2ba6b1d5e) |
+| Refund rechazar | `50263a74841ef999e2a93e92d28bdf3f1247828a7a892d41dc6e2485da970523` | [Ver tx](https://stellar.expert/explorer/testnet/tx/50263a74841ef999e2a93e92d28bdf3f1247828a7a892d41dc6e2485da970523) |
+| Refund proponer (revocación) | `2c1fb704e02e1ede1ef8a64af9c101465299fa45f999835b5db9c2becad3bd61` | [Ver tx](https://stellar.expert/explorer/testnet/tx/2c1fb704e02e1ede1ef8a64af9c101465299fa45f999835b5db9c2becad3bd61) |
+| Refund revocar | `50e0a196ebf94c29dbfffd2a3c71d153a7102f44ba49f72673f71ac01e6cea97` | [Ver tx](https://stellar.expert/explorer/testnet/tx/50e0a196ebf94c29dbfffd2a3c71d153a7102f44ba49f72673f71ac01e6cea97) |
+
+Todos los hashes verificados en Horizon con `successful: true`.
+
+## 6b. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |
 |---|---|

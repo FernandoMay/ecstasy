@@ -75,6 +75,7 @@ Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archi
 - `/analytics` — contadores derivados de encuentros observados y evidencia real.
 - `/activity` — timeline global de transiciones y transacciones verificadas.
 - `/afterglow` — historial y desglose de feedback estructurado calculado localmente.
+- `/refunds` — reembolso mutuo con XLM real y doble autorización.
 
 Diferido a V2 (decisiones de producto): disputas con árbitro, identidad verificada, multiasset y multipartito. No están implementados y no se presentan como disponibles.
 
@@ -100,7 +101,7 @@ cd contracts/ecstasy && cargo test # 38 tests del contrato
 cd ../.. && npm run dev            # http://localhost:3000
 ```
 
-Total: **163 tests automatizados** = 33 shared + 88 web + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 124 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
+Total: **166 tests automatizados** = 33 shared + 88 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 38 ECSTASY Rust + 2 bóveda Rust (unitarios/de invariantes; **no** son 124 pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
 
 Abre la app con Freighter en Testnet. Usa dos wallets/contextos para los dos roles. Los términos privados se guardan solo en el navegador si haces opt-in y se pueden borrar desde el formulario.
 

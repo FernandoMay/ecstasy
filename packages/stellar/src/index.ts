@@ -52,3 +52,8 @@ export {
   Client as DisputesClient,
   DisputeError,
 } from "./generated/disputes";
+
+export {
+  Client as RefundsClient,
+  RefundError,
+} from "./generated/refunds";
