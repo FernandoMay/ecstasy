@@ -242,7 +242,19 @@ El intento de aprobación tardía fue rechazado en simulación (#3), sin hash.
 
 El intento de doble resolución fue rechazado en simulación (#3), sin hash.
 
-## 6d. Chequeos negativos (sin hash de transacción)
+## 9. Milestone escrow (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Hitos crear | `18a681274cd9e8c47d1040a63db60b99b15b0d56651b27ac477f5175f63b5be8` | [Ver tx](https://stellar.expert/explorer/testnet/tx/18a681274cd9e8c47d1040a63db60b99b15b0d56651b27ac477f5175f63b5be8) |
+| Hitos submit 0 | `0cfcbde2948e9eac8bb495461647485b9ad38436aa649ce27cebf063f97a4066` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0cfcbde2948e9eac8bb495461647485b9ad38436aa649ce27cebf063f97a4066) |
+| Hitos approve 0 | `c17a91fa0db82b7c1a26cd7d53b877537c35896d249259810b5fe9eb0a64bc6c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/c17a91fa0db82b7c1a26cd7d53b877537c35896d249259810b5fe9eb0a64bc6c) |
+| Hitos submit 1 | `68f715f9ad833e5e8d0ead9760f4d01f45719e961ba9d13053bb99e2161ce31c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/68f715f9ad833e5e8d0ead9760f4d01f45719e961ba9d13053bb99e2161ce31c) |
+| Hitos dispute 1 | `4e38f6a27c5eca04fe090bfcbf0f2a4a8e9ddada8a2974e38465fda8b3bd93e0` | [Ver tx](https://stellar.expert/explorer/testnet/tx/4e38f6a27c5eca04fe090bfcbf0f2a4a8e9ddada8a2974e38465fda8b3bd93e0) |
+| Hitos resolve 1 | `37a2e1176eb0b2e260aa2176fdc06a9a2769231e6647088f4910505f12bd4af8` | [Ver tx](https://stellar.expert/explorer/testnet/tx/37a2e1176eb0b2e260aa2176fdc06a9a2769231e6647088f4910505f12bd4af8) |
+| Hitos recover 2 | `479ddc98ee23ebf67c12bcaca4d2aedcd9f9229b3534eb2b68080b937e0c05ff` | [Ver tx](https://stellar.expert/explorer/testnet/tx/479ddc98ee23ebf67c12bcaca4d2aedcd9f9229b3534eb2b68080b937e0c05ff) |
+
+## 6e. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |
 |---|---|

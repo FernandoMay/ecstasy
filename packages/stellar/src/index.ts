@@ -67,3 +67,8 @@ export {
   Client as ArbitrationClient,
   ArbitrationError,
 } from "./generated/arbitration";
+
+export {
+  Client as MilestonesClient,
+  MilestoneError,
+} from "./generated/milestones";
