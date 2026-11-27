@@ -35,7 +35,7 @@ export default function NotificationsPage() {
           }
         }),
       );
-      if (!cancelled) setItems(pending.filter((item): item is Pending => item !== null));
+      if (!cancelled) setItems(pending.filter((item) => item !== null) as Pending[]);
     })();
     return () => {
       cancelled = true;
