@@ -117,3 +117,8 @@ export {
   Client as ArbitratorsRegistryClient,
   RegistryError,
 } from "./generated/arbitrators-registry";
+
+export {
+  Client as VaultV2Client,
+  VaultV2Error,
+} from "./generated/vault-v2";

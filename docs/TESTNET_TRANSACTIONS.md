@@ -374,6 +374,21 @@ Los intentos de `resolve` fuera de ventana (#8 y #5) fueron rechazados en simula
 
 El intento de atestar un controlador duplicado fue rechazado en simulación (#4), sin hash. Saldo final del contrato: 0.
 
+## 17. Vault V2 por atribución (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| V2 vault crear A | `5130769fc71704db5e61a2c6424739f9f67b16ebae15109c49dc2d6f0d082f31` | [Ver tx](https://stellar.expert/explorer/testnet/tx/5130769fc71704db5e61a2c6424739f9f67b16ebae15109c49dc2d6f0d082f31) |
+| V2 vault crear B | `6db6a8950bc7452e7383a8c984d2a02bdb661c4305b2b2fa92008a011ad2bf97` | [Ver tx](https://stellar.expert/explorer/testnet/tx/6db6a8950bc7452e7383a8c984d2a02bdb661c4305b2b2fa92008a011ad2bf97) |
+| V2 vault fondear A | `895b4887b22c581e55737769aa1a3d8156980c79d68123e41c77f9c057e1b783` | [Ver tx](https://stellar.expert/explorer/testnet/tx/895b4887b22c581e55737769aa1a3d8156980c79d68123e41c77f9c057e1b783) |
+| V2 vault fondear B | `86dea8c4f0f1d8467e3d6ff2c8d370382c65b39b352a3bd8dd6c879902864443` | [Ver tx](https://stellar.expert/explorer/testnet/tx/86dea8c4f0f1d8467e3d6ff2c8d370382c65b39b352a3bd8dd6c879902864443) |
+| V2 vault transferencia directa | `99eec7ffd70cb6f92c48e848aa8d782507841ee7d89affcc2b1b6b8a503ea180` | [Ver tx](https://stellar.expert/explorer/testnet/tx/99eec7ffd70cb6f92c48e848aa8d782507841ee7d89affcc2b1b6b8a503ea180) |
+| V2 vault sweep surplus | `fcce58300f3a6ecfcc28bd8bc7aa287912a3b6f7e42fc53a3e63419c1d56593c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/fcce58300f3a6ecfcc28bd8bc7aa287912a3b6f7e42fc53a3e63419c1d56593c) |
+| V2 vault retiro A | `653494dd0200152b5a591deafd2f1e1b134e78c3ce122c9ba2bff463f1e46558` | [Ver tx](https://stellar.expert/explorer/testnet/tx/653494dd0200152b5a591deafd2f1e1b134e78c3ce122c9ba2bff463f1e46558) |
+| V2 vault retiro B | `12a2a2eb134967632e9ebe8950b7f4ea62a96da6c6d6832362af9405bece1346` | [Ver tx](https://stellar.expert/explorer/testnet/tx/12a2a2eb134967632e9ebe8950b7f4ea62a96da6c6d6832362af9405bece1346) |
+
+Retiro por encima de la atribución (#5) y retiro del vault ajeno (#2) rechazados en simulación, sin hash. Saldo final: 0.
+
 ## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |

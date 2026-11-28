@@ -46,3 +46,5 @@ contracts/arbitration-v2/test_snapshots/
 contracts/arbitrators-registry/test_snapshots/
 
 contracts/panel-v2/test_snapshots/
+
+contracts/vault-v2/test_snapshots/

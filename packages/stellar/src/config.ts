@@ -32,6 +32,7 @@ export interface NetworkPreset {
   arbitrationV2ContractId: string;
   panelV2ContractId: string;
   arbitratorsRegistryContractId: string;
+  vaultV2ContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -56,6 +57,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     arbitrationV2ContractId: "CADVNOHMY2CLHMTP2JGI6LEWJVK4SCVA4TDLQIGZB6X7F2PBGG46ZMHY",
     panelV2ContractId: "CDLK3J5UYFRT3TWOVWSR6BOIKICJ5B6SOSCHMWQB44JXHPXKZPSAGEE3",
     arbitratorsRegistryContractId: "CDUYDNPWLXQLC3D2JFEVEJN2BISWNY52WCQLOTBQVCG2GZVOWKPCDBTJ",
+    vaultV2ContractId: "CDEV3GITSAFJZIY54QJ4UMXXSMHMJIHU7CZIGG34TIQCUXYL2KNJO57B",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -78,6 +80,7 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     arbitrationV2ContractId: "",
     panelV2ContractId: "",
     arbitratorsRegistryContractId: "",
+    vaultV2ContractId: "",
   },
 };
 
@@ -119,6 +122,8 @@ export interface AppConfig extends NetworkPreset {
   panelV2ContractId: string;
   /** Arbitrators registry contract ID. */
   arbitratorsRegistryContractId: string;
+  /** Attribution-based vault V2 contract ID. */
+  vaultV2ContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -176,6 +181,7 @@ export function getConfig(
     arbitrationV2ContractId: env("NEXT_PUBLIC_ARBITRATION_V2_CONTRACT_ID", source) ?? preset.arbitrationV2ContractId,
     panelV2ContractId: env("NEXT_PUBLIC_PANEL_V2_CONTRACT_ID", source) ?? preset.panelV2ContractId,
     arbitratorsRegistryContractId: env("NEXT_PUBLIC_ARBITRATORS_REGISTRY_CONTRACT_ID", source) ?? preset.arbitratorsRegistryContractId,
+    vaultV2ContractId: env("NEXT_PUBLIC_VAULT_V2_CONTRACT_ID", source) ?? preset.vaultV2ContractId,
   };
 }
 

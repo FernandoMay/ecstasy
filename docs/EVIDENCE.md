@@ -533,6 +533,15 @@ Nine Horizon-confirmed transactions: create `0e401b1e…`, select `637f1b67…`,
 
 Counts: 36 shared + 92 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 + 11 arbitration-v2 + 4 arbitrators-registry + 11 panel-v2 = **240 automated tests**. Evidence Center: 118 verified transactions.
 
+
+## Vault V2 — attribution-based accounting (27 nov)
+
+Contract `CDEV3GITSAFJZIY54QJ4UMXXSMHMJIHU7CZIGG34TIQCUXYL2KNJO57B` (wasm `9242aedf…`). Only `fund` creates attribution, atomically with the XLM transfer. `withdraw` debits the caller's own vault attribution, never the contract balance; `sweep_surplus` moves `balance - Σ attributed` to a destination fixed at construction. Eight Rust tests cover the SEC-04 attack rejected, multi-vault isolation, terminality and exact reconciliation.
+
+Eight Horizon-confirmed transactions: vault creation `5130769f…`/`6db6a895…`, funding `895b4887…`/`86dea8c4…`, direct transfer `99eec7ff…`, surplus sweep `fcce5830…`, legitimate withdrawals `653494dd…`/`12a2a2eb…`. Two appropriation attempts were rejected in simulation (#5 and #2) with no hash. Final state: attributed 0, surplus 0, contract balance 0. V1's 5,555 XLM were not touched. Public view `/vault-v2`; policy in `docs/VAULT_V2_POLICY.md`.
+
+Counts: 36 shared + 92 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 + 11 arbitration-v2 + 4 arbitrators-registry + 11 panel-v2 + 8 vault-v2 = **248 automated tests**. Evidence Center: 126 verified transactions.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.
