@@ -33,6 +33,8 @@ export interface NetworkPreset {
   panelV2ContractId: string;
   arbitratorsRegistryContractId: string;
   vaultV2ContractId: string;
+  roleRegistryV2ContractId: string;
+  flowV2ContractId: string;
 }
 
 export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
@@ -58,6 +60,8 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     panelV2ContractId: "CDLK3J5UYFRT3TWOVWSR6BOIKICJ5B6SOSCHMWQB44JXHPXKZPSAGEE3",
     arbitratorsRegistryContractId: "CDUYDNPWLXQLC3D2JFEVEJN2BISWNY52WCQLOTBQVCG2GZVOWKPCDBTJ",
     vaultV2ContractId: "CDEV3GITSAFJZIY54QJ4UMXXSMHMJIHU7CZIGG34TIQCUXYL2KNJO57B",
+    roleRegistryV2ContractId: "CDYLAMODBA5M5ZMFND33DXGDXPYIOAP6PHA5TVVFPJTBJA62EXDPU3BV",
+    flowV2ContractId: "CCZ2ADMIZPKWFM2V2KA3F67XWV4V2UP7KBL53OVE3UDXMOBNHLLHHZKW",
   },
   mainnet: {
     rpcUrl: "https://mainnet.sorobanrpc.com",
@@ -81,6 +85,8 @@ export const NETWORK_PRESETS: Record<NetworkName, NetworkPreset> = {
     panelV2ContractId: "",
     arbitratorsRegistryContractId: "",
     vaultV2ContractId: "",
+    roleRegistryV2ContractId: "",
+    flowV2ContractId: "",
   },
 };
 
@@ -124,6 +130,10 @@ export interface AppConfig extends NetworkPreset {
   arbitratorsRegistryContractId: string;
   /** Attribution-based vault V2 contract ID. */
   vaultV2ContractId: string;
+  /** Delegated role registry for V2 flows. */
+  roleRegistryV2ContractId: string;
+  /** Composed V2 flow registry contract ID. */
+  flowV2ContractId: string;
 }
 
 function env(name: string, source: Record<string, string | undefined>): string | undefined {
@@ -182,6 +192,8 @@ export function getConfig(
     panelV2ContractId: env("NEXT_PUBLIC_PANEL_V2_CONTRACT_ID", source) ?? preset.panelV2ContractId,
     arbitratorsRegistryContractId: env("NEXT_PUBLIC_ARBITRATORS_REGISTRY_CONTRACT_ID", source) ?? preset.arbitratorsRegistryContractId,
     vaultV2ContractId: env("NEXT_PUBLIC_VAULT_V2_CONTRACT_ID", source) ?? preset.vaultV2ContractId,
+    roleRegistryV2ContractId: env("NEXT_PUBLIC_ROLE_REGISTRY_V2_CONTRACT_ID", source) ?? preset.roleRegistryV2ContractId,
+    flowV2ContractId: env("NEXT_PUBLIC_FLOW_V2_CONTRACT_ID", source) ?? preset.flowV2ContractId,
   };
 }
 

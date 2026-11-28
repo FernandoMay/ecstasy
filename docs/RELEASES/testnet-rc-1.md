@@ -46,10 +46,12 @@ cd contracts/ecstasy && stellar contract build
 | Arbitrators registry tests | 4 passed |
 | Panel V2 contract tests | 11 passed |
 | Vault V2 contract tests | 8 passed |
+| Role registry V2 tests | 3 passed |
+| Flow V2 tests | 6 passed |
 | Typecheck / production build | clean |
 | Clippy `-D warnings` / cargo fmt | clean |
 | Generated bindings vs final wasm | no diff |
-| Automated total | **248** = 38 + 2 + 36 + 92 + 2 + 3 + 4 + 3 + 4 + 3 + 4 + 3 + 6 + 6 + 8 + 11 + 4 + 11 + 8 |
+| Automated total | **257** = 38 + 2 + 36 + 92 + 2 + 3 + 4 + 3 + 4 + 3 + 4 + 3 + 6 + 6 + 8 + 11 + 4 + 11 + 8 + 3 + 6 |
 | Clean clone | `npm ci`, tests, typecheck, build, wasm, clippy, bindings sync all pass |
 | Production smoke | homepage 200, encounter route 200, new contract ID in public bundle; `GET /api/status` reports `rpc: healthy` |
 

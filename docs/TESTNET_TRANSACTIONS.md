@@ -389,6 +389,38 @@ El intento de atestar un controlador duplicado fue rechazado en simulación (#4)
 
 Retiro por encima de la atribución (#5) y retiro del vault ajeno (#2) rechazados en simulación, sin hash. Saldo final: 0.
 
+## 18. Flujo V2 compuesto (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| V2 roles grant fund_manager | `65d2627d71478a7be044f87efa11b135c94130c45165d7f9a9ed7dccf0be8434` | [Ver tx](https://stellar.expert/explorer/testnet/tx/65d2627d71478a7be044f87efa11b135c94130c45165d7f9a9ed7dccf0be8434) |
+| V2 roles grant registrar | `2dcef9538eb5bdd151b042a3ffeb5e15fa6d16ed1dd7883fcd55aa034cf8d171` | [Ver tx](https://stellar.expert/explorer/testnet/tx/2dcef9538eb5bdd151b042a3ffeb5e15fa6d16ed1dd7883fcd55aa034cf8d171) |
+| V2 roles grant resolver | `0932f1774038c02018db0014d905a035727d9d71d86d128993736ad8cf014f8d` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0932f1774038c02018db0014d905a035727d9d71d86d128993736ad8cf014f8d) |
+| V2 flujo start | `60183196dbc3cb10d05bdd4d7f851ef07c55a3282d53ed4088ab759049af6745` | [Ver tx](https://stellar.expert/explorer/testnet/tx/60183196dbc3cb10d05bdd4d7f851ef07c55a3282d53ed4088ab759049af6745) |
+| V2 flujo vault crear | `86ac9a64f18d3e2dc16f36581b1a0a38b071b1ca89d2c4904ded227d96b8adb8` | [Ver tx](https://stellar.expert/explorer/testnet/tx/86ac9a64f18d3e2dc16f36581b1a0a38b071b1ca89d2c4904ded227d96b8adb8) |
+| V2 flujo vault fund | `699bc8f53692b3b29ac311ddeeee6bfc06afa1c38b2d30676d8d25a6b81507b8` | [Ver tx](https://stellar.expert/explorer/testnet/tx/699bc8f53692b3b29ac311ddeeee6bfc06afa1c38b2d30676d8d25a6b81507b8) |
+| V2 flujo hito crear | `08d147f85995f32dd0f615b7fae937e0f735d74ff14cf4698bf4915c9640d7a8` | [Ver tx](https://stellar.expert/explorer/testnet/tx/08d147f85995f32dd0f615b7fae937e0f735d74ff14cf4698bf4915c9640d7a8) |
+| V2 flujo hito disputa | `507d7abd87bdd8d86c350d8997920134dddd068ad50e24801b62fcd5ee4ac220` | [Ver tx](https://stellar.expert/explorer/testnet/tx/507d7abd87bdd8d86c350d8997920134dddd068ad50e24801b62fcd5ee4ac220) |
+| V2 flujo arbitraje depósito | `190af49569c8a7b2c4155ce53366cc29bcd873aa4e1f32cf0e868115e408deb1` | [Ver tx](https://stellar.expert/explorer/testnet/tx/190af49569c8a7b2c4155ce53366cc29bcd873aa4e1f32cf0e868115e408deb1) |
+| V2 flujo arbitraje resolución | `1eb6c7f08e52b434a62e6e23cc92a641668fee026379d9f075a565ba78e9e404` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1eb6c7f08e52b434a62e6e23cc92a641668fee026379d9f075a565ba78e9e404) |
+| V2 flujo panel crear | `62a1aba541f213d56faadb0d41629d1e4e5fc01204069277db48081c0fa51613` | [Ver tx](https://stellar.expert/explorer/testnet/tx/62a1aba541f213d56faadb0d41629d1e4e5fc01204069277db48081c0fa51613) |
+| V2 flujo panel selección | `3251284c752dd51a60303732f0641d477ead1c082c5e1fa5a9ed680a8605f1e5` | [Ver tx](https://stellar.expert/explorer/testnet/tx/3251284c752dd51a60303732f0641d477ead1c082c5e1fa5a9ed680a8605f1e5) |
+| V2 flujo panel commit 1 | `ece625c1641728dee7776a52a6848b04aa3dae52a3bdb5a74bb5da26d32b33b0` | [Ver tx](https://stellar.expert/explorer/testnet/tx/ece625c1641728dee7776a52a6848b04aa3dae52a3bdb5a74bb5da26d32b33b0) |
+| V2 flujo panel commit 2 | `3ab98f352fadaebd4de6821f1357d61b89d36ac79867d3ca15618eff9fbe92a4` | [Ver tx](https://stellar.expert/explorer/testnet/tx/3ab98f352fadaebd4de6821f1357d61b89d36ac79867d3ca15618eff9fbe92a4) |
+| V2 flujo panel commit 3 | `425f3a7e6ae33e6e37b8306824550fb6ea174630ec2dc8f2e08f227c037eef69` | [Ver tx](https://stellar.expert/explorer/testnet/tx/425f3a7e6ae33e6e37b8306824550fb6ea174630ec2dc8f2e08f227c037eef69) |
+| V2 flujo panel reveal 1 | `19a791de99da4c678da0444cbd07195e90272367ec9819d5bf78b87aec39935e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/19a791de99da4c678da0444cbd07195e90272367ec9819d5bf78b87aec39935e) |
+| V2 flujo panel reveal 2 | `b4895080afcaf088ff83d440958578b2fefd7081fff0a54136037b6b2c440996` | [Ver tx](https://stellar.expert/explorer/testnet/tx/b4895080afcaf088ff83d440958578b2fefd7081fff0a54136037b6b2c440996) |
+| V2 flujo panel reveal 3 | `97b4b1c50cd639cfe002e3f59c6dd9e2bb711fdee03c2fd96968a0853ea4219e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/97b4b1c50cd639cfe002e3f59c6dd9e2bb711fdee03c2fd96968a0853ea4219e) |
+| V2 flujo panel settlement | `cd0940c0ce2a2b3625cfd2b01b29212b45a29dd86982a03d60d889382441746a` | [Ver tx](https://stellar.expert/explorer/testnet/tx/cd0940c0ce2a2b3625cfd2b01b29212b45a29dd86982a03d60d889382441746a) |
+| V2 flujo link vault | `eb56f162f9d0bfe3384f990866ba94baa7e4063d65a490cf59ecd6456ff083dc` | [Ver tx](https://stellar.expert/explorer/testnet/tx/eb56f162f9d0bfe3384f990866ba94baa7e4063d65a490cf59ecd6456ff083dc) |
+| V2 flujo link milestone | `6a331e05bdcb8deafd0f7169dd023191bc26624064ff5ef29a5b9a5e10ef41c9` | [Ver tx](https://stellar.expert/explorer/testnet/tx/6a331e05bdcb8deafd0f7169dd023191bc26624064ff5ef29a5b9a5e10ef41c9) |
+| V2 flujo link dispute | `3460ab6ad8485606757539eb5e387e6ed20249f88cb1b5c7f7314c95807fc77e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/3460ab6ad8485606757539eb5e387e6ed20249f88cb1b5c7f7314c95807fc77e) |
+| V2 flujo link arbitration | `1641ebd4ea28153e0c3e7665c6b6547453108b7d453362761c10661d8e5b89fd` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1641ebd4ea28153e0c3e7665c6b6547453108b7d453362761c10661d8e5b89fd) |
+| V2 flujo link panel | `9f89562fe555b7cf4aa0932522a892e5127574d9275d6d61a4af7647177673c5` | [Ver tx](https://stellar.expert/explorer/testnet/tx/9f89562fe555b7cf4aa0932522a892e5127574d9275d6d61a4af7647177673c5) |
+| V2 flujo settlement | `17053caccafb834a12bebe0dd1dc3941a8e81798430170b527502eeef0bf987d` | [Ver tx](https://stellar.expert/explorer/testnet/tx/17053caccafb834a12bebe0dd1dc3941a8e81798430170b527502eeef0bf987d) |
+
+Los intentos de `start` y `link_step` por la cuenta admin fueron rechazados en simulación (#2), sin hash. Estado final del flujo: `Settled` con 5 pasos.
+
 ## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |

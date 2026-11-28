@@ -14,6 +14,7 @@ const GROUPS: NavGroup[] = [
       { href: "/encounters", label: "Encuentros" },
       { href: "/vault", label: "Vault" },
       { href: "/vault-v2", label: "Vault V2" },
+      { href: "/flow-v2", label: "Flujo V2" },
       { href: "/boveda", label: "Bóveda" },
       { href: "/analytics", label: "Analítica" },
       { href: "/activity", label: "Actividad" },

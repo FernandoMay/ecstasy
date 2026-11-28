@@ -542,6 +542,17 @@ Eight Horizon-confirmed transactions: vault creation `5130769f…`/`6db6a895…`
 
 Counts: 36 shared + 92 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 + 11 arbitration-v2 + 4 arbitrators-registry + 11 panel-v2 + 8 vault-v2 = **248 automated tests**. Evidence Center: 126 verified transactions.
 
+
+## Composed V2 flow, delegated authority and scalable storage (27 nov)
+
+New contracts `CDYLAMODBA5M5ZMFND33DXGDXPYIOAP6PHA5TVVFPJTBJA62EXDPU3BV` (role registry, wasm `b2b93c62…`) and `CCZ2ADMIZPKWFM2V2KA3F67XWV4V2UP7KBL53OVE3UDXMOBNHLLHHZKW` (flow registry, wasm `607fc677…`). Four distinct roles replace a single operator: `admin` (suite-admin, no operational role), `fund_manager` (arceus-deployer), `registrar` (cc2026-new), `resolver` (escrow-arbiter). Admin `start`/`link_step` attempts were rejected in simulation (#2) with no hash. Persistent per-key storage and paginated reads replace unbounded instance growth: 200 flows with steps were written and read successfully.
+
+A real composed flow linked Vault V2 → Milestones V2 (disputed) → Arbitration V2 (Release) → Panel V2 (2/3 Release) → settlement, all with real Testnet transaction hashes indexed in the flow registry. Final flow status `Settled` with five linked steps. Nine Rust tests cover roles and pagination plus flow authorization, duplicates, missing steps and terminality.
+
+Twenty-five Horizon-confirmed transactions are indexed in the Evidence Center. `v1.0.0` and the 5,555 XLM in Vault V1 remain untouched. Public view `/flow-v2`.
+
+Counts: 36 shared + 92 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 + 11 arbitration-v2 + 4 arbitrators-registry + 11 panel-v2 + 8 vault-v2 + 3 role-registry-v2 + 6 flow-v2 = **257 automated tests**. Evidence Center: 151 verified transactions.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

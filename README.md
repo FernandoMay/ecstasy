@@ -71,10 +71,11 @@ Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archi
 - Actividad reciente — transiciones públicas de estado en la misma vista, sin contenido privado ni notificaciones push.
 - Intercambio cifrado de términos — el creador genera un sobre AES-GCM con clave PBKDF2 y el participante lo descifra en la app; la frase secreta se comparte fuera de la app. No hay claves persistentes, pero no hay secreto perfecto hacia adelante ni recuperación sin la frase.
 - `/boveda` — bóveda de 5555 XLM con reclamo por código.
-- `/evidence` — 126 transacciones Testnet reales con enlace a Stellar Expert.
+- `/evidence` — 151 transacciones Testnet reales con enlace a Stellar Expert.
 - `/encounters/:id` — detalle con timeline de hitos, reconciliación y recibo copiable.
 - `/vault` — dashboard de la bóveda (estado on-chain e historial local de reclamos).
 - `/vault-v2` — bóveda con contabilidad por atribución y surplus con destino fijado.
+- `/flow-v2` — flujo compuesto Vault → Milestones → Arbitration → Panel con autoridad delegada.
 - `/analytics` — contadores derivados de encuentros observados y evidencia real.
 - `/activity` — timeline global de transiciones y transacciones verificadas.
 - `/afterglow` — historial y desglose de feedback estructurado calculado localmente.
@@ -118,7 +119,7 @@ cd contracts/ecstasy && cargo test # 38 tests del contrato
 cd ../.. && npm run dev            # http://localhost:3000
 ```
 
-Total: **248 tests automatizados** = 36 shared + 92 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 + 11 arbitration-v2 + 4 arbitrators-registry + 11 panel-v2 + 8 vault-v2 (unitarios/de invariantes; **no** son pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
+Total: **257 tests automatizados** = 36 shared + 92 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 + 11 arbitration-v2 + 4 arbitrators-registry + 11 panel-v2 + 8 vault-v2 + 3 role-registry-v2 + 6 flow-v2 (unitarios/de invariantes; **no** son pruebas E2E). Typecheck, build, Clippy `-D warnings`, verificación de WASM y detección de drift de versiones pasan en CI.
 
 Abre la app con Freighter en Testnet. Usa dos wallets/contextos para los dos roles. Los términos privados se guardan solo en el navegador si haces opt-in y se pueden borrar desde el formulario.
 

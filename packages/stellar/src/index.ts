@@ -122,3 +122,12 @@ export {
   Client as VaultV2Client,
   VaultV2Error,
 } from "./generated/vault-v2";
+
+export {
+  Client as RoleRegistryV2Client,
+  RoleError,
+} from "./generated/role-registry-v2";
+export {
+  Client as FlowV2Client,
+  FlowError,
+} from "./generated/flow-v2";
