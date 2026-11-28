@@ -281,6 +281,40 @@ export default function WorkbenchPage() {
               ? "Rol registrar disponible para enlazar el hito al flujo."
               : "El rol registrar se valida en el contrato antes de enlazar pasos."}
           </p>
+          <div className="row" style={{ marginTop: 14 }}>
+            <button
+              className="btn btn-small"
+              disabled={busy !== null || !canFund}
+              onClick={() => run("Retirar atribución", async (walletAdapter) => {
+                const c = new VaultV2Client({
+                  ...clientOptions(config), contractId: config.vaultV2ContractId,
+                  publicKey: address!, signTransaction: walletAdapter.signTransaction,
+                  errorTypes: VaultV2Error, allowHttp: config.rpcUrl.startsWith("http://"),
+                });
+                return c.withdraw({ caller: address!, vault_id: 1n, amount: BigInt(Math.round(Number(amount) * 10_000_000)) });
+              })}
+            >
+              {busy === "Retirar atribución" ? "Firmando…" : "Retirar atribución"}
+            </button>
+            <button
+              className="btn btn-small"
+              disabled={busy !== null}
+              onClick={async () => {
+                try {
+                  const c = new VaultV2Client({
+                    ...clientOptions(config), contractId: config.vaultV2ContractId,
+                    errorTypes: VaultV2Error, allowHttp: config.rpcUrl.startsWith("http://"),
+                  });
+                  const value = (await c.get_surplus()).result;
+                  setNotice(`Surplus del vault: ${xlm(value)} XLM.`);
+                } catch (cause) {
+                  setNotice(`Leer surplus: ${cause instanceof Error ? cause.message : String(cause)}`);
+                }
+              }}
+            >
+              {busy === "Leer surplus" ? "Leyendo…" : "Leer surplus"}
+            </button>
+          </div>
         </div>
 
         <div className="card">
