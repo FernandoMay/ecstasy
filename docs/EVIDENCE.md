@@ -553,6 +553,13 @@ Twenty-five Horizon-confirmed transactions are indexed in the Evidence Center. `
 
 Counts: 36 shared + 92 web + 38 ECSTASY + 2 vault + 2 disputes + 3 refunds + 4 recovery + 3 arbitration + 4 milestones + 3 panel + 4 reputation + 3 traceability + 6 streaming + 6 subscription + 8 milestones-v2 + 11 arbitration-v2 + 4 arbitrators-registry + 11 panel-v2 + 8 vault-v2 + 3 role-registry-v2 + 6 flow-v2 = **257 automated tests**. Evidence Center: 151 verified transactions.
 
+
+## V2 Release Candidate — fresh Testnet run (27 nov)
+
+A clean RC run was executed from reproducible artifacts: all seven V2 WASMs rebuilt locally match the deployed instances. 257/257 regression tests passed. The same composed flow was executed again with **new** transactions (no historical hash reused): 27 Horizon-confirmed hashes indexed in the Evidence Center. Final RC flow status `Settled` with five linked steps; settlement `40bbedd6…`, flow close `c9f21822…`. Milestones, Arbitration and Panel RC contracts ended at zero balance; Vault RC retained 1 XLM of legitimately attributed funds. Admin `start`/`link_step` attempts were rejected (#2) with no hash.
+
+Release gate: **GO for Testnet** (regression, reproducibility, fresh run, delegated authority, terminality, storage and composition); **NO-GO for Mainnet** (no independent audit, no authorized migration). All 36 V1 findings remain open: `V1 finding abierto → V2 comportamiento corregido y demostrado`. See `docs/V2_RELEASE_CANDIDATE.md`.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

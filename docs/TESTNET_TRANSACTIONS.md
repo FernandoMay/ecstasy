@@ -421,6 +421,40 @@ Retiro por encima de la atribución (#5) y retiro del vault ajeno (#2) rechazado
 
 Los intentos de `start` y `link_step` por la cuenta admin fueron rechazados en simulación (#2), sin hash. Estado final del flujo: `Settled` con 5 pasos.
 
+## 19. V2 Release Candidate — corrida fresca (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| RC roles grant fund_manager | `9d1ef99828b6303576c992dd913667874f786758f6d6d13dabe2da3cb068134a` | [Ver tx](https://stellar.expert/explorer/testnet/tx/9d1ef99828b6303576c992dd913667874f786758f6d6d13dabe2da3cb068134a) |
+| RC roles grant registrar | `300298561676a8f9afb716ddd826abb86009db8aab623b69fa645103b9bab271` | [Ver tx](https://stellar.expert/explorer/testnet/tx/300298561676a8f9afb716ddd826abb86009db8aab623b69fa645103b9bab271) |
+| RC roles grant resolver | `5dd9c4b22b1bc75739bafbba8ca38256b7efd9d2412f413b5a6367c2120d4074` | [Ver tx](https://stellar.expert/explorer/testnet/tx/5dd9c4b22b1bc75739bafbba8ca38256b7efd9d2412f413b5a6367c2120d4074) |
+| RC flow start | `0fc2215dc55acf2dc8117c5234f1aeeaf7e602e464fa0aea427d9279df6e00e0` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0fc2215dc55acf2dc8117c5234f1aeeaf7e602e464fa0aea427d9279df6e00e0) |
+| RC vault crear | `ad7419a9650a5d9c1494f5fc53291caad57732c2e7049b52febc863c19c8965c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/ad7419a9650a5d9c1494f5fc53291caad57732c2e7049b52febc863c19c8965c) |
+| RC vault fund | `b7e92dd71b2abe5bad65170ff3c9353626f43c210fd0186805611798f06901f0` | [Ver tx](https://stellar.expert/explorer/testnet/tx/b7e92dd71b2abe5bad65170ff3c9353626f43c210fd0186805611798f06901f0) |
+| RC hito crear | `7edf3e5b21874d5677675ad1cf0c876163510829469f4e15af7f0f1105034652` | [Ver tx](https://stellar.expert/explorer/testnet/tx/7edf3e5b21874d5677675ad1cf0c876163510829469f4e15af7f0f1105034652) |
+| RC hito entrega | `b1d5c19d709217b5177e15aae3ecbbba4b242f8434a060b823301e7bc06e605f` | [Ver tx](https://stellar.expert/explorer/testnet/tx/b1d5c19d709217b5177e15aae3ecbbba4b242f8434a060b823301e7bc06e605f) |
+| RC hito disputa | `e43b86f4639d56c1721f089960caf7429ba7ed3c3da9077bc963244502874321` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e43b86f4639d56c1721f089960caf7429ba7ed3c3da9077bc963244502874321) |
+| RC hito resolución | `7fc54faed807739259328c82855705f64127ffd0b72ddfd3a5bf0202afd3e77c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/7fc54faed807739259328c82855705f64127ffd0b72ddfd3a5bf0202afd3e77c) |
+| RC arbitraje depósito | `579807535d7bc4a4e8ede90543a3da6636e2f1924fdca3df31aa941881a0c335` | [Ver tx](https://stellar.expert/explorer/testnet/tx/579807535d7bc4a4e8ede90543a3da6636e2f1924fdca3df31aa941881a0c335) |
+| RC arbitraje resolución | `f91fd0eb9109e953c48674444fe05c5051c83e5bd62adc078cbfd75994060081` | [Ver tx](https://stellar.expert/explorer/testnet/tx/f91fd0eb9109e953c48674444fe05c5051c83e5bd62adc078cbfd75994060081) |
+| RC panel crear | `6cdf33ab2e080a5a20409b8ff61c6f95d0f54986362589c4409ab10acce507bf` | [Ver tx](https://stellar.expert/explorer/testnet/tx/6cdf33ab2e080a5a20409b8ff61c6f95d0f54986362589c4409ab10acce507bf) |
+| RC panel selección | `1abc8a99c257e5600ee2f99a7fb652f18f35fbabf55ce6fa37b0963145f8559c` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1abc8a99c257e5600ee2f99a7fb652f18f35fbabf55ce6fa37b0963145f8559c) |
+| RC panel commit 1 | `82642eb8ce24d929409c9ec9ccb8b1dc1a7b6c9774210c08358260965d8c30d4` | [Ver tx](https://stellar.expert/explorer/testnet/tx/82642eb8ce24d929409c9ec9ccb8b1dc1a7b6c9774210c08358260965d8c30d4) |
+| RC panel commit 2 | `4bf47e928e29b22b31336ecdea3e9315aba26b5cf3d2a2cd25397f305c416dda` | [Ver tx](https://stellar.expert/explorer/testnet/tx/4bf47e928e29b22b31336ecdea3e9315aba26b5cf3d2a2cd25397f305c416dda) |
+| RC panel commit 3 | `2ace8fb026a084588ee9e4c9f0b2cd7b844ef1ed95a6bcedf92df8a46bf3331e` | [Ver tx](https://stellar.expert/explorer/testnet/tx/2ace8fb026a084588ee9e4c9f0b2cd7b844ef1ed95a6bcedf92df8a46bf3331e) |
+| RC panel reveal 1 | `e73dda3f9ee870973be5539b39349df3e9caaeb053a267ca693ad97f7ece7e45` | [Ver tx](https://stellar.expert/explorer/testnet/tx/e73dda3f9ee870973be5539b39349df3e9caaeb053a267ca693ad97f7ece7e45) |
+| RC panel reveal 2 | `d3bd33de31a393adae2fc8c1f6fa12a898b93c54c6c5c3626e71e3022fdebe94` | [Ver tx](https://stellar.expert/explorer/testnet/tx/d3bd33de31a393adae2fc8c1f6fa12a898b93c54c6c5c3626e71e3022fdebe94) |
+| RC panel reveal 3 | `15f7a07900f983e570a4204b01db140798d24b66ee7d099d677cb6e95f2d1285` | [Ver tx](https://stellar.expert/explorer/testnet/tx/15f7a07900f983e570a4204b01db140798d24b66ee7d099d677cb6e95f2d1285) |
+| RC panel settlement | `40bbedd6275600d942c450d943827417a6f6e7cc92a8203e5cba0e0f1dc80123` | [Ver tx](https://stellar.expert/explorer/testnet/tx/40bbedd6275600d942c450d943827417a6f6e7cc92a8203e5cba0e0f1dc80123) |
+| RC link vault | `0b225bdbad90781d239582fecdfa2f92e47de78011ce3d34f64c15bf6693e0a7` | [Ver tx](https://stellar.expert/explorer/testnet/tx/0b225bdbad90781d239582fecdfa2f92e47de78011ce3d34f64c15bf6693e0a7) |
+| RC link milestone | `1a0351947e427c629cfd70e74e981fc3b2a32e27dea349f379b8f5cbd92c1ecb` | [Ver tx](https://stellar.expert/explorer/testnet/tx/1a0351947e427c629cfd70e74e981fc3b2a32e27dea349f379b8f5cbd92c1ecb) |
+| RC link dispute | `f503bd14eb868a6adf06f265b993b787fe74b4f5d8eaa0406f903d5a06f09f53` | [Ver tx](https://stellar.expert/explorer/testnet/tx/f503bd14eb868a6adf06f265b993b787fe74b4f5d8eaa0406f903d5a06f09f53) |
+| RC link arbitration | `fe445a81e145d0e32c926f7c774ae01171f6b052ed3bcdbc017fd8dd0d1cd641` | [Ver tx](https://stellar.expert/explorer/testnet/tx/fe445a81e145d0e32c926f7c774ae01171f6b052ed3bcdbc017fd8dd0d1cd641) |
+| RC link panel | `ed2c3a47f1a7cd9131056aa6b31f6e0804158fa7d62bba50422bd4d65eef31cf` | [Ver tx](https://stellar.expert/explorer/testnet/tx/ed2c3a47f1a7cd9131056aa6b31f6e0804158fa7d62bba50422bd4d65eef31cf) |
+| RC flow settlement | `c9f21822e24d763fa8e5e49e5127023c61a6a62b29290d99e9e11ba3a59cbf39` | [Ver tx](https://stellar.expert/explorer/testnet/tx/c9f21822e24d763fa8e5e49e5127023c61a6a62b29290d99e9e11ba3a59cbf39) |
+
+Estado final del flujo RC: `Settled` con 5 pasos. Los intentos de `start`/`link_step` por admin fueron rechazados en simulación (#2), sin hash.
+
 ## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |

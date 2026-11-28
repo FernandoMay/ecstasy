@@ -7,7 +7,7 @@ ECSTASY es un protocolo de acuerdos privados entre dos partes, construido sobre 
 
 **Demo en vivo:** https://ecs-tasy.netlify.app · **Evidencia:** https://ecs-tasy.netlify.app/evidence
 
-> **Fase 15.1 — Paquete listo para revisión externa (Fase 14 completada).** Inventario y revisión adversarial interna de los 12 contratos desplegados: `docs/SECURITY_REVIEW_14_1.md`; pruebas reproducibles en `docs/ADVERSARIAL_TESTING_14_2.md` e inventario de autoridades en `docs/MAINNET_READINESS_14_3.md`; remediación por riesgo en `docs/REMEDIATION_PLAN_14_4.md` y paquete para revisor en `docs/EXTERNAL_REVIEW_PACKAGE_15_1.md` y encargo en `docs/REVIEWER_ENGAGEMENT.md` (paquete congelado en `review-package-v1.0`, checksums en `docs/review/CHECKSUMS.sha256`). Resultado actual: **NO-GO para Mainnet** (4 hallazgos High reproducidos y abiertos). Es una revisión **interna**, no una auditoría independiente de terceros. No se despliegan contratos nuevos durante esta fase.
+> **Fase 15.1 — Paquete listo para revisión externa (Fase 14 completada).** Inventario y revisión adversarial interna de los 12 contratos desplegados: `docs/SECURITY_REVIEW_14_1.md`; pruebas reproducibles en `docs/ADVERSARIAL_TESTING_14_2.md` e inventario de autoridades en `docs/MAINNET_READINESS_14_3.md`; remediación por riesgo en `docs/REMEDIATION_PLAN_14_4.md` y paquete para revisor en `docs/EXTERNAL_REVIEW_PACKAGE_15_1.md` y encargo en `docs/REVIEWER_ENGAGEMENT.md` (paquete congelado en `review-package-v1.0`); RC V2 en `docs/V2_RELEASE_CANDIDATE.md`. Resultado actual: **NO-GO para Mainnet** (4 hallazgos High reproducidos y abiertos). Es una revisión **interna**, no una auditoría independiente de terceros. No se despliegan contratos nuevos durante esta fase.
 
 > **Privado por defecto. Liquidado en Stellar.**
 > [Video: Acuerdos secretos y pruebas públicas en Stellar](https://youtube.com/shorts/zMHbDthidtI)
@@ -71,7 +71,7 @@ Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archi
 - Actividad reciente — transiciones públicas de estado en la misma vista, sin contenido privado ni notificaciones push.
 - Intercambio cifrado de términos — el creador genera un sobre AES-GCM con clave PBKDF2 y el participante lo descifra en la app; la frase secreta se comparte fuera de la app. No hay claves persistentes, pero no hay secreto perfecto hacia adelante ni recuperación sin la frase.
 - `/boveda` — bóveda de 5555 XLM con reclamo por código.
-- `/evidence` — 151 transacciones Testnet reales con enlace a Stellar Expert.
+- `/evidence` — 178 transacciones Testnet reales con enlace a Stellar Expert.
 - `/encounters/:id` — detalle con timeline de hitos, reconciliación y recibo copiable.
 - `/vault` — dashboard de la bóveda (estado on-chain e historial local de reclamos).
 - `/vault-v2` — bóveda con contabilidad por atribución y surplus con destino fijado.
