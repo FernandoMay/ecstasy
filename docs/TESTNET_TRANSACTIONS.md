@@ -455,6 +455,18 @@ Los intentos de `start` y `link_step` por la cuenta admin fueron rechazados en s
 
 Estado final del flujo RC: `Settled` con 5 pasos. Los intentos de `start`/`link_step` por admin fueron rechazados en simulación (#2), sin hash.
 
+## 20. Workbench — flujo de producto (XLM real)
+
+| Acción | Hash | Enlace |
+|---|---|---|
+| Workbench financiar vault | `bc4c8c71e12449bfd62885d470fb5a1619fae8d9dc96e664a398e20e7f68bc79` | [Ver tx](https://stellar.expert/explorer/testnet/tx/bc4c8c71e12449bfd62885d470fb5a1619fae8d9dc96e664a398e20e7f68bc79) |
+| Workbench crear hito | `23a795485bb53295331a1eaa956fb2b30352a34925d2b25b4853f6cb25412493` | [Ver tx](https://stellar.expert/explorer/testnet/tx/23a795485bb53295331a1eaa956fb2b30352a34925d2b25b4853f6cb25412493) |
+| Workbench entrega | `008a066f86a7a08e714811a025c0f5117ecafacd5f442a87cbf139b1553a32ba` | [Ver tx](https://stellar.expert/explorer/testnet/tx/008a066f86a7a08e714811a025c0f5117ecafacd5f442a87cbf139b1553a32ba) |
+| Workbench aprobación | `b21ff199441a2921de78185dffda2b49a8e2313dafffab82905e93c4ea0506ab` | [Ver tx](https://stellar.expert/explorer/testnet/tx/b21ff199441a2921de78185dffda2b49a8e2313dafffab82905e93c4ea0506ab) |
+| Workbench retiro | `8594d73add1a850f871e88a1635f6b88710fff12fc71e1d033dbbb2b82ad31cc` | [Ver tx](https://stellar.expert/explorer/testnet/tx/8594d73add1a850f871e88a1635f6b88710fff12fc71e1d033dbbb2b82ad31cc) |
+
+El intento de `sweep_surplus` sin surplus fue rechazado en simulación (#6), sin hash. Estado final del vault 1: 0/0/0.
+
 ## 6f. Chequeos negativos (sin hash de transacción)
 
 | Acción | Resultado observado |

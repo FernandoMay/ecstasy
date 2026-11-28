@@ -560,6 +560,13 @@ A clean RC run was executed from reproducible artifacts: all seven V2 WASMs rebu
 
 Release gate: **GO for Testnet** (regression, reproducibility, fresh run, delegated authority, terminality, storage and composition); **NO-GO for Mainnet** (no independent audit, no authorized migration). All 36 V1 findings remain open: `V1 finding abierto → V2 comportamiento corregido y demostrado`. See `docs/V2_RELEASE_CANDIDATE.md`.
 
+
+## Workbench — usable product surface (27 nov)
+
+Route `/workbench` reads live state from the V2 contracts and signs real transactions through Freighter. Permissions are checked on-chain with `has_role` before enabling actions and enforced again by the contracts. Receipts are exported as JSON from observed on-chain state and verified transaction hashes; no mock state is displayed or exported.
+
+A complete real flow was executed: vault funding `bc4c8c71…`, milestone creation `23a79548…`, delivery `008a066f…`, approval `b21ff199…` and creator withdrawal `8594d73a…`. The `sweep_surplus` attempt with no surplus was rejected in simulation (#6) with no hash. Final vault state: balance 0, attributed 0, surplus 0. See `docs/WORKBENCH.md`.
+
 ## Known limitations
 
 - Browser E2E with two Freighter wallets and UI screenshots are still pending; this pack is CLI/RPC evidence plus a production web build and a production payment verified from the public Netlify URL.

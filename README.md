@@ -71,11 +71,12 @@ Detalle completo: `docs/RELEASES/testnet-rc-1.md`, `docs/EVIDENCE.md` y el archi
 - Actividad reciente — transiciones públicas de estado en la misma vista, sin contenido privado ni notificaciones push.
 - Intercambio cifrado de términos — el creador genera un sobre AES-GCM con clave PBKDF2 y el participante lo descifra en la app; la frase secreta se comparte fuera de la app. No hay claves persistentes, pero no hay secreto perfecto hacia adelante ni recuperación sin la frase.
 - `/boveda` — bóveda de 5555 XLM con reclamo por código.
-- `/evidence` — 178 transacciones Testnet reales con enlace a Stellar Expert.
+- `/evidence` — 183 transacciones Testnet reales con enlace a Stellar Expert.
 - `/encounters/:id` — detalle con timeline de hitos, reconciliación y recibo copiable.
 - `/vault` — dashboard de la bóveda (estado on-chain e historial local de reclamos).
 - `/vault-v2` — bóveda con contabilidad por atribución y surplus con destino fijado.
 - `/flow-v2` — flujo compuesto Vault → Milestones → Arbitration → Panel con autoridad delegada.
+- `/workbench` — operaciones escrow reales con wallet, permisos on-chain y comprobantes exportables.
 - `/analytics` — contadores derivados de encuentros observados y evidencia real.
 - `/activity` — timeline global de transiciones y transacciones verificadas.
 - `/afterglow` — historial y desglose de feedback estructurado calculado localmente.
